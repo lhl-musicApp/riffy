@@ -10,9 +10,6 @@ Includes
 - Passport
 - Postgres
 
-"dev": "gmail_pass=Manhattan1100 nodemon build/dev-server.js",
-"build": "node build/build.js"
-
 
 ## Build Setup
 
