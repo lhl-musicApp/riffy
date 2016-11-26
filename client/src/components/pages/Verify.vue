@@ -17,7 +17,7 @@ export default {
   },
   created () {
     if (this.$route.params.id) {
-      this.$http.get('http://localhost:3000/api/verify/' + this.$route.params.id + '/' + this.$route.params.token).then(response => {
+      this.$http.get('verify/' + this.$route.params.id + '/' + this.$route.params.token).then(response => {
         this.response = response.data.message;
       });
     } else {

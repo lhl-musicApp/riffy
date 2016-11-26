@@ -28,12 +28,22 @@ app.set('superSecret', 'lkmaspokjsafpaoskdpa8asda0s9a'); // secret variable
 const LocalStrategy = require('passport-local').Strategy;
 const jwtSecret = 'lkmaspokjsafpaoskdpa8asda0s9a';
 
+//NodeMailer config
+var transporter = nodemailer.createTransport({
+	service: 'Gmail',
+	auth: {
+		user: process.env.email, // Your email id
+		pass: process.env.password // Your password
+	}
+});
+
 //PASSPORT CONFIG
 passport.use(new LocalStrategy({
 		usernameField: 'email',
 		passwordField: 'password'
 	},
 	function(username, password, done) {
+		console.log(username);
 		pg.connect(connectionString, (error, client) => {
 			client.query("SELECT * FROM users WHERE email = '" + username + "'", function(err, result) {
 				var user = result.rows[0];
@@ -124,10 +134,10 @@ router.get('/users', ejwt({
 router.post('/auth/login', function(req, res, next) {
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
-			return res.status(400).json({ error: err });
+			return res.status(400).json({ error: err }); 
 		} else {
 			//user has authenticated correctly thus we create a JWT token
-			var token = jwt.sign(user, app.get('superSecret'), { expiresIn: '24h' });
+			var token = jwt.sign(user, app.get('superSecret'));
 			console.log(user.role);
 			return res.json({ success: true, role: user.role, token: token });
 		}
@@ -170,18 +180,10 @@ router.post('/auth/register', function(req, res, next) {
 							if (err) {
 								return res.status(500).json({ success: false, data: err });
 							} else {
-								console.log('trigger');
-								var transporter = nodemailer.createTransport({
-									service: 'Gmail',
-									auth: {
-										user: 'patrickbollenbachcc@gmail.com', // Your email id
-										pass: process.env.gmail_pass // Your password
-									}
-								});
 								var text = 'Hi ' + data.firstName + '! Welcome to Vue Boilerplate. Please click the following link to verify your email - http://localhost:8090/verify/' + result.rows[0].id + '/' + ranString + '';
 								var mailOptions = {
 									from: 'patrickbollenbachcc@gmail.com', // sender address
-									to: 'patrick.bolle@hotmail.com', // list of receivers
+									to: data.email, // list of receivers
 									subject: 'Vue Boilerplate - ' + data.email + ' Email Verification', // Subject line
 									text: text //, // plaintext body
 										// html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
@@ -204,28 +206,95 @@ router.post('/auth/register', function(req, res, next) {
 	});
 });
 
-router.delete('/auth/users/:user_id', (req, res, next) => {
-	const results = [];
-	// Grab data from the URL parameters
-	const id = req.params.user_id;
-	// Get a Postgres client from the connection pool
-	pg.connect(connectionString, (err, client, done) => {
-		// Handle connection errors
-		if (err) {
-			done();
-			console.log(err);
-			return res.status(500).json({ success: false, data: err });
-		}
-		// SQL Query > Delete Data
-		client.query('DELETE FROM users WHERE id=($1)', [id],
-			function(err, result) {
-				if (err) {
-					return res.status(500).json({ success: false, data: err });
-				} else {
-					return res.json({ success: true });
-				}
+router.post('/auth/reset', function(req, res) {
+	var email = req.body.email;
+	var expiryDate = moment().add(2, 'hours').format("YYYY-MM-DD HH:mm:ss");
+	var ranString = randomstring.generate({
+		length: 16,
+		charset: 'alphabetic'
+	});
+	pg.connect(connectionString, (error, client) => {
+		client.query("SELECT * FROM users WHERE email = '" + email + "'", function(err, result) {
+			var user = result.rows[0];
+			if (!user) {
+				return res.status(400).json({ error: 'Email does not match to any account.' });	
+			} else {
+				console.log('reached');
+				client.query('UPDATE users SET resetpasstoken=($1), resetpassexpiry=($2) WHERE email=($3)',
+    			[ranString, expiryDate, email], function(err, result) {
+    				if (err) {console.log(err);}
+					var mailOptions = {
+						from: 'patrickbollenbachcc@gmail.com', // sender address
+						to: 'patrick.bolle@hotmail.com', // list of receivers
+						subject: 'Vue Boilerplate - ' + req.body.email + ' Password Reset', // Subject line
+						text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+				          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+				          'http://' + req.headers.host + '/reset/' + ranString + '\n\n' +
+				          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+					};
+					transporter.sendMail(mailOptions, function(error, info) {
+						if (error) {
+							console.log('Error!!');
+							return res.status(400).json({ error: error });	
+						} else {
+							console.log('Message sent: ' + info.response);
+							return res.json({ success: true, info: "Password reset email sent." });
+						};
+					});
+    			}); 
 			}
-		);
+		});
+	});
+});
+
+router.post('/auth/reset/:token', function(req, res) {
+	console.log(req.body.password);
+	var password = bcrypt.hashSync(req.body.password, 10);
+	console.log(password);
+	console.log(req.params.token);
+	var token = req.params.token;
+	pg.connect(connectionString, (error, client) => {
+		client.query("SELECT * FROM users WHERE resetpasstoken = '" + token + "'", function(err, result) {
+			var user = result.rows[0];
+			if (!user) {
+				return res.status(400).json({ error: 'Email does not match to any account.' });	
+			} else {
+				client.query("UPDATE users SET password = '" + password + "', resetpasstoken = NULL, resetpassexpiry = NULL WHERE email = '" + user.email + "'");
+				var mailOptions = {
+					from: 'patrickbollenbachcc@gmail.com', // sender address
+					to: user.email, // list of receivers
+					subject: 'Vue Boilerplate - Your Password Has Been Changed', // Subject line
+					text: 'Hello,\n\n' +
+          			'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+				};
+				transporter.sendMail(mailOptions, function(error, info) {
+					if (error) {
+						return res.status(400).json({ error: error });	
+					} else {
+						console.log('Message sent: ' + info.response);
+						return res.json({ success: true, info: "Password reset successful." });
+					};
+				});
+			}
+		});
+	});
+});
+
+router.get('/auth/reset/:token', function(req, res) {
+	var token = req.params.token;
+	pg.connect(connectionString, (error, client) => {
+		client.query('SELECT * FROM users WHERE resetpasstoken = ' + token + ' AND resetpassexpiry > ' + Date.now(), function(err, result) {
+			var user = result.rows[0];
+			if (!user) {
+				return res.json({ success: false, message: 'Password reset token is invalid or has expired.' });
+			} else {
+				return res.json({ success: true, message: 'Please proceed to reset password page.' });
+			}
+			// disconnect the client
+			client.end(function(err) {
+				if (err) throw err;
+			});
+		});
 	});
 });
 
@@ -258,7 +327,6 @@ router.get('/notes', (req, res) => {
 	// Get a Postgres client from the connection pool
 	pg.connect(connectionString, (err, client, done) => {
 		// Handle connection errors
-		console.log('testing notes');
 		if (err) {
 			done();
 			console.log(err);

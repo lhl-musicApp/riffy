@@ -10,7 +10,6 @@
           <th>Last Name</th>
           <th>ID</th>
           <th>Verified</th>
-          <th>Delete</th>
         </tr>
       </thead>
       <tbody v-for="user in users">
@@ -20,11 +19,6 @@
           <td>{{ user.lastname }}</td>
           <td>{{ user.id }}</td>
           <td>{{ user.verified_email }}</td>
-          <td>
-            <a v-on:click="remove(user.id)">
-              <i class="fa fa-trash"></i>
-            </a>
-          </td>
         </tr>
       </tbody>
     </table>

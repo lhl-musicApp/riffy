@@ -17,6 +17,8 @@
         <span v-show="errors.has('password')" class="alert-danger">{{ errors.first('password') }}</span>
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
+      <hr>
+      <a href="/forgotpassword">Forgot your password?</a>
     </form>
   </div>
 </template>

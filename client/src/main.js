@@ -12,6 +12,8 @@ import Users from './components/pages/Users.vue';
 import Notes from './components/pages/Notes.vue';
 import NoteSingle from './components/pages/NoteSingle.vue';
 import Verify from './components/pages/Verify.vue';
+import ForgotPassword from './components/pages/ForgotPassword.vue';
+import ResetPassword from './components/pages/ResetPassword.vue';
 
 //Auth Setup
 // Check the user's auth status when the app starts
@@ -31,6 +33,8 @@ export var router = new Router({
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
 		{ path: '/notes', component: Notes },
 		{ path: '/verify', component: Verify },
+		{ path: '/forgotpassword', component: ForgotPassword },	
+		{ path: '/reset/:token', component: ResetPassword },	
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle }
 	]
@@ -56,6 +60,7 @@ router.beforeEach((to, from, next) => {
 		}
 	}
 	if (to.matched.some(record => record.meta.requiresAdmin)) {
+		console.log(auth.user);
 		// this route requires auth, check if logged in
 		// if not, redirect to login page.
 		if (auth.user.role == 'admin') {
