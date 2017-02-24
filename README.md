@@ -1,4 +1,25 @@
-# vuejs-boilerplate
+# riffy
+
+Networking platform built for musician community to help
+  - individuals to set up and display their own user profile with music skills
+  - individuals to search for bands to join
+  - bands to search for individuals with instrument skills
+
+
+### Tech Stack
+- Node.js
+- Express.js
+- Vue.js
+- Postgres SQL
+- Sass
+
+## Color
+- 5BCCFF
+- 00AFFF
+- FF9C21
+
+
+## vuejs-boilerplate
 
 ### WANT TO HELP?
 I need a hand figuring out how to deploy this to a Digital Ocean server for demo purposes. Give me a shout!
