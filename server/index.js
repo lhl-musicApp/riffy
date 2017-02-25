@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 //Imports
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,7 +10,6 @@ const app = express();
 const router = express.Router();
 const flash = require('connect-flash');
 const passport = require('passport');
-const pg = require('pg');
 const path = require('path');
 const connectionString = process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/todo';
 const ejwt = require('express-jwt');
@@ -16,6 +17,15 @@ const moment = require('moment');
 const nodemailer = require('nodemailer');
 const randomstring = require("randomstring");
 const cors = require('cors');
+
+// customized
+const ENV = process.env.ENV || "development";
+
+const pg = require('pg');
+
+const knexConfig = require("../knexfile");
+const knex = require('knex')(knexConfi[ENV]);
+
 
 //Express Config
 app.use(flash());
@@ -134,7 +144,7 @@ router.get('/users', ejwt({
 router.post('/auth/login', function(req, res, next) {
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
-			return res.status(400).json({ error: err }); 
+			return res.status(400).json({ error: err });
 		} else {
 			//user has authenticated correctly thus we create a JWT token
 			var token = jwt.sign(user, app.get('superSecret'));
@@ -217,7 +227,7 @@ router.post('/auth/reset', function(req, res) {
 		client.query("SELECT * FROM users WHERE email = '" + email + "'", function(err, result) {
 			var user = result.rows[0];
 			if (!user) {
-				return res.status(400).json({ error: 'Email does not match to any account.' });	
+				return res.status(400).json({ error: 'Email does not match to any account.' });
 			} else {
 				console.log('reached');
 				client.query('UPDATE users SET resetpasstoken=($1), resetpassexpiry=($2) WHERE email=($3)',
@@ -235,13 +245,13 @@ router.post('/auth/reset', function(req, res) {
 					transporter.sendMail(mailOptions, function(error, info) {
 						if (error) {
 							console.log('Error!!');
-							return res.status(400).json({ error: error });	
+							return res.status(400).json({ error: error });
 						} else {
 							console.log('Message sent: ' + info.response);
 							return res.json({ success: true, info: "Password reset email sent." });
 						};
 					});
-    			}); 
+    			});
 			}
 		});
 	});
@@ -257,7 +267,7 @@ router.post('/auth/reset/:token', function(req, res) {
 		client.query("SELECT * FROM users WHERE resetpasstoken = '" + token + "'", function(err, result) {
 			var user = result.rows[0];
 			if (!user) {
-				return res.status(400).json({ error: 'Email does not match to any account.' });	
+				return res.status(400).json({ error: 'Email does not match to any account.' });
 			} else {
 				client.query("UPDATE users SET password = '" + password + "', resetpasstoken = NULL, resetpassexpiry = NULL WHERE email = '" + user.email + "'");
 				var mailOptions = {
@@ -269,7 +279,7 @@ router.post('/auth/reset/:token', function(req, res) {
 				};
 				transporter.sendMail(mailOptions, function(error, info) {
 					if (error) {
-						return res.status(400).json({ error: error });	
+						return res.status(400).json({ error: error });
 					} else {
 						console.log('Message sent: ' + info.response);
 						return res.json({ success: true, info: "Password reset successful." });
