@@ -45,7 +45,8 @@ exports.up = function(knex, Promise) {
       t.increments('id').primary();
       t.string('band_name');
       t.text('band_bio', 'mediumtext');
-      t.string('band_influenece');
+      t.string('band_influence');
+      t.string('soundcloud_link');
       t.boolean('is_new_band').comment('Checking if starting new band');
       t.string('has_open_position');
       t.string('looking_for');
