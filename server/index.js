@@ -168,52 +168,78 @@ router.post('/auth/register', function(req, res, next) {
 		verify_token: ranString,
 		role: 'regular'
 	};
+	console.log('data:',data)
+
 	const results = [];
+	// This insert works! fuck yea
+	return knex('users').insert({
+		email: data.email,
+		password: data.password,
+		first_name: data.firstName,
+		last_name: data.lastName,
+	}).then( function (result) {
+          res.json({ success: true, message: 'ok' });     // respond back to request
+       });
 	// Get a Postgres client from the connection pool
-	pg.connect(connectionString, (err, client, done) => {
-		// Handle connection errors
-		if (err) {
-			done();
-			console.log(err);
-			return res.status(500).json({ success: false, data: err });
-		}
-		// SQL Query > Select Data To Check If Email Already Exists
-		client.query("SELECT * FROM users WHERE email = '" + data.email + "' ORDER BY id ASC",
-			function(err, result) {
-				var user = result.rows[0];
-				if (user) {
-					return res.status(400).json({ success: false, data: 'User already exists. Please try again.' });
-				} else {
-					// SQL Query > Insert Data
-					client.query('INSERT INTO users(email, password, firstname, lastname, verify_token, role) values($1, $2, $3, $4, $5, $6) RETURNING *', [data.email, data.password, data.firstName, data.lastName, data.verify_token, data.role],
-						function(err, result) {
-							if (err) {
-								return res.status(500).json({ success: false, data: err });
-							} else {
-								var text = 'Hi ' + data.firstName + '! Welcome to Vue Boilerplate. Please click the following link to verify your email - http://localhost:8090/verify/' + result.rows[0].id + '/' + ranString + '';
-								var mailOptions = {
-									from: 'patrickbollenbachcc@gmail.com', // sender address
-									to: data.email, // list of receivers
-									subject: 'Vue Boilerplate - ' + data.email + ' Email Verification', // Subject line
-									text: text //, // plaintext body
-										// html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-								};
-								transporter.sendMail(mailOptions, function(error, info) {
-									if (error) {
-										console.log(error);
-										return res.json({ success: false, info: "Something went wrong." });
-									} else {
-										console.log('Message sent: ' + info.response + text);
-										return res.json({ success: true, info: "Registered account and sent verification email." });
-									};
-								});
-							}
-						}
-					);
-				};
-			}
-		)
-	});
+	// knex('users').insert({'email': data.email, 'password': data.password, 'first_name': data.firstName})
+	// knex.select().from('users').where(email, data.email).then(function (results){
+	// 		return console.log(results)
+	// 	})
+
+	// pg.connect(connectionString, (err, client, done) => {
+	// 	// Handle connection errors
+	// 	if (err) {
+	// 		done();
+	// 		console.log(err);
+	// 		return res.status(500).json({ success: false, data: err });
+	// 	}
+	// knex.select().from('users').where(email, data.email).then(function (results){
+	// 		return console.log(results)
+	// 	}).then( function (result) {
+ //          var user = result.rows[0];
+	// 			if (user) {
+	// 				return res.status(400).json({ success: false, data: 'User already exists. Please try again.' });
+	// 			} else { };
+ //       });
+
+	// 	// SQL Query > Select Data To Check If Email Already Exists
+	// 	client.query("SELECT * FROM users WHERE email = '" + data.email + "' ORDER BY id ASC",
+	// 		function(err, result) {
+	// 			var user = result.rows[0];
+	// 			if (user) {
+	// 				return res.status(400).json({ success: false, data: 'User already exists. Please try again.' });
+	// 			} else {
+
+	// 				// SQL Query > Insert Data
+	// 				client.query('INSERT INTO users(email, password, firstname, lastname, verify_token, role) values($1, $2, $3, $4, $5, $6) RETURNING *', [data.email, data.password, data.firstName, data.lastName, data.verify_token, data.role],
+	// 					function(err, result) {
+	// 						if (err) {
+	// 							return res.status(500).json({ success: false, data: err });
+	// 						} else {
+	// 							var text = 'Hi ' + data.firstName + '! Welcome to Vue Boilerplate. Please click the following link to verify your email - http://localhost:8090/verify/' + result.rows[0].id + '/' + ranString + '';
+	// 							var mailOptions = {
+	// 								from: 'patrickbollenbachcc@gmail.com', // sender address
+	// 								to: data.email, // list of receivers
+	// 								subject: 'Vue Boilerplate - ' + data.email + ' Email Verification', // Subject line
+	// 								text: text //, // plaintext body
+	// 									// html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
+	// 							};
+	// 							transporter.sendMail(mailOptions, function(error, info) {
+	// 								if (error) {
+	// 									console.log(error);
+	// 									return res.json({ success: false, info: "Something went wrong." });
+	// 								} else {
+	// 									console.log('Message sent: ' + info.response + text);
+	// 									return res.json({ success: true, info: "Registered account and sent verification email." });
+	// 								};
+	// 							});
+	// 						}
+	// 					}
+	// 				);
+	// 			};
+	// 		}
+	// 	)
+	// });
 });
 
 router.post('/auth/reset', function(req, res) {
