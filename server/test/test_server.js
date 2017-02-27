@@ -11,7 +11,7 @@ chai.use(chaiHttp);
 describe("server", function() {
   it('should be able to post', function(done) {
   chai.request(server)
-    .post('/auth/register')
+    .post('/api/auth/register')
     .send({
         email: 'doodle@gmial.com',
         firstName: 'Jon',
@@ -20,7 +20,7 @@ describe("server", function() {
       })
     .end(function(err, res){
       expect(err).to.be.null;
-        expect(res).to.have.status(200);
+      expect(res).to.have.status(200);
       // res.should.have.status(200);
       // res.should.be.json;
       // res.body.should.be.a('object');
