@@ -11,7 +11,7 @@ const router = express.Router();
 const flash = require('connect-flash');
 const passport = require('passport');
 const path = require('path');
-const connectionString = process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/todo';
+const connectionString = process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/riffy';
 const ejwt = require('express-jwt');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
@@ -25,7 +25,7 @@ const pg = require('pg');
 
 const knexConfig = require("./knexfile");
 const knex = require('knex')(knexConfig[ENV]);
-
+const chai = require('chai');
 
 //Express Config
 app.use(flash());
@@ -168,39 +168,29 @@ router.post('/auth/register', function(req, res, next) {
 		verify_token: ranString,
 		role: 'regular'
 	};
-	console.log('data:',data)
+	// console.log('data:',data)
 
 	const results = [];
-	// This insert works! fuck yea
-	return knex('users').insert({
-		email: data.email,
-		password: data.password,
-		first_name: data.firstName,
-		last_name: data.lastName,
-	}).then( function (result) {
-          res.json({ success: true, message: 'ok' });     // respond back to request
-       });
-	// Get a Postgres client from the connection pool
-	// knex('users').insert({'email': data.email, 'password': data.password, 'first_name': data.firstName})
-	// knex.select().from('users').where(email, data.email).then(function (results){
-	// 		return console.log(results)
-	// 	})
 
-	// pg.connect(connectionString, (err, client, done) => {
-	// 	// Handle connection errors
-	// 	if (err) {
-	// 		done();
-	// 		console.log(err);
-	// 		return res.status(500).json({ success: false, data: err });
-	// 	}
-	// knex.select().from('users').where(email, data.email).then(function (results){
-	// 		return console.log(results)
-	// 	}).then( function (result) {
- //          var user = result.rows[0];
-	// 			if (user) {
-	// 				return res.status(400).json({ success: false, data: 'User already exists. Please try again.' });
-	// 			} else { };
- //       });
+	knex.select().from('users').where({ email: data.email }).then( function (result) {
+    var user = result[0];
+    // console.log(result[0])
+		if (user) {
+			return res.status(400).json({ success: false, data: 'User already exists. Please try again and again.' });
+		} else {
+			return knex('users').insert({
+				email: data.email,
+				password: data.password,
+				first_name: data.firstName,
+				last_name: data.lastName
+			}).then( function (result) {
+		    return res.json({ success: true, message: 'ok' });
+	    }).catch(function (err) {
+		    return res.status(500).json({ success: false, data: err });
+		  });
+		}
+  });
+	// >> TODO transporter.sendMail() is invoked after insert, we should make use of it in time!
 
 	// 	// SQL Query > Select Data To Check If Email Already Exists
 	// 	client.query("SELECT * FROM users WHERE email = '" + data.email + "' ORDER BY id ASC",
@@ -250,6 +240,9 @@ router.post('/auth/reset', function(req, res) {
 		charset: 'alphabetic'
 	});
 	pg.connect(connectionString, (error, client) => {
+		knex.select().from('users').where('email', email).then(function(err, result){
+			console.log(result)
+		})
 		client.query("SELECT * FROM users WHERE email = '" + email + "'", function(err, result) {
 			var user = result.rows[0];
 			if (!user) {
@@ -497,3 +490,5 @@ var port = process.env.PORT || 3000;
 app.listen(port, function() {
 	console.log('Boilerplate server listening on port ' + port);
 })
+
+module.exports = app
