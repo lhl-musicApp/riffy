@@ -25,7 +25,7 @@ const pg = require('pg');
 
 const knexConfig = require("./knexfile");
 const knex = require('knex')(knexConfig[ENV]);
-const chai = require('chai');
+
 
 //Express Config
 app.use(flash());
