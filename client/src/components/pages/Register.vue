@@ -1,4 +1,4 @@
-<template lang="html">
+
   <div class="container">
     <h1>Register An Account</h1>
     <hr>
