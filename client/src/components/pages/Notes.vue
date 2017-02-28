@@ -38,6 +38,9 @@
                 <li>{{ note.id }}</li>
                 <li>{{ note.user_city }}</li>
                 <li>{{ note.user_country }}</li>
+                <li>{{ note.user_influence }}</li>
+                <li>{{ note.isAvailable }}</li>
+                <li>{{ note.looking_for }}</li>
               </ul>
 
 
@@ -105,7 +108,9 @@
 
 <script>
 import auth from '../../auth.js'
+import vSelect from "vue-select"
 export default {
+  components: {vSelect},
   data () {
     return {
       searchString: "",
@@ -129,19 +134,37 @@ export default {
             var articles_array = this.notes,
                 searchString = this.searchString;
 
+                var stringArray = searchString.split(' ');
+                console.log('stringArray', stringArray);
+
+            var searchArray = [];
+
+
+
             if(!searchString){
                 return articles_array;
             }
 
             searchString = searchString.trim().toLowerCase();
-
+            console.log("searchString: ", searchString)
             articles_array = articles_array.filter(function(item){
-                if(item.first_name.toLowerCase().indexOf(searchString) !== -1){
-                    return item;
+              for (var key in item) {
+                  // console.log('obj[key]', typeof(item[key]));
+                if(typeof(item[key]) == typeof('string')){
+                  for(var i = 0; i > stringArray.length; i++){
+                    if(item[key].toLowerCase().indexOf(stringArray[i]) !== -1){
+                      console.log('item=>', item)
+                      return item;
+                    }
+                  }
                 }
-                if(item.first_name.toLowerCase().indexOf(searchString) !== -1){
-                    return item;
-                }
+              }
+                // if(item.first_name.toLowerCase().indexOf(stringArray[0]) !== -1){
+                //     return item;
+                // }
+                // if(item.last_name.toLowerCase().indexOf(stringArray[1]) !== -1){
+                //     return item;
+                // }
             })
 
             // Return an array with the filtered data.
