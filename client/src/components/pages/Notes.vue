@@ -17,7 +17,26 @@
       <button type="submit" class="btn btn-primary">Create Item</button>
       <hr>
     </form>
-    <table class="table">
+<div class="row">
+  <div class="col-sm-6 col-md-4" v-for="note in notes">
+    <div class="thumbnail">
+      <img src="" alt="">
+      <div class="caption">
+        <img src="http://www.fillmurray.com/200/200" alt="">
+        <h3>{{ note.first_name }} {{ note.last_name }}</h3>
+        <ul>
+          <li>{{ note.id }}</li>
+          <li>{{ note.user_city }}</li>
+          <li>{{ note.user_country }}</li>
+        </ul>
+
+
+        <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!--     <table class="table">
       <thead class="thead thead-inverse">
         <tr>
           <th>ID</th>
@@ -35,6 +54,8 @@
           <td>{{ note.id }}</td>
           <td>{{ note.first_name }}</td>
           <td>{{ note.last_name }}</td>
+          <td>{{ note.user_city }}</td>
+          <td>{{ note.country }}</td>
           <td>
             <a v-on:click="remove(note.id)">
               <i class="fa fa-trash"></i>
@@ -42,7 +63,7 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </template>
 
