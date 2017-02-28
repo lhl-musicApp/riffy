@@ -355,7 +355,7 @@ router.get('/notes', (req, res) => {
 	// const resultsArr = [];
 	knex.select().from('users').then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
-		// console.log('results from notes: ', result)
+		console.log('results from notes: ', result)
 		  // results.push(result)çc\\efsdafsfd
 		return res.json(result);
 	}).catch(function (err) {
