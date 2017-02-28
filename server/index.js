@@ -1,42 +1,42 @@
-require('dotenv').config()
+require('dotenv').config() //passed
 
 //Imports
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require('express'); //passed
+const bodyParser = require('body-parser'); //passed
 const _ = require('lodash');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-const app = express();
-const router = express.Router();
+const bcrypt = require('bcrypt'); //passed
+const jwt = require('jsonwebtoken'); //passed // used to create, sign, and verify tokens
+const app = express(); //passed
+const router = express.Router(); //passed
 const flash = require('connect-flash');
-const passport = require('passport');
-const path = require('path');
+const passport = require('passport'); //passed
+const path = require('path'); //passed
 const connectionString = process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/todo';
-const ejwt = require('express-jwt');
+const ejwt = require('express-jwt'); //passed
 const moment = require('moment');
-const nodemailer = require('nodemailer');
-const randomstring = require("randomstring");
-const cors = require('cors');
+const nodemailer = require('nodemailer'); //passed
+const randomstring = require("randomstring"); //passed
+const cors = require('cors'); //passed
 
 // customized
-const ENV = process.env.ENV || "development";
+const ENV = process.env.ENV || "development"; //passed
 
-const pg = require('pg');
+const pg = require('pg'); //passed
 
-const knexConfig = require("./knexfile");
-const knex = require('knex')(knexConfig[ENV]);
-
+const knexConfig = require("./knexfile"); //passed
+const knex = require('knex')(knexConfig[ENV]); //passed
+///////////////////
 
 //Express Config
 app.use(flash());
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(passport.initialize());
-app.use(passport.session());
-app.set('superSecret', 'lkmaspokjsafpaoskdpa8asda0s9a'); // secret variable
-const LocalStrategy = require('passport-local').Strategy;
-const jwtSecret = 'lkmaspokjsafpaoskdpa8asda0s9a';
+app.use(cors()); //passed
+app.use(bodyParser.urlencoded({ extended: false })); //passed
+app.use(bodyParser.json()); //passed
+app.use(passport.initialize()); //passed
+app.use(passport.session()); //passed
+app.set('superSecret', 'lkmaspokjsafpaoskdpa8asda0s9a'); //passed // secret variable
+const LocalStrategy = require('passport-local').Strategy; //passed
+const jwtSecret = 'lkmaspokjsafpaoskdpa8asda0s9a'; //passed
 
 //NodeMailer config
 var transporter = nodemailer.createTransport({
@@ -108,6 +108,18 @@ passport.deserializeUser(function(id, done) {
 		});
 	});
 });
+
+// Test
+// router.get('/test', (req, res) => {
+// 	knex.select().from('users')
+// 	.then((data) => {
+// 		res.json(data);
+// 		// console.log(data);
+// 	})
+// })
+
+
+
 
 //User displaying Route
 router.get('/users', ejwt({
@@ -331,7 +343,9 @@ router.get('/verify/:id/:token', function(req, res) {
 	});
 });
 
-// DATA ROUTES
+
+
+// DATA ROUTES --> this is where pages are rendered
 router.get('/notes', (req, res) => {
 	const results = [];
 	// Get a Postgres client from the connection pool
@@ -467,7 +481,7 @@ router.delete('/notes/:note_id', (req, res, next) => {
 
 //Server port
 app.use('/api', router);
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, function() {
 	console.log('Boilerplate server listening on port ' + port);
 })
