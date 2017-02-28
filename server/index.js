@@ -84,28 +84,39 @@ passport.use(new LocalStrategy({
 }));
 
 // used to serialize the user for the session
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
 	done(null, user.id);
 	// where is this user.id going? Are we supposed to access this anywhere?
 });
 
 // used to deserialize the user
-passport.deserializeUser(function(id, done) {
-	// User.findById(id, function(err, user) {});
-	const results = [];
-	// Get a Postgres client from the connection pool
-	pg.connect(connectionString, (err, client, done) => {
-		// SQL Query > Select Data
-		const query = client.query('SELECT * FROM users WHERE id = ' + id + ' ORDER BY id ASC;');
-		// Stream results back one row at a time
-		query.on('row', (row) => {
-			results.push(row);
-		});
-		// After all data is returned, close connection and return results
-		query.on('end', () => {
-			done(err, user);
-		});
+passport.deserializeUser((id, done) => {
+
+	knex.select().from('users').where({id: id}).orderBy('id')
+	.then((data) => {
+		res.json(data);
+	})
+	.catch((err) => {
+		res.status(400).json(err);
 	});
+
+/////////////////
+	// User.findById(id, function(err, user) {});
+	// const results = [];
+	// // Get a Postgres client from the connection pool
+	// pg.connect(connectionString, (err, client, done) => {
+	// 	// SQL Query > Select Data
+	// 	const query = client.query('SELECT * FROM users WHERE id = ' + id + ' ORDER BY id ASC;');
+	// 	// Stream results back one row at a time
+	// 	query.on('row', (row) => {
+	// 		results.push(row);
+	// 	});
+	// 	// After all data is returned, close connection and return results
+	// 	query.on('end', () => {
+	// 		done(err, user);
+	// 	});
+	// });
+///////////////////
 });
 
 
@@ -113,16 +124,15 @@ passport.deserializeUser(function(id, done) {
 router.get('/users', ejwt({
 		secret: app.get('superSecret')
 	}), (req, res) => {
-  console.log(req);
+  console.log(req.user);
   if (!req.user) {
     return res.sendStatus(401)
   } else if (req.user.role == 'regular') {
     return res.status(400).json({ success: false, data: "Insufficient privileges" });
   } else {
-
     knex.select().from('users').orderBy('id')
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       res.json(data);
     })
     .catch((err) => {
