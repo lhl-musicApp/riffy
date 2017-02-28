@@ -16,10 +16,10 @@ export default {
 				self.user.authenticated = true;
 				location.reload();
 				if (self.user.role = 'regular') {
-					context.$router.push('/');				
+					context.$router.push('/');
 				}
 				else if (self.user.role = 'admin') {
-					context.$router.push('/users');				
+					context.$router.push('/users');
 				}
 			})
 			.catch(function(error) {
@@ -36,7 +36,7 @@ export default {
 			})
 			.then(response => {
 				if (response.data.success == true) {
-					context.$router.push('/verify');				
+					context.$router.push('/verify');
 				};
 			})
 			.catch(function(error) {
@@ -49,11 +49,11 @@ export default {
 			})
 			.then(response => {
 				if (redirect) {
-					this.$router.push('/');				
+					this.$router.push('/');
 				};
 			})
 			.catch(function(error) {
-				context.error = error.body.error;		
+				context.error = error.body.error;
 			});
 	},
 	reset(context, creds, redirect) {
@@ -62,19 +62,19 @@ export default {
 			})
 			.then(response => {
 				if (redirect) {
-					this.$router.push('/login');				
+					this.$router.push('/login');
 				};
 			})
 			.catch(function(error) {
 				if (error) {
-					context.error = error.body.error;		
+					context.error = error.body.error;
 				}
 			});
 	},
 	logout(context) {
 		localStorage.removeItem('id_token')
 		this.user.authenticated = false;
-		context.$router.push('/login');				
+		context.$router.push('/login');
 	},
 	checkAuth() {
 		var jwt = localStorage.getItem('id_token');

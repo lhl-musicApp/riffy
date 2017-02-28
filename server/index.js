@@ -49,40 +49,39 @@ var transporter = nodemailer.createTransport({
 
 //PASSPORT CONFIG
 passport.use(new LocalStrategy({
-		usernameField: 'email',
-		passwordField: 'password'
-	},
-	function(username, password, done) {
-		console.log(username);
-		pg.connect(connectionString, (error, client) => {
-			client.query("SELECT * FROM users WHERE email = '" + username + "'", function(err, result) {
-				var user = result.rows[0];
-				if (!user) {
-					return done("Incorrect credentials", false);
-				} else {
-					if (user.email == null) {
-						return done("Incorrect credentials", false);
-					}
-					if (user.verified_email == null || user.verified_email == false) {
-						return done("Please verify your email first. Check your inbox for our verification email.", false);
-					}
-					bcrypt.compare(password, user.password, function(err, res) {
-						// res == true
-						if (res == true) {
-							return done(null, user);
-						} else {
-							return done("Incorrect credentials", false);
-						}
-					});
-				}
-				// disconnect the client
-				client.end(function(err) {
-					if (err) throw err;
-				});
-			});
-		});
-	}
-));
+    usernameField: 'email',
+    passwordField: 'password'
+  },
+  function(username, password, done) {
+    console.log('username:', username);
+
+    knex.select().from('users').where({ email: username })
+    .then((result) => {
+      // console.log(result);
+      const user = result[0];
+      if (!user) {
+          return done("Incorrect credentials", false);
+      } else {
+        if (user.email == null) {
+          return done("Incorrect credentials", false);
+        }
+        if (user.verified_email == null || user.verified_email == false) {
+          return done("Please verify your email first. Check your inbox for our verification email.", false);
+        }
+        bcrypt.compare(password, user.password, function(err, res) {
+        // res == true
+          if (res == true) {
+            return done(null, user);
+          } else {
+            return done("Incorrect credentials", false);
+          }
+        });
+      }
+    })
+    .catch((err) =>{
+      res.status(400).json(err);
+    })
+}));
 
 // used to serialize the user for the session
 passport.serializeUser(function(user, done) {
@@ -112,34 +111,24 @@ passport.deserializeUser(function(id, done) {
 
 //User displaying Route
 router.get('/users', ejwt({
-	secret: app.get('superSecret')
-}), (req, res) => {
-	if (!req.user) {
-		return res.sendStatus(401)
-	} else if (req.user.role == 'regular') {
-		return res.status(400).json({ success: false, data: "Insufficient privileges" });
-	} else {
-		const results = [];
-		// Get a Postgres client from the connection pool
-		pg.connect(connectionString, (err, client, done) => {
-			// Handle connection errors
-			if (err) {
-				done();
-				return res.status(500).json({ success: false, data: err });
-			}
-			// SQL Query > Select Data
-			const query = client.query('SELECT * FROM users ORDER BY id ASC;');
-			// Stream results back one row at a time
-			query.on('row', (row) => {
-				results.push(row);
-			});
-			// After all data is returned, close connection and return results
-			query.on('end', () => {
-				done();
-				return res.json(results);
-			});
-		});
-	}
+		secret: app.get('superSecret')
+	}), (req, res) => {
+  console.log(req);
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else if (req.user.role == 'regular') {
+    return res.status(400).json({ success: false, data: "Insufficient privileges" });
+  } else {
+
+    knex.select().from('users').orderBy('id')
+    .then((data) => {
+      console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
 });
 
 router.post('/auth/login', function(req, res, next) {
@@ -149,7 +138,7 @@ router.post('/auth/login', function(req, res, next) {
 		} else {
 			//user has authenticated correctly thus we create a JWT token
 			var token = jwt.sign(user, app.get('superSecret'));
-			console.log(user.role);
+			console.log('auth/login-user role: ', user.role);
 			return res.json({ success: true, role: user.role, token: token });
 		}
 	})(req, res, next);
@@ -192,45 +181,6 @@ router.post('/auth/register', function(req, res, next) {
 		}
   });
 	// >> TODO transporter.sendMail() is invoked after insert, we should make use of it in time!
-
-	// 	// SQL Query > Select Data To Check If Email Already Exists
-	// 	client.query("SELECT * FROM users WHERE email = '" + data.email + "' ORDER BY id ASC",
-	// 		function(err, result) {
-	// 			var user = result.rows[0];
-	// 			if (user) {
-	// 				return res.status(400).json({ success: false, data: 'User already exists. Please try again.' });
-	// 			} else {
-
-	// 				// SQL Query > Insert Data
-	// 				client.query('INSERT INTO users(email, password, firstname, lastname, verify_token, role) values($1, $2, $3, $4, $5, $6) RETURNING *', [data.email, data.password, data.firstName, data.lastName, data.verify_token, data.role],
-	// 					function(err, result) {
-	// 						if (err) {
-	// 							return res.status(500).json({ success: false, data: err });
-	// 						} else {
-	// 							var text = 'Hi ' + data.firstName + '! Welcome to Vue Boilerplate. Please click the following link to verify your email - http://localhost:8090/verify/' + result.rows[0].id + '/' + ranString + '';
-	// 							var mailOptions = {
-	// 								from: 'patrickbollenbachcc@gmail.com', // sender address
-	// 								to: data.email, // list of receivers
-	// 								subject: 'Vue Boilerplate - ' + data.email + ' Email Verification', // Subject line
-	// 								text: text //, // plaintext body
-	// 									// html: '<b>Hello world ✔</b>' // You can choose to send an HTML body instead
-	// 							};
-	// 							transporter.sendMail(mailOptions, function(error, info) {
-	// 								if (error) {
-	// 									console.log(error);
-	// 									return res.json({ success: false, info: "Something went wrong." });
-	// 								} else {
-	// 									console.log('Message sent: ' + info.response + text);
-	// 									return res.json({ success: true, info: "Registered account and sent verification email." });
-	// 								};
-	// 							});
-	// 						}
-	// 					}
-	// 				);
-	// 			};
-	// 		}
-	// 	)
-	// });
 });
 
 router.post('/auth/reset', function(req, res) {
@@ -486,6 +436,14 @@ router.delete('/notes/:note_id', (req, res, next) => {
 		});
 	});
 });
+
+
+
+
+
+
+
+
 
 //Server port
 app.use('/api', router);
