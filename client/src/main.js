@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import vSelect from 'vue-select'
+Vue.component(vSelect)
 import Router from 'vue-router';
 import Resource from 'vue-resource';
 import App from './App';
@@ -33,8 +35,8 @@ export var router = new Router({
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
 		{ path: '/notes', component: Notes },
 		{ path: '/verify', component: Verify },
-		{ path: '/forgotpassword', component: ForgotPassword },	
-		{ path: '/reset/:token', component: ResetPassword },	
+		{ path: '/forgotpassword', component: ForgotPassword },
+		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle }
 	]
