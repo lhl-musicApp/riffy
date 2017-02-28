@@ -457,7 +457,24 @@ router.delete('/notes/:note_id', (req, res, next) => {
 });
 
 
-
+/////
+router.get('/search', ejwt({
+		secret: app.get('superSecret')
+	}), (req, res) => {
+  console.log(req);
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else {
+    knex.select().from('users').orderBy('id')
+    .then((data) => {
+      // console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
+});
 
 
 
