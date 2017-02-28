@@ -5,19 +5,19 @@
     <table class="table">
       <thead class="thead thead-inverse">
         <tr>
+          <th>ID</th>
           <th>Email</th>
           <th>First Name</th>
           <th>Last Name</th>
-          <th>ID</th>
           <th>Verified</th>
         </tr>
       </thead>
       <tbody v-for="user in users">
         <tr>
-          <td>{{ user.email }}</td>
-          <td>{{ user.firstname }}</td>
-          <td>{{ user.lastname }}</td>
           <td>{{ user.id }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
           <td>{{ user.verified_email }}</td>
         </tr>
       </tbody>
