@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config() //passed
 
 //Imports
 const express = require('express');
@@ -108,6 +108,7 @@ passport.deserializeUser(function(id, done) {
 		});
 	});
 });
+
 
 //User displaying Route
 router.get('/users', ejwt({
@@ -350,7 +351,9 @@ router.get('/verify/:id/:token', function(req, res) {
 	});
 });
 
-// DATA ROUTES
+
+
+// DATA ROUTES --> this is where pages are rendered
 router.get('/notes', (req, res) => {
 	const results = [];
 	// Get a Postgres client from the connection pool
@@ -486,7 +489,7 @@ router.delete('/notes/:note_id', (req, res, next) => {
 
 //Server port
 app.use('/api', router);
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, function() {
 	console.log('Boilerplate server listening on port ' + port);
 })
