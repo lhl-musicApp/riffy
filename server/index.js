@@ -352,27 +352,36 @@ router.get('/verify/:id/:token', function(req, res) {
 
 // DATA ROUTES
 router.get('/notes', (req, res) => {
-	const results = [];
-	// Get a Postgres client from the connection pool
-	pg.connect(connectionString, (err, client, done) => {
-		// Handle connection errors
-		if (err) {
-			done();
-			console.log(err);
-			return res.status(500).json({ success: false, data: err });
-		}
-		// SQL Query > Select Data
-		const query = client.query('SELECT * FROM notes ORDER BY createdon ASC;');
-		// Stream results back one row at a time
-		query.on('row', (row) => {
-			results.push(row);
-		});
-		// After all data is returned, close connection and return results
-		query.on('end', () => {
-			done();
-			return res.json(results);
-		});
+	// const resultsArr = [];
+	knex.select().from('users').then( function (result) {
+		    // return res.json({ success: true, message: 'ok' });
+		// console.log('results from notes: ', result)
+		  // results.push(result)çc\\efsdafsfd
+		return res.json(result);
+	}).catch(function (err) {
+		return res.status(500).json({ success: false, data: err });
 	});
+
+	// Get a Postgres client from the connection pool
+	// pg.connect(connectionString, (err, client, done) => {
+	// 	// Handle connection errors
+	// 	if (err) {
+	// 		done();
+	// 		console.log(err);
+	// 		return res.status(500).json({ success: false, data: err });
+	// 	}
+	// 	// SQL Query > Select Data
+	// 	const query = client.query('SELECT * FROM notes ORDER BY createdon ASC;');
+	// 	// Stream results back one row at a time
+	// 	query.on('row', (row) => {
+	// 		results.push(row);
+	// 	});
+	// 	// After all data is returned, close connection and return results
+	// 	query.on('end', () => {
+	// 		done();
+	// 		return res.json(results);
+	// 	});
+	// });
 });
 
 router.get('/notes/:note_id', (req, res) => {
