@@ -6,7 +6,7 @@ export var router = new Router({
 		{ path: '/users', component: Users, meta: { requiresAuth: true, requiresAdmin: true } },
 		{ path: '/register', component: Register, meta: { checksAuth: true } },
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
-		{ path: '/notes', component: Notes },
+		{ path: '/Main', component: Main },
 		{ path: '/verify', component: Verify },
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle }

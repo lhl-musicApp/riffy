@@ -304,11 +304,11 @@ router.get('/verify/:id/:token', function(req, res) {
 
 
 // DATA ROUTES --> this is where pages are rendered
-router.get('/notes', (req, res) => {
+router.get('/main', (req, res) => {
 	// const resultsArr = [];
 	knex.select().from('users').then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
-		console.log('results from notes: ', result)
+		console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
 		return res.json(result);
 	}).catch(function (err) {

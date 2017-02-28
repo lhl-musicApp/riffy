@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="container">
-    <h1>Note List</h1>
+<!--     <h1>Main List</h1>
     <hr>
     <form v-if="user.authenticated" v-on:submit.prevent="submit">
       <div v-show="error" class="alert alert-danger" role="alert">
@@ -16,48 +16,48 @@
       </div>
       <button type="submit" class="btn btn-primary">Create Item</button>
       <hr>
-    </form>
+    </form> -->
 
-<form id="main" v-cloak>
-  <div class="bar">
-      <!-- Create a binding between the searchString model and the text field -->
-    <input type="text" v-model="searchString" placeholder="Enter your search terms" />
-  </div>
+  <form id="main" v-cloak>
+    <div class="bar">
+        <!-- Create a binding between the searchString model and the text field -->
+      <input type="text" v-model="searchString" placeholder="Enter your search terms" />
+    </div>
 
-  <ul>
-        <!-- Render a li element for every entry in the computed filteredArticles array. -->
-    <li v-for="article in filteredArticles">
-      <div class="row">
-        <div class="col-sm-6 col-md-4" v-for="note in filteredArticles">
-          <div class="thumbnail">
-            <img src="" alt="">
-            <div class="caption">
-              <img src="http://www.fillmurray.com/200/200" alt="">
-              <h3>{{ note.first_name }} {{ note.last_name }}</h3>
-              <ul>
-                <li>{{ note.id }}</li>
-                <li>{{ note.user_city }}</li>
-                <li>{{ note.user_country }}</li>
-                <li>{{ note.user_influence }}</li>
-                <li>{{ note.isAvailable }}</li>
-                <li>{{ note.looking_for }}</li>
-              </ul>
+    <ul>
+          <!-- Render a li element for every entry in the computed filteredArticles array. -->
+      <li v-for="article in filteredArticles">
+        <div class="row">
+          <div class="col-sm-6 col-md-4" v-for="main in filteredArticles">
+            <div class="thumbnail">
+              <img src="" alt="">
+              <div class="caption">
+                <img src="http://www.fillmurray.com/200/200" alt="">
+                <h3>{{ main.first_name }} {{ main.last_name }}</h3>
+                <ul>
+                  <li>{{ main.id }}</li>
+                  <li>{{ main.user_city }}</li>
+                  <li>{{ main.user_country }}</li>
+                  <li>{{ main.user_influence }}</li>
+                  <li>{{ main.isAvailable }}</li>
+                  <li>{{ main.looking_for }}</li>
+                </ul>
 
 
-              <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
+                <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- <a v-bind:href="article.url"><img v-bind:src="article.image" /></a>
-      <p>{{article.title}}</p> -->
-    </li>
-  </ul>
+        <!-- <a v-bind:href="article.url"><img v-bind:src="article.image" /></a>
+        <p>{{article.title}}</p> -->
+      </li>
+    </ul>
 
-</form>
+  </form>
 
  <!--    <div class="row">
-      <div class="col-sm-6 col-md-4" v-for="note in notes">
+      <div class="col-sm-6 col-md-4" v-for="note in main">
         <div class="thumbnail">
           <img src="" alt="">
           <div class="caption">
@@ -86,7 +86,7 @@
           <th>Remove</th>
         </tr>
       </thead>
-      <tbody v-for="note in notes">
+      <tbody v-for="note in main">
         <tr>
           <td>{{ note.id }}</td>
           <td><router-link :to="{ name: 'noteSingle', params: { id: note.id }}">{{ note.title }}</router-link></td>
@@ -116,7 +116,7 @@ export default {
       searchString: "",
       user: auth.user,
       error: null,
-      notes: [],
+      main: [],
       body: {
         title: '',
         text: '',
@@ -124,56 +124,49 @@ export default {
     };
   },
   created () {
-    this.$http.get('notes').then(response => {
-      this.notes = response.data;
+    this.$http.get('main').then(response => {
+      this.main = response.data;
     });
   },
   computed: {
  // A computed property that holds only those articles that match the searchString.
-        filteredArticles: function () {
-            var articles_array = this.notes,
-                searchString = this.searchString;
+    filteredArticles: function () {
+      var articles_array = this.main,
+      searchString = this.searchString;
+      var stringArray = searchString.split(' ');
+      console.log('stringArray', stringArray);
 
-                var stringArray = searchString.split(' ');
-                console.log('stringArray', stringArray);
+      var searchArray = [];
 
-            var searchArray = [];
+      if(!searchString){
+        return articles_array;
+      }
 
-
-
-            if(!searchString){
-                return articles_array;
+      searchString = searchString.trim().toLowerCase();
+      console.log("searchString: ", searchString)
+      var loadArray = [];
+      articles_array = articles_array.filter(function(item){
+        for (var key in item) {
+            // console.log('obj[key]', typeof(item[key]));
+          if(typeof(item[key]) == typeof('string')){
+            if(item[key].toLowerCase().indexOf(stringArray[0]) !== -1){
+              console.log('item=>', item)
+              return loadArray.push(item);
             }
-
-            searchString = searchString.trim().toLowerCase();
-            console.log("searchString: ", searchString)
-            articles_array = articles_array.filter(function(item){
-              for (var key in item) {
-                  // console.log('obj[key]', typeof(item[key]));
-                if(typeof(item[key]) == typeof('string')){
-                  for(var i = 0; i > stringArray.length; i++){
-                    if(item[key].toLowerCase().indexOf(stringArray[i]) !== -1){
-                      console.log('item=>', item)
-                      return item;
-                    }
-                  }
-                }
-              }
-                // if(item.first_name.toLowerCase().indexOf(stringArray[0]) !== -1){
-                //     return item;
-                // }
-                // if(item.last_name.toLowerCase().indexOf(stringArray[1]) !== -1){
-                //     return item;
-                // }
-            })
-
-            // Return an array with the filtered data.
-            return articles_array;;
+            if(item[key].toLowerCase().indexOf(stringArray[1]) !== -1){
+              console.log('item=>', item)
+              return loadArray.push(item);
+            }
+          }
         }
+      })
+            // Return an array with the filtered data.
+      return loadArray;
+    }
   },
   methods: {
     remove (id) {
-      this.$http.delete('notes/' + id).then(response => {
+      this.$http.delete('main/' + id).then(response => {
         if (response.status == 200) {
            location.reload(true);
         }
@@ -182,7 +175,7 @@ export default {
     submit() {
       this.$validator.validateAll();
       if (!this.errors.any()) {
-        this.$http.post('notes', {
+        this.$http.post('main', {
           title: this.body.title,
           text: this.body.text,
         })

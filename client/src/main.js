@@ -11,7 +11,7 @@ import Register from './components/pages/Register.vue';
 import Hello from './components/pages/Hello.vue';
 import Login from './components/pages/Login.vue';
 import Users from './components/pages/Users.vue';
-import Notes from './components/pages/Notes.vue';
+import Main from './components/pages/Main.vue';
 import NoteSingle from './components/pages/NoteSingle.vue';
 import Verify from './components/pages/Verify.vue';
 import ForgotPassword from './components/pages/ForgotPassword.vue';
@@ -33,7 +33,7 @@ export var router = new Router({
 		{ path: '/users', component: Users, meta: { requiresAuth: true, requiresAdmin: true } },
 		{ path: '/register', component: Register, meta: { checksAuth: true } },
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
-		{ path: '/notes', component: Notes },
+		{ path: '/Main', component: Main },
 		{ path: '/verify', component: Verify },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },

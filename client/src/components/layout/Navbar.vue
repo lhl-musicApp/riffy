@@ -6,7 +6,7 @@
         <router-link to="/"><a class="nav-link">Home</a></router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/notes"><a class="nav-link">Notes</a></router-link>
+        <router-link to="/main"><a class="nav-link">Main</a></router-link>
       </li>
       <li class="nav-item">
         <router-link to="/login" v-if="!user.authenticated"><a class="nav-link">Login</a></router-link>
