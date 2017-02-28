@@ -32,9 +32,9 @@
         <tr>
           <td>{{ note.id }}</td>
           <td><router-link :to="{ name: 'noteSingle', params: { id: note.id }}">{{ note.title }}</router-link></td>
-          <td>{{ note.text }}</td>
-          <td>{{ note.createdby }}</td>
-          <td>{{ note.createdon }}</td>
+          <td>{{ note.id }}</td>
+          <td>{{ note.first_name }}</td>
+          <td>{{ note.last_name }}</td>
           <td>
             <a v-on:click="remove(note.id)">
               <i class="fa fa-trash"></i>
