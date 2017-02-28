@@ -100,31 +100,15 @@ passport.deserializeUser((id, done) => {
 		res.status(400).json(err);
 	});
 
-/////////////////
-	// User.findById(id, function(err, user) {});
-	// const results = [];
-	// // Get a Postgres client from the connection pool
-	// pg.connect(connectionString, (err, client, done) => {
-	// 	// SQL Query > Select Data
-	// 	const query = client.query('SELECT * FROM users WHERE id = ' + id + ' ORDER BY id ASC;');
-	// 	// Stream results back one row at a time
-	// 	query.on('row', (row) => {
-	// 		results.push(row);
-	// 	});
-	// 	// After all data is returned, close connection and return results
-	// 	query.on('end', () => {
-	// 		done(err, user);
-	// 	});
-	// });
-///////////////////
+
 });
 
 
-//User displaying Route
+// Admin User displaying Route
 router.get('/users', ejwt({
 		secret: app.get('superSecret')
 	}), (req, res) => {
-  console.log(req.user);
+
   if (!req.user) {
     return res.sendStatus(401)
   } else if (req.user.role == 'regular') {
