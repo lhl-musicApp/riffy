@@ -53,7 +53,7 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
   },
   function(username, password, done) {
-    console.log('username:', username);
+    console.log('from passport.use = >username:', username);
 
     knex.select().from('users').where({ email: username })
     .then((result) => {
@@ -148,7 +148,7 @@ router.post('/auth/login', function(req, res, next) {
 		} else {
 			//user has authenticated correctly thus we create a JWT token
 			var token = jwt.sign(user, app.get('superSecret'));
-			console.log('auth/login-user role: ', user.role);
+			console.log('auth/login-user toke =>: ', token);
 			return res.json({ success: true, role: user.role, token: token });
 		}
 	})(req, res, next);
