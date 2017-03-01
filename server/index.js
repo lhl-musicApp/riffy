@@ -445,12 +445,28 @@ router.get('/users/:user_id', ejwt({
     });
 });
 
-router.put('/users/:id', (req, res) => {
-  knex.select().from('users')
-  .then((data) =>{
-    res.json(data);
-  })
-})
+// PUT users/:id
+// router.put('/edituser', ejwt({
+//     secret: app.get('superSecret')
+//   })
+//   , (req, res) => {
+//   console.log(req.params);
+//   // Grab data from the URL parameters
+//   let param_id = req.user.id;
+//
+//   // knex.select().from('users').where({id: param_id})
+//   //   .then((data) => {
+//   //     let userdata = data[0];
+//   //     if (param_id === userdata.id) {
+//   //       res.json(data);
+//   //     } else {
+//   //       res.status(400).redirect('/index')
+//   //     }
+//   //   })
+//     .catch((err) => {
+//       res.status(400).json(err);
+//     });
+// })
 
 router.delete('/users/:id', (req, res) => {
   knex.select().from('users')

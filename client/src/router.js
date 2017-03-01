@@ -12,6 +12,7 @@ export var router = new Router({
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { checksAuth: true } }
+    // { name: 'userEditor', path: '/edituser', component: UserEditor, meta: { checksAuth: true } }
 	]
 });
 
