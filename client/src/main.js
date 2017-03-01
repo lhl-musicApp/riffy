@@ -14,6 +14,7 @@ import Users from './components/pages/Users.vue';
 import Main from './components/pages/Main.vue';
 import NoteSingle from './components/pages/NoteSingle.vue';
 import Verify from './components/pages/Verify.vue';
+import Search from './components/pages/Search.vue';
 import ForgotPassword from './components/pages/ForgotPassword.vue';
 import ResetPassword from './components/pages/ResetPassword.vue';
 
@@ -34,6 +35,7 @@ export var router = new Router({
 		{ path: '/register', component: Register, meta: { checksAuth: true } },
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
 		{ path: '/Main', component: Main },
+		{ path: '/search', component: Search },
 		{ path: '/verify', component: Verify },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
