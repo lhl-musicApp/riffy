@@ -445,12 +445,13 @@ router.get('/users/:user_id', ejwt({
     });
 });
 
-
+// Route for update form
 router.post('/users/:id/update', function(req, res) {
 
   console.log(req.params);
   // Grab data from the URL parameters
   let param_id = req.user.id;
+
   const result = {
     first_name: req.body.first_name,
     last_name: req.body.last_name
