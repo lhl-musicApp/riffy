@@ -11,6 +11,7 @@ import Register from './components/pages/Register.vue';
 import Hello from './components/pages/Hello.vue';
 import Login from './components/pages/Login.vue';
 import Users from './components/pages/Users.vue';
+// import UserEditor from './components/pages/UserEditor.vue';
 import UserSingle from './components/pages/UserSingle.vue';
 import Main from './components/pages/Main.vue';
 import NoteSingle from './components/pages/NoteSingle.vue';
@@ -41,6 +42,7 @@ export var router = new Router({
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } }
+		// { name: 'userEditor', path: '/edituser', component: UserSingle, meta: { requiresAuth: true } }
 	]
 });
 
