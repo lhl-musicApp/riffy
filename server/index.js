@@ -53,7 +53,7 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
   },
   function(username, password, done) {
-    console.log('username:', username);
+    // console.log('username:', username);
 
     knex.select().from('users').where({ email: username })
     .then((result) => {
@@ -106,7 +106,7 @@ passport.deserializeUser((id, done) => {
 router.get('/users', ejwt({
 		secret: app.get('superSecret')
 	}), (req, res) => {
-  console.log(req.user);
+  // console.log(req.user);
   if (!req.user) {
     return res.sendStatus(401)
   } else if (req.user.role == 'regular') {
@@ -130,7 +130,7 @@ router.post('/auth/login', function(req, res, next) {
 		} else {
 			//user has authenticated correctly thus we create a JWT token
 			var token = jwt.sign(user, app.get('superSecret'));
-			console.log('auth/login-user role: ', user.role);
+			// console.log('auth/login-user role: ', user.role);
 			return res.json({ success: true, role: user.role, token: token });
 		}
 	})(req, res, next);
@@ -495,6 +495,7 @@ router.put('/bands/:id', (req, res) => {
   })
 })
 
+
 router.delete('/bands/:id', (req, res) => {
   knex.select().from('bands')
   .then((data) =>{
@@ -509,6 +510,27 @@ router.get('/tracks', (req, res) => {
     res.json(data);
   })
 })
+
+/////
+router.get('/search',
+	// ejwt({ secret: app.get('superSecret')}),
+	(req, res) => {
+  console.log(req);
+  // if (!req.user) {
+  //   return res.sendStatus(401)
+  // } else {
+
+    knex.select().from('users').orderBy('id')
+    .then((data) => {
+      console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  // }
+});
+
 
 router.post('/tracks/new', (req, res) => {
   res.send('this is POST /tracks/new Page');
