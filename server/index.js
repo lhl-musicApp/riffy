@@ -53,7 +53,9 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
   },
   function(username, password, done) {
+
     console.log('from passport.use = >username:', username);
+
 
     knex.select().from('users').where({ email: username })
     .then((result) => {
@@ -131,7 +133,9 @@ router.post('/auth/login', function(req, res, next) {
 		} else {
 			//user has authenticated correctly thus we create a JWT token
 			var token = jwt.sign(user, app.get('superSecret'));
+
 			console.log('auth/login-user toke =>: ', token);
+
 			return res.json({ success: true, role: user.role, token: token });
 		}
 	})(req, res, next);
@@ -455,86 +459,108 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-// // bands
-// router.get('/bands', (req, res) => {
-//   knex.select().from('bands')
-//   .then((data) =>{
-//     res.json(data);
-//   })
-// })
+// bands
+router.get('/bands', (req, res) => {
+  knex.select().from('bands')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
-// router.post('/bands/new', (req, res) => {
-//   res.send('this is POST /bands/new Page');
-// })
+router.post('/bands/new', (req, res) => {
+  res.send('this is POST /bands/new Page');
+})
 
-// router.get('/bands/:band_id', ejwt({
-//     secret: app.get('superSecret')
-//   })
-//   , (req, res) => {
-//   console.log();
-//   // Grab data from the URL parameters
-//   let param_id = req.user.id;
+router.get('/bands/:band_id', ejwt({
+    secret: app.get('superSecret')
+  })
+  , (req, res) => {
+  console.log();
+  // Grab data from the URL parameters
+  let param_id = req.user.id;
 
-//   knex.select().from('bands').where({id: param_id})
-//     .then((data) => {
-//       let userdata = data[0];
-//       if (param_id === userdata.id) {
-//         res.json(data);
-//       } else {
-//         res.status(400).redirect('/index')
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(400).json(err);
-//     });
-// });
+  knex.select().from('bands').where({id: param_id})
+    .then((data) => {
+      let userdata = data[0];
+      if (param_id === userdata.id) {
+        res.json(data);
+      } else {
+        res.status(400).redirect('/index')
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
 
-// router.put('/bands/:id', (req, res) => {
-//   knex.select().from('bands')
-//   .then((data) =>{
-//     res.json(data);
-//   })
-// })
+router.put('/bands/:id', (req, res) => {
+  knex.select().from('bands')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
-// router.delete('/bands/:id', (req, res) => {
-//   knex.select().from('bands')
-//   .then((data) =>{
-//     res.json(data);
-//   })
-// })
 
-// // tracks
-// router.get('/tracks', (req, res) => {
-//   knex.select().from('tracks')
-//   .then((data) =>{
-//     res.json(data);
-//   })
-// })
+router.delete('/bands/:id', (req, res) => {
+  knex.select().from('bands')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
-// router.post('/tracks/new', (req, res) => {
-//   res.send('this is POST /tracks/new Page');
-// })
+// tracks
+router.get('/tracks', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
-// router.get('/tracks/:id', (req, res) => {
-//   knex.select().from('tracks')
-//   .then((data) =>{
-//     res.json(data);
-//   })
-// })
+/////
+router.get('/search',
+	// ejwt({ secret: app.get('superSecret')}),
+	(req, res) => {
+  console.log(req);
+  // if (!req.user) {
+  //   return res.sendStatus(401)
+  // } else {
 
-// router.put('/tracks/:id', (req, res) => {
-//   knex.select().from('tracks')
-//   .then((data) =>{
-//     res.json(data);
-//   })
-// })
+    knex.select().from('users').orderBy('id')
+    .then((data) => {
+      console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  // }
+});
 
-// router.delete('/tracks/:id', (req, res) => {
-//   knex.select().from('tracks')
-//   .then((data) =>{
-//     res.json(data);
-//   })
-// })
+
+router.post('/tracks/new', (req, res) => {
+  res.send('this is POST /tracks/new Page');
+})
+
+router.get('/tracks/:id', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
+
+router.put('/tracks/:id', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
+
+router.delete('/tracks/:id', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
 
 //Server port
