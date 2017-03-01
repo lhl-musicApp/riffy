@@ -11,6 +11,7 @@ import Register from './components/pages/Register.vue';
 import Hello from './components/pages/Hello.vue';
 import Login from './components/pages/Login.vue';
 import Users from './components/pages/Users.vue';
+import UserSingle from './components/pages/UserSingle.vue';
 import Main from './components/pages/Main.vue';
 import NoteSingle from './components/pages/NoteSingle.vue';
 import Verify from './components/pages/Verify.vue';
@@ -38,7 +39,8 @@ export var router = new Router({
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
-		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle }
+		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
+    { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } }
 	]
 });
 

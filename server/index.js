@@ -99,24 +99,6 @@ passport.deserializeUser((id, done) => {
 	.catch((err) => {
 		res.status(400).json(err);
 	});
-
-/////////////////
-	// User.findById(id, function(err, user) {});
-	// const results = [];
-	// // Get a Postgres client from the connection pool
-	// pg.connect(connectionString, (err, client, done) => {
-	// 	// SQL Query > Select Data
-	// 	const query = client.query('SELECT * FROM users WHERE id = ' + id + ' ORDER BY id ASC;');
-	// 	// Stream results back one row at a time
-	// 	query.on('row', (row) => {
-	// 		results.push(row);
-	// 	});
-	// 	// After all data is returned, close connection and return results
-	// 	query.on('end', () => {
-	// 		done(err, user);
-	// 	});
-	// });
-///////////////////
 });
 
 
@@ -324,27 +306,6 @@ router.get('/main', (req, res) => {
 	}).catch(function (err) {
 		return res.status(500).json({ success: false, data: err });
 	});
-
-	// Get a Postgres client from the connection pool
-	// pg.connect(connectionString, (err, client, done) => {
-	// 	// Handle connection errors
-	// 	if (err) {
-	// 		done();
-	// 		console.log(err);
-	// 		return res.status(500).json({ success: false, data: err });
-	// 	}
-	// 	// SQL Query > Select Data
-	// 	const query = client.query('SELECT * FROM notes ORDER BY createdon ASC;');
-	// 	// Stream results back one row at a time
-	// 	query.on('row', (row) => {
-	// 		results.push(row);
-	// 	});
-	// 	// After all data is returned, close connection and return results
-	// 	query.on('end', () => {
-	// 		done();
-	// 		return res.json(results);
-	// 	});
-	// });
 });
 
 router.get('/notes/:note_id', (req, res) => {
@@ -456,12 +417,123 @@ router.delete('/notes/:note_id', (req, res, next) => {
 	});
 });
 
+///////////////////////
+router.get('/users/:user_id', ejwt({
+    secret: app.get('superSecret')
+  })
+  , (req, res) => {
+  console.log(req.params);
+  // Grab data from the URL parameters
+  let param_id = req.user.id;
 
+  knex.select().from('users').where({id: param_id})
+    .then((data) => {
+      let userdata = data[0];
+      if (param_id === userdata.id) {
+        res.json(data);
+      } else {
+        res.status(400).redirect('/index')
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
 
+router.put('/users/:id', (req, res) => {
+  knex.select().from('users')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
+router.delete('/users/:id', (req, res) => {
+  knex.select().from('users')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
+// bands
+router.get('/bands', (req, res) => {
+  knex.select().from('bands')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
+router.post('/bands/new', (req, res) => {
+  res.send('this is POST /bands/new Page');
+})
 
+router.get('/bands/:band_id', ejwt({
+    secret: app.get('superSecret')
+  })
+  , (req, res) => {
+  console.log();
+  // Grab data from the URL parameters
+  let param_id = req.user.id;
+
+  knex.select().from('bands').where({id: param_id})
+    .then((data) => {
+      let userdata = data[0];
+      if (param_id === userdata.id) {
+        res.json(data);
+      } else {
+        res.status(400).redirect('/index')
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
+
+router.put('/bands/:id', (req, res) => {
+  knex.select().from('bands')
+  .then((data) =>{
+    res.json(data);
+  })
+})
+
+router.delete('/bands/:id', (req, res) => {
+  knex.select().from('bands')
+  .then((data) =>{
+    res.json(data);
+  })
+})
+
+// tracks
+router.get('/tracks', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
+
+router.post('/tracks/new', (req, res) => {
+  res.send('this is POST /tracks/new Page');
+})
+
+router.get('/tracks/:id', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
+
+router.put('/tracks/:id', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
+
+router.delete('/tracks/:id', (req, res) => {
+  knex.select().from('tracks')
+  .then((data) =>{
+    res.json(data);
+  })
+})
 
 
 //Server port
