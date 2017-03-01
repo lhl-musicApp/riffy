@@ -8,6 +8,7 @@ export var router = new Router({
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
 		{ path: '/Main', component: Main },
 		{ path: '/verify', component: Verify },
+		{ path: '/search', component: Search },
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { checksAuth: true } }
