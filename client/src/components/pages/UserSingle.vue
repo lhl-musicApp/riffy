@@ -92,7 +92,9 @@ export default {
   computed: {},
   methods: {
     submit(){
-     console.log(this.profile)
+      // TODO *Dustin, make this submit work with the server.
+      console.log(this.profile.first_name)
+
     }
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
