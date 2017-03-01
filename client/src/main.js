@@ -40,7 +40,7 @@ export var router = new Router({
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
-    { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } }
+    { name: '/userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } }
 	]
 });
 
