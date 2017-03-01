@@ -445,6 +445,33 @@ router.get('/users/:user_id', ejwt({
     });
 });
 
+
+router.post('/users/:id/update', function(req, res) {
+
+  console.log(req.params);
+  // Grab data from the URL parameters
+  let param_id = req.user.id;
+  const result = {
+    first_name: req.body.first_name,
+    last_name: req.body.last_name
+  };
+
+  knex().where({id: param_id}).update(result)
+    .then((data) => {
+
+      let userdata = data[0];
+      if (param_id === userdata.id) {
+        console.log('profile update results => ', data)
+        res.json(data);
+      } else {
+        res.status(400).redirect('/index')
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+  });
+})
+
 // PUT users/:id
 // router.put('/edituser', ejwt({
 //     secret: app.get('superSecret')
