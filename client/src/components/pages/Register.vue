@@ -1,4 +1,4 @@
-
+<template>
   <div class="container">
     <h1>Register An Account</h1>
     <hr>
