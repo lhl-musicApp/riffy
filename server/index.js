@@ -450,22 +450,15 @@ router.post('/users/update', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
   let param_id = req.user.id;
-  console.log('Req to post update', req.body);
-  // res.send('works good!')
-  // Grab data from the URL parameters
-  // let param_id = req.user.id;
-  console.log("req.user.first_name", req.body.first_name)
-  const result = {
-    first_name: req.body.first_name
-  };
 
-  knex.select().from('users').where({id: param_id}).update(result)
-    .then((data) => {
-      console.log('update data', data)
-        res.json(data);
+  const result = req.body;
+
+  knex.select().from('users').returning('*')
+		.where({id: param_id}).update(result)
+		.then((data) => {
+			res.json(data[0]);
     })
     .catch((err) => {
-      console.log('profile update error => ', err)
       res.status(400).json(err);
     });
 })
