@@ -500,7 +500,7 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-////
+//// ok
 router.get('/bands',
   ejwt({
     secret: app.get('superSecret')
@@ -523,23 +523,28 @@ router.get('/bands',
 
 
 
-//////
+// New Band - Not Done
 router.post('/bands/new', (req, res) => {
   res.send('this is POST /bands/new Page');
 })
+
 
 router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
   , (req, res) => {
+  console.log("Req User check in Band Detail: ", req.user);
+  console.log("Param in Get Band: ", req.params);
 
   // Grab data from the URL parameters
-  let param_id = req.user.id;
+  let param_id = req.params.band_id;
 
-  knex.select().from('bands').where({id: param_id})
+  knex.select().from('bands').where({ id: param_id })
     .then((data) => {
-      let userdata = data[0];
-      if (param_id === userdata.id) {
+      console.log('band id data: ', data);
+      // let banddata = data[0];
+      // if (param_id === banddata.id) {
+      //   console.log(data);
         res.json(data);
       } else {
         res.status(400).redirect('/index')
