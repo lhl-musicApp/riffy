@@ -539,6 +539,8 @@ router.get('/bands/:band_id', ejwt({
       // if (param_id === banddata.id) {
       //   console.log(data);
         res.json(data);
+      // } else {
+      //   res.status(400).redirect('/index')
     })
     .catch((err) => {
       res.status(400).json(err);
