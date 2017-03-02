@@ -134,7 +134,7 @@ router.post('/auth/login', function(req, res, next) {
 			//user has authenticated correctly thus we create a JWT token
 			var token = jwt.sign(user, app.get('superSecret'));
 
-			console.log('auth/login-user toke =>: ', token);
+			// console.log('auth/login-user toke =>: ', token);
 
 			return res.json({ success: true, role: user.role, token: token });
 		}
@@ -153,7 +153,8 @@ router.post('/auth/register', function(req, res, next) {
 		lastName: req.body.lastName,
 		password: bcrypt.hashSync(req.body.password, saltRounds),
 		verify_token: ranString,
-		role: 'regular'
+		role: 'regular',
+    verified_email: true
 	};
 	// console.log('data:',data)
 
@@ -188,9 +189,9 @@ router.post('/auth/reset', function(req, res) {
 		charset: 'alphabetic'
 	});
 	pg.connect(connectionString, (error, client) => {
-		knex.select().from('users').where('email', email).then(function(err, result){
-			console.log(result)
-		})
+		// knex.select().from('users').where('email', email).then(function(err, result){
+		// 	// console.log(result)
+		// })
 		client.query("SELECT * FROM users WHERE email = '" + email + "'", function(err, result) {
 			var user = result.rows[0];
 			if (!user) {
@@ -305,7 +306,7 @@ router.get('/main', (req, res) => {
 	// const resultsArr = [];
 	knex.select().from('users').then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
-		console.log('results from main: ', result)
+		// console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
 		return res.json(result);
 	}).catch(function (err) {
@@ -425,9 +426,8 @@ router.delete('/notes/:note_id', (req, res, next) => {
 // Get user profile
 router.get('/users/:user_id', ejwt({
     secret: app.get('superSecret')
-  })
-  , (req, res) => {
-  console.log(req.params);
+  }), (req, res) => {
+  // console.log(req.params);
   // Grab data from the URL parameters
   let param_id = req.user.id;
 
@@ -444,6 +444,24 @@ router.get('/users/:user_id', ejwt({
       res.status(400).json(err);
     });
 });
+
+// Route for update form
+router.post('/users/update', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+  let param_id = req.user.id;
+
+  const result = req.body;
+
+  knex.select().from('users').returning('*')
+		.where({id: param_id}).update(result)
+		.then((data) => {
+			res.json(data[0]);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+})
 
 // PUT users/:id
 // router.put('/edituser', ejwt({
@@ -475,14 +493,30 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-// bands
-router.get('/bands', (req, res) => {
-  knex.select().from('bands')
-  .then((data) =>{
-    res.json(data);
-  })
-})
+////
+router.get('/bands',
+  ejwt({
+    secret: app.get('superSecret')
+  }),
+  (req, res) => {
 
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else {
+    knex.select().from('bands')
+    .then((data) => {
+      // console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
+});
+
+
+
+//////
 router.post('/bands/new', (req, res) => {
   res.send('this is POST /bands/new Page');
 })
@@ -491,7 +525,7 @@ router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
   , (req, res) => {
-  console.log();
+
   // Grab data from the URL parameters
   let param_id = req.user.id;
 
@@ -536,14 +570,14 @@ router.get('/tracks', (req, res) => {
 router.get('/search',
 	// ejwt({ secret: app.get('superSecret')}),
 	(req, res) => {
-  console.log(req);
+  // console.log(req);
   // if (!req.user) {
   //   return res.sendStatus(401)
   // } else {
 
     knex.select().from('users').orderBy('id')
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       res.json(data);
     })
     .catch((err) => {

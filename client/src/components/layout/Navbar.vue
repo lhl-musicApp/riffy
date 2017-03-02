@@ -9,6 +9,9 @@
         <router-link to="/main"><a class="nav-link">Main</a></router-link>
       </li>
       <li class="nav-item">
+        <router-link to="/bands"><a class="nav-link">Bands</a></router-link>
+      </li>
+      <li class="nav-item">
         <router-link to="/login" v-if="!user.authenticated"><a class="nav-link">Login</a></router-link>
       </li>
       <li class="nav-item">
@@ -18,7 +21,7 @@
         <router-link to="/users" v-if="user.authenticated && user.role == 'admin'"><a class="nav-link">Admin</a></router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/users/12"><a class="nav-link">Profile</a></router-link>
+        <router-link to="/users/profile"><a class="nav-link">Profile</a></router-link>
       </li>
       <li class="nav-item">
         <a href="#" @click="logout()" v-if="user.authenticated" class="nav-link">Log Out</a>
