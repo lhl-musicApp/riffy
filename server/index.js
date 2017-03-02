@@ -450,22 +450,15 @@ router.post('/users/update', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
   let param_id = req.user.id;
-  console.log('Req to post update', req.body);
-  // res.send('works good!')
-  // Grab data from the URL parameters
-  // let param_id = req.user.id;
-  console.log("req.user.first_name", req.body.first_name)
-  const result = {
-    first_name: req.body.first_name
-  };
 
-  knex.select().from('users').where({id: param_id}).update(result)
-    .then((data) => {
-      console.log('update data', data)
-        res.json(data);
+  const result = req.body;
+
+  knex.select().from('users').returning('*')
+		.where({id: param_id}).update(result)
+		.then((data) => {
+			res.json(data[0]);
     })
     .catch((err) => {
-      console.log('profile update error => ', err)
       res.status(400).json(err);
     });
 })
@@ -500,30 +493,51 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-// bands
-router.get('/bands', (req, res) => {
-  knex.select().from('bands')
-  .then((data) =>{
-    res.json(data);
-  })
-})
+//// ok
+router.get('/bands',
+  ejwt({
+    secret: app.get('superSecret')
+  }),
+  (req, res) => {
 
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else {
+    knex.select().from('bands')
+    .then((data) => {
+      // console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
+});
+
+
+
+// New Band - Not Done
 router.post('/bands/new', (req, res) => {
   res.send('this is POST /bands/new Page');
 })
+
 
 router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
   , (req, res) => {
+  console.log("Req User check in Band Detail: ", req.user);
+  console.log("Param in Get Band: ", req.params);
 
   // Grab data from the URL parameters
-  let param_id = req.user.id;
+  let param_id = req.params.band_id;
 
-  knex.select().from('bands').where({id: param_id})
+  knex.select().from('bands').where({ id: param_id })
     .then((data) => {
-      let userdata = data[0];
-      if (param_id === userdata.id) {
+      console.log('band id data: ', data);
+      // let banddata = data[0];
+      // if (param_id === banddata.id) {
+      //   console.log(data);
         res.json(data);
       } else {
         res.status(400).redirect('/index')

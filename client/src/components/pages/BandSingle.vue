@@ -2,7 +2,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-lg-6">
+<!--       <div class="col-lg-6">
         <form id="registration" v-on:submit.prevent="submit">
           <div class="registration form-group">
             <label for="first_name">First Name</label>
@@ -43,65 +43,52 @@
             <button form="registration" name="registration" type="submit">Save</button>
           </div>
         </form>
-      </div>
+      </div> -->
 
-      <div class="user col-lg-6">
-        <p>First Name: {{ user.first_name }}</p>
-        <p>Last Name: {{ user.last_name }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>email: {{ user.email }}</p>
-        <span>Gender: {{ user.gender }}</span>
-        <p>City: {{ user.user_city }}</p>
-        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>Soundcloud Link: {{ user.soundcloud_link }} </p>
-        <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
-        <br>
-        <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
+      <div class="band col-lg-6">
+        <p>First Name: {{ band.id }}</p>
+        <p>Last Name: {{ band.band_name }}</p>
+        <p>Influence: {{ band.user_influence }}</p>
+        <p style="white-space: pre">{{ band.band_bio }}</p>
+        <p>Influence: {{ band.band_influence }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
+import auth from '../../auth.js'
 export default {
   data () {
     return {
       error: null,
-      user: {
-        first_name: '',
-        last_name: '',
-        email: '',
-        gender: '',
-        user_city: '',
-        user_country: '',
-        user_bio: '',
-        user_influence: '',
-        soundcloud_link: '',
-        isAvailable: false,
-        looking_for: false
-      }
-    };
+      band: []
+    }
   },
-
-
-
-
   created () {
-    console.log('this.$route.params.id', this.$route.params.id)
-    this.$http.get('users/' + this.$route.params.id).then(response => {
-      this.user = response.data[0];
+    this.$http.get('bands/' + this.$route.params.id).then(response => {
+      this.band = response.data[0];
     });
+
   },
   computed: {},
   methods: {
-    submit(){
-      this.$http.post('users/update', this.user)
-        .then(response => {
-        this.user = response.body;
-      });
-    }
+    // submit(){
+    //   // TODO *Dustin, make this submit work with the server.
+
+    //   console.log(this.user.first_name)
+
+    //   const stuff = {first_name: this.user.first_name}
+    //   // const payload = {first_name: this.user.first_name}
+
+    //   this.$http.post('users/update', {
+    //     first_name : this.user.first_name
+    //   })
+    //     .then(response => {
+    //     this.user = response
+    //     console.log('this.user =>', this.user)
+    //   });
+    // }
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
   //       title: this.note.title,

@@ -9,6 +9,9 @@
         <router-link to="/main"><a class="nav-link">Main</a></router-link>
       </li>
       <li class="nav-item">
+        <router-link to="/bands"><a class="nav-link">Bands</a></router-link>
+      </li>
+      <li class="nav-item">
         <router-link to="/login" v-if="!user.authenticated"><a class="nav-link">Login</a></router-link>
       </li>
       <li class="nav-item">
