@@ -11,6 +11,7 @@ import Register from './components/pages/Register.vue';
 import Hello from './components/pages/Hello.vue';
 import Login from './components/pages/Login.vue';
 import Users from './components/pages/Users.vue';
+import DragDrop from './components/pages/DragDrop.vue';
 // import UserEditor from './components/pages/UserEditor.vue';
 import UserSingle from './components/pages/UserSingle.vue';
 import Main from './components/pages/Main.vue';
@@ -41,6 +42,7 @@ export var router = new Router({
 		{ path: '/Main', component: Main },
 		{ path: '/search', component: Search },
 		{ path: '/verify', component: Verify },
+    { path: '/drop', component: DragDrop },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
