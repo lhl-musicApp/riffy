@@ -44,16 +44,6 @@ export default {
       console.log(this);
     });
   }
-  // ,
-  // methods: {
-  //   remove (id) {
-  //     this.$http.delete('auth/users/' + id).then(response => {
-  //       if (response.status == 200) {
-  //          location.reload(true);
-  //       }
-  //     })
-  //   },
-  // }
 }
 </script>
 
