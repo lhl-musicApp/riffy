@@ -52,7 +52,7 @@
         <p>email: {{ user.email }}</p>
         <span>Gender: {{ user.gender }}</span>
         <p>City: {{ user.user_city }}</p>
-        <p style="white-space: pre">{{ user.user_bio }}</p>
+        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
         <p>Influence: {{ user.user_influence }}</p>
         <p>Soundcloud Link: {{ user.soundcloud_link }} </p>
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
@@ -97,19 +97,9 @@ export default {
   computed: {},
   methods: {
     submit(){
-      // TODO *Dustin, make this submit work with the server.
-
-      console.log(this.user.first_name)
-
-      const stuff = {first_name: this.user.first_name}
-      // const payload = {first_name: this.user.first_name}
-
-      this.$http.post('users/update', {
-        first_name : this.user.first_name
-      })
+      this.$http.post('users/update', this.user)
         .then(response => {
-        this.user = response
-        console.log('this.user =>', this.user)
+        this.user = response.body;
       });
     }
   //   edit() {
