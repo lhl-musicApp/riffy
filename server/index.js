@@ -500,14 +500,30 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-// bands
-router.get('/bands', (req, res) => {
-  knex.select().from('bands')
-  .then((data) =>{
-    res.json(data);
-  })
-})
+////
+router.get('/bands',
+  ejwt({
+    secret: app.get('superSecret')
+  }),
+  (req, res) => {
 
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else {
+    knex.select().from('bands')
+    .then((data) => {
+      // console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
+});
+
+
+
+//////
 router.post('/bands/new', (req, res) => {
   res.send('this is POST /bands/new Page');
 })
