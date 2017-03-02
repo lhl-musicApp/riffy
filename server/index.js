@@ -570,12 +570,36 @@ router.get('/tracks', (req, res) => {
 router.get('/search',
 	// ejwt({ secret: app.get('superSecret')}),
 	(req, res) => {
-  // console.log(req);
+
+  console.log(req.query);
+
   // if (!req.user) {
   //   return res.sendStatus(401)
   // } else {
+	let city1 = req.query.user_city[0] // vancouver
+	console.log(city1);
+	let city2 = req.query.user_city[1];
+	console.log(city2);
 
-    knex.select().from('users').orderBy('id')
+	let gender1 = req.query.instrument[0] // vancouver
+	console.log(gender1);
+	let gender2 = req.query.instrument[1];
+	console.log(gender2);
+
+	// AND
+    // knex.select().from('users').where({ user_city: city1, gender: gender1})
+		// .orWhere({ user_city: city2, gender: gender1})
+	// multi - multi
+		knex.select().from('users').where({ user_city: city1, gender: gender1})
+		// .orWhere({ user_city: city1, gender: gender2})
+		// .orWhere({ user_city: city2, gender: gender1})
+		// .orWhere({ user_city: city2, gender: gender2})
+		//
+		// knex('skill_user')
+		// .join('users', 'users.id', 'skill_user.user_id')
+		// .join('skills', 'skills.id', 'skill_user.skill_id')
+		// .where({ user_city: city1, gender: gender1})
+		// .orWhere({ user_city: city2, gender: gender1})
     .then((data) => {
       // console.log(data);
       res.json(data);
