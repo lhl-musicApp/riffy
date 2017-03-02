@@ -18,7 +18,7 @@
         <router-link to="/users" v-if="user.authenticated && user.role == 'admin'"><a class="nav-link">Admin</a></router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/users/12"><a class="nav-link">Profile</a></router-link>
+        <router-link to="/users/profile"><a class="nav-link">Profile</a></router-link>
       </li>
       <li class="nav-item">
         <a href="#" @click="logout()" v-if="user.authenticated" class="nav-link">Log Out</a>
