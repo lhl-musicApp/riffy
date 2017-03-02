@@ -1,6 +1,14 @@
 <template lang="html">
   <div>
     <h1>Drag and Drop Page</h1>
+    <div v-if="!image">
+    <h2>Select an image</h2>
+    <input type="file" @change="onFileChange">
+  </div>
+  <div v-else>
+    <img :src="image" />
+    <button @click="removeImage">Remove image</button>
+  </div>
   </div>
 </template>
 
@@ -9,7 +17,7 @@ import auth from '../../auth.js'
 export default {
   data () {
     return {
-      drop: {}
+      image: ''
 
     };
   },
@@ -22,11 +30,38 @@ export default {
 
   },
   methods: {
+    onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
 
+      reader.onload = (e) => {
+        vm.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      console.log(reader);
+    },
+    removeImage: function (e) {
+      this.image = '';
+    }
   },
   components: {}
 };
 </script>
 
 <style lang="css">
+img {
+  width: 30%;
+  margin: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+button {}
 </style>
+
