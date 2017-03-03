@@ -522,9 +522,9 @@ router.post('/upload', upload.array(), (req, res) => {
 
 
 
-    fs.writeFile(__dirname + "/upload/out.jpeg", imageBuffer.data, 'base64', function(err) {
+    fs.writeFile(__dirname + "/../client/src/uploads/out.jpeg", imageBuffer.data, 'base64', function(err) {
         if (err) console.log(err);
-        fs.readFile(__dirname + "/upload/out.jpeg", function(err, data) {
+        fs.readFile(__dirname + "/../client/src/uploads/out.jpeg", function(err, data) {
             if (err) throw err;
             console.log('reading file...', data.toString('base64'));
             res.send(data);
@@ -654,7 +654,7 @@ router.delete('/tracks/:id', (req, res) => {
   })
 })
 
-
+app.use('/uploads', express.static('upload'))
 //Server port
 app.use('/api', router);
 const port = process.env.PORT || 3000;
