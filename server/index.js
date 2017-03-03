@@ -439,15 +439,17 @@ router.get('/users/:user_id', ejwt({
   }), (req, res) => {
   // console.log(req.params);
   // Grab data from the URL parameters
-  let param_id = req.user.id;
+  console.log(req.params);
+  let param_id = req.params.user_id;
+
 
   knex.select().from('users').where({id: param_id})
     .then((data) => {
       let userdata = data[0];
-      if (param_id === userdata.id) {
-        res.json(data);
+      if (!userdata) {
+        res.status(400).redirect('/login')
       } else {
-        res.status(400).redirect('/index')
+        res.json(data);
       }
     })
     .catch((err) => {
@@ -456,11 +458,11 @@ router.get('/users/:user_id', ejwt({
 });
 
 // Route for update form
-router.post('/users/update', ejwt({
+router.post('/users/:id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
   let param_id = req.user.id;
-
+  console.log(user);
   const result = req.body;
 
   knex.select().from('users').returning('*')
