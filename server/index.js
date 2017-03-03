@@ -494,12 +494,7 @@ router.delete('/users/:id', (req, res) => {
 })
 
 //// ok
-router.get('/bands',
-  ejwt({
-    secret: app.get('superSecret')
-  }),
-  (req, res) => {
-
+router.get('/bands', ejwt({ secret: app.get('superSecret') }), (req, res) => {
   if (!req.user) {
     return res.sendStatus(401)
   } else {
@@ -526,21 +521,43 @@ router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
   , (req, res) => {
-  console.log("Req User check in Band Detail: ", req.user);
-  console.log("Param in Get Band: ", req.params);
+  // console.log("Req User check in Band Detail: ", req.user);
+  // console.log("Param in Get Band: ", req.params);
 
   // Grab data from the URL parameters
   let param_id = req.params.band_id;
 
   knex.select().from('bands').where({ id: param_id })
     .then((data) => {
-      console.log('band id data: ', data);
+      // console.log('band id data: ', data);
       // let banddata = data[0];
       // if (param_id === banddata.id) {
       //   console.log(data);
         res.json(data);
       // } else {
       //   res.status(400).redirect('/index')
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
+
+router.get('/bandtracks/:band_id'
+  , ejwt({
+    secret: app.get('superSecret')
+  })
+  , (req, res) => {
+  // console.log("Req User check in Band Detail: ", req.user);
+  // console.log("Param in Get Band Tracks: ", req.params);
+  let param_id = req.params.band_id;
+
+  knex('bands')
+  .join('tracks', 'bands.id', 'tracks.band_id')
+    .select('tracks.id as track_id', 'bands.id as band_id', 'tracks.track_name as track_name', 'tracks.isCreator as isCreator', 'tracks.original_artist as original_artist', 'tracks.soundcloud_link as soundcloud_link', 'tracks.isPublished as isPublished')
+    .where({ band_id: param_id })
+    .then((data) => {
+      // console.log('band track id data: ', data);
+        res.json(data);
     })
     .catch((err) => {
       res.status(400).json(err);
@@ -563,12 +580,46 @@ router.delete('/bands/:id', (req, res) => {
 })
 
 // tracks
-router.get('/tracks', (req, res) => {
-  knex.select().from('tracks')
-  .then((data) =>{
-    res.json(data);
+router.get('/tracks', ejwt({ secret: app.get('superSecret') }), (req, res) => {
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else {
+    knex.select().from('tracks')
+    .then((data) => {
+      // console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
+});
+
+router.get('/tracks/:track_id', ejwt({
+    secret: app.get('superSecret')
   })
-})
+  , (req, res) => {
+  console.log("Req User check in Track Detail: ", req.user);
+  console.log("Param in Get Track: ", req.params);
+
+  // Grab data from the URL parameters
+  let param_id = req.params.track_id;
+
+  knex.select().from('tracks').where({ id: param_id })
+    .then((data) => {
+      console.log('track id data: ', data);
+      // let banddata = data[0];
+      // if (param_id === banddata.id) {
+      //   console.log(data);
+        res.json(data);
+      // } else {
+      //   res.status(400).redirect('/index')
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
+
 
 /////
 router.get('/search',
@@ -619,12 +670,6 @@ router.post('/tracks/new', (req, res) => {
   res.send('this is POST /tracks/new Page');
 })
 
-router.get('/tracks/:id', (req, res) => {
-  knex.select().from('tracks')
-  .then((data) =>{
-    res.json(data);
-  })
-})
 
 router.put('/tracks/:id', (req, res) => {
   knex.select().from('tracks')
