@@ -137,6 +137,7 @@ router.get('/users', ejwt({
 });
 
 router.post('/auth/login', function(req, res, next) {
+	console.log(req);
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
 			return res.status(400).json({ error: err });

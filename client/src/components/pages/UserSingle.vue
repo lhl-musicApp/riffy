@@ -1,51 +1,52 @@
 <template lang="html">
-
   <div class="container">
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-4">
         <form id="registration" v-on:submit.prevent="submit">
-          <div class="registration form-group">
-            <label for="first_name">First Name</label>
-            <input v-model="user.first_name" placeholder="first name">
-            <br>
-            <label for="last_name">Last Name</label>
-            <input v-model="user.last_name" placeholder="last name">
-            <br>
-            <label for="email">email</label>
-            <input v-model="user.email" placeholder="email">
-            <br>
-            <label for="male">male</label>
-            <input type="radio" id="male" value="male" v-model="user.gender">
-            <br>
-            <label for="female">female</label>
-            <input type="radio" id="female" value="female" v-model="user.gender">
-            <br>
-            <label for="user_city">City</label>
-            <input v-model="user.user_city" placeholder="city">
-            <br>
-            <label for="user_country">Country</label>
-            <input v-model="user.user_country" placeholder="country">
-            <br>
-            <span>Bio</span>
-            <br>
-            <textarea v-model="user.user_bio" placeholder="Add your bio"></textarea>
-            <br>
-            <label for="user_influence">Influence</label>
-            <input v-model="user.user_influence" placeholder="influence">
-            <br>
-            <label for="soundcloud_link">Soundcloud Link</label>
-            <input v-model="user.soundcloud_link" placeholder="soundcloud link">
-            <br>
-            <input type="checkbox" id="isAvailable" v-model="user.isAvailable">Available to join band?</input>
-            <br>
-            <input type="checkbox" id="looking_for" v-model="user.looking_for">Looking for band to join?</input>
-            <br>
-            <button form="registration" name="registration" type="submit">Save</button>
-          </div>
+          <transition name="slide-fade">
+            <div v-if="show" class="registration form-group">
+              <label for="first_name">First Name</label>
+              <input v-model="user.first_name" placeholder="first name">
+              <br>
+              <label for="last_name">Last Name</label>
+              <input v-model="user.last_name" placeholder="last name">
+              <br>
+              <label for="email">email</label>
+              <input v-model="user.email" placeholder="email">
+              <br>
+              <label for="male">male</label>
+              <input type="radio" id="male" value="male" v-model="user.gender">
+              <br>
+              <label for="female">female</label>
+              <input type="radio" id="female" value="female" v-model="user.gender">
+              <br>
+              <label for="user_city">City</label>
+              <input v-model="user.user_city" placeholder="city">
+              <br>
+              <label for="user_country">Country</label>
+              <input v-model="user.user_country" placeholder="country">
+              <br>
+              <span>Bio</span>
+              <br>
+              <textarea v-model="user.user_bio" placeholder="Add your bio"></textarea>
+              <br>
+              <label for="user_influence">Influence</label>
+              <input v-model="user.user_influence" placeholder="influence">
+              <br>
+              <label for="soundcloud_link">Soundcloud Link</label>
+              <input v-model="user.soundcloud_link" placeholder="soundcloud link">
+              <br>
+              <input type="checkbox" id="isAvailable" v-model="user.isAvailable">Available to join band?</input>
+              <br>
+              <input type="checkbox" id="looking_for" v-model="user.looking_for">Looking for band to join?</input>
+              <br>
+              <button form="registration" name="registration" type="submit">Save</button>
+            </div>
+          </transition>
         </form>
       </div>
 
-      <div class="user col-lg-6">
+      <div class="user col-lg-4">
         <p>First Name: {{ user.first_name }}</p>
         <p>Last Name: {{ user.last_name }}</p>
         <p>Influence: {{ user.user_influence }}</p>
@@ -58,6 +59,7 @@
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
+        <button @click="show = !show">Edit</button>
       </div>
 
       <div class="container">
@@ -84,6 +86,7 @@ export default {
   data () {
 
     return {
+      show: true,
       error: null,
       user: {
         first_name: '',
@@ -176,4 +179,17 @@ export default {
 </script>
 
 <style lang="css">
+  /* Enter and leave animations can use different */
+  /* durations and timing functions.              */
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active for <2.1.8 */ {
+    transform: translateX(10px);
+    opacity: 0;
+  }
 </style>
