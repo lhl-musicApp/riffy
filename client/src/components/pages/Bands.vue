@@ -14,7 +14,7 @@
       </thead>
       <tbody v-for="band in bands">
         <tr>
-          <td>{{ band.id }}</td>
+          <td><a :href="'/bands/' + band.id">{{ band.id }}</a></td>
           <td>{{ band.band_name }}</td>
           <td>{{ band.band_bio }}</td>
           <td>{{ band.influence }}</td>
