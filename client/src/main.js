@@ -11,6 +11,7 @@ import Hello from './components/pages/Hello.vue';
 import Login from './components/pages/Login.vue';
 import Users from './components/pages/Users.vue';
 import DragDrop from './components/pages/DragDrop.vue';
+import AudioDrop from './components/pages/AudioDrop.vue';
 import VueYouTubeEmbed from 'vue-youtube-embed';
 // import UserEditor from './components/pages/UserEditor.vue';
 import UserSingle from './components/pages/UserSingle.vue';
@@ -46,6 +47,7 @@ export var router = new Router({
 		{ path: '/search', component: Search },
 		{ path: '/verify', component: Verify },
     { path: '/drop', component: DragDrop },
+    { path: '/audiodrop', component: AudioDrop },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
