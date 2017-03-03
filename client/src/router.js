@@ -14,7 +14,10 @@ export var router = new Router({
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { checksAuth: true } },
     // { name: 'userEditor', path: '/edituser', component: UserEditor, meta: { checksAuth: true } }
     { path: '/bands', component: Bands, meta: { requiresAuth: true }},
-    { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { checksAuth: true } }
+    { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { checksAuth: true } },
+    { path: '/bandtracks/:id', component: BandSingle, meta: { checksAuth: true }},
+    { path: '/tracks', component: Tracks, meta: { requiresAuth: true }},
+    { name: 'trackSingle', path: '/tracks/:id', component: TrackSingle, meta: { checksAuth: true } }
 	]
 });
 
