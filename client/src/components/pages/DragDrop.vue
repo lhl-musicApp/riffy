@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <h1>Drag and Drop Page</h1>
+    <h1>Image upload Page</h1>
     <div v-if="!image">
     <h2>Select an image</h2>
     <input type="file" @change="onFileChange">
@@ -10,7 +10,7 @@
     <button @click="removeImage">Remove image</button>
     <button @click="saveImage">Save image</button>
   </div>
-<img :src="imageSrc" />
+  <img :src="imageSrc" />
 
   </div>
 </template>
