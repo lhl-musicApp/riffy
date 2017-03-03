@@ -17,13 +17,10 @@
 
 <script>
 import auth from '../../auth.js'
-// import imageSrc from 'assets/out.jpeg';
 export default {
   data () {
     return {
-      image: '',
-      // imageSrc: './../uploads/out.jpeg'
-
+      image: ''
     };
   },
   created () {

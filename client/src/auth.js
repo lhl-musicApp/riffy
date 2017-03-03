@@ -78,7 +78,9 @@ export default {
 			});
 	},
 	logout(context) {
-		localStorage.removeItem('id_token')
+		localStorage.removeItem('id_token');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user_role');
 		this.user.authenticated = false;
 		context.$router.push('/login');
 	},
