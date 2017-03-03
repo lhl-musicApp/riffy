@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import vSelect from 'vue-select'
-Vue.component(vSelect)
 import Router from 'vue-router';
 import Resource from 'vue-resource';
 import App from './App';
@@ -12,6 +11,7 @@ import Hello from './components/pages/Hello.vue';
 import Login from './components/pages/Login.vue';
 import Users from './components/pages/Users.vue';
 import DragDrop from './components/pages/DragDrop.vue';
+import VueYouTubeEmbed from 'vue-youtube-embed';
 // import UserEditor from './components/pages/UserEditor.vue';
 import UserSingle from './components/pages/UserSingle.vue';
 import Main from './components/pages/Main.vue';
@@ -22,6 +22,8 @@ import ForgotPassword from './components/pages/ForgotPassword.vue';
 import ResetPassword from './components/pages/ResetPassword.vue';
 import Bands from './components/pages/Bands.vue';
 import BandSingle from './components/pages/BandSingle.vue';
+import Tracks from './components/pages/Tracks.vue';
+import TrackSingle from './components/pages/TrackSingle.vue';
 
 //Auth Setup
 // Check the user's auth status when the app starts
@@ -30,7 +32,8 @@ auth.checkAuth();
 Vue.use(VeeValidate);
 Vue.use(Resource);
 Vue.use(Router);
-
+Vue.use(VueYouTubeEmbed);
+Vue.component(vSelect);
 // Routes
 export var router = new Router({
 	mode: 'history',
@@ -51,6 +54,9 @@ export var router = new Router({
 		// { name: 'userEditor', path: '/edituser', component: UserSingle, meta: { requiresAuth: true } }
     { path: '/bands', component: Bands, meta: { requiresAuth: true } },
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { requiresAuth: true } },
+    { path: '/bandtracks/:id', component: BandSingle, meta: { checksAuth: true }},
+    { path: '/tracks', component: Tracks, meta: { requiresAuth: true } },
+    { name: 'trackSingle', path: '/tracks/:id', component: TrackSingle, meta: { requiresAuth: true } }
 	]
 });
 

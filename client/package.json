@@ -58,12 +58,15 @@
     "vue-router": "^2.0.0",
     "vue-select": "github:sagalbot/vue-select",
     "vue-style-loader": "^1.0.0",
+    "vue-youtube-embed": "^2.0.3",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.8.3",
     "webpack-hot-middleware": "^2.12.2",
     "webpack-merge": "^0.14.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"

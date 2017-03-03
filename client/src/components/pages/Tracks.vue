@@ -6,19 +6,21 @@
       <thead class="thead thead-inverse">
         <tr>
           <th>ID</th>
-          <th>Band Name</th>
-          <th>Band Bio</th>
-          <th>influenced by</th>
-          <th>soundcloud link</th>
+          <th>Track Name</th>
+          <th>Is Creator</th>
+          <th>Original Artist</th>
+          <th>Soundcloud link</th>
+          <th>isPublished</th>
         </tr>
       </thead>
-      <tbody v-for="band in bands">
+      <tbody v-for="track in tracks">
         <tr>
-          <td><a :href="'/bands/' + band.id">{{ band.id }}</a></td>
-          <td>{{ band.band_name }}</td>
-          <td>{{ band.band_bio }}</td>
-          <td>{{ band.influence }}</td>
-          <td>{{ band.soundcloud_link }}</td>
+          <td><a :href="'/tracks/' + track.id">{{ track.id }}</a></td>
+          <td>{{ track.track_name }}</td>
+          <td>{{ track.isCreator }}</td>
+          <td>{{ track.original_artist }}</td>
+          <td>{{ track.soundcloud_link }}</td>
+          <td>{{ track.isPublished }}</td>
         </tr>
       </tbody>
     </table>
@@ -30,14 +32,14 @@ import auth from '../../auth.js'
 export default {
   data () {
     return {
-      bands: []
+      tracks: []
     }
   },
   created () {
-    this.$http.get('bands').then(res => {
+    this.$http.get('tracks').then(res => {
       console.log(this.bands);
       console.log('---before------');
-      this.bands = res.data;
+      this.tracks = res.data;
       console.log('---after------');
       console.log(this.bands);
       console.log('---starting this------');
