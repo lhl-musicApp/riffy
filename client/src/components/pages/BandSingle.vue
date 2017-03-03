@@ -42,28 +42,6 @@ export default {
       console.log(response.body);
     });
 
-// testing Promise
-    // const self = this;
-    // function getBand() {
-    //   self.$http.get('bands/' + self.$route.params.id)
-    //   .then((response) => {
-    //     self.band = response.data[0];
-    //     console.log(response);
-    //   });
-    // }
-
-    // function getBandTrack() {
-    //   self.$http.get('bandtracks/' + self.$route.params.id)
-    //   .then((response) => {
-    //     self.tracks = response.data[0];
-    //     console.log(response);
-    //   });
-    // }
-
-    // Promise.all([getBand, getBandTrack]).then((results)=> {
-    //   console.log(results);
-    // })
-//
   },
   computed: {},
   methods: {

@@ -1,7 +1,8 @@
 export default {
 	user: {
 		authenticated: false,
-		role: null
+		role: null,
+    user_id: ''
 	},
 	login(context, creds, redirect) {
 		var self = this;
@@ -10,10 +11,15 @@ export default {
 				password: creds.password
 			})
 			.then(response => {
+        console.log(response.data);
 				localStorage.setItem('id_token', response.data.token);
 				localStorage.setItem('user_role', response.data.role);
-				self.user = {role:response.data.role};
+        localStorage.setItem('user_id', response.data.user_id);
+        // console.log('id token: ', localStorage.id_token);
 				self.user.authenticated = true;
+        self.user.role = response.data.role;
+        self.user.user_id = response.data.user_id;
+        console.log(self.user.user_id);
 				location.reload();
 				if (self.user.role = 'regular') {
 					context.$router.push('/');
