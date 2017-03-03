@@ -33,8 +33,8 @@ const knex = require('knex')(knexConfig[ENV]);
 app.use(flash());
 app.use(cors());
 app.use(express.static('./public'));
-app.use(bodyParser.urlencoded({ extended: false, limit: '5mb'} ));
-app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({ extended: false, limit: '12mb' }));
+app.use(bodyParser.json({ limit: '12mb' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.set('superSecret', 'lkmaspokjsafpaoskdpa8asda0s9a'); // secret variable
@@ -538,6 +538,45 @@ router.post('/upload', upload.array(), (req, res) => {
         });
     });
 })
+
+
+
+// Audio Post
+router.post('/upload/audio', upload.array(), (req, res) => {
+  var base64Data = req.body.audioObj.audio[1];
+
+    console.log('writing file...', base64Data);
+
+    function decodeBase64Image(dataString) {
+      // var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+      //   response = {};
+
+      // if (matches.length !== 3) {
+      //   return new Error('Invalid input string');
+      // }
+      response = {};
+      response.type = dataString[1];
+      response.data = new Buffer(dataString[2], 'base64');
+
+      return response;
+    }
+
+    var imageBuffer = decodeBase64Image(base64Data);
+    console.log(imageBuffer);
+
+
+    fs.writeFile(__dirname + "/../client/src/uploads/audio/out.mp3", imageBuffer.data, 'base64', function(err) {
+        if (err) console.log(err);
+        fs.readFile(__dirname + "/../client/src/uploads/audio/out.mp3", function(err, data) {
+            if (err) throw err;
+            console.log('reading file...', data.toString('base64'));
+            res.send(data);
+        });
+    });
+})
+
+
+
 
 
 //// ok
