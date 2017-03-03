@@ -672,9 +672,7 @@ router.get('/tracks/:track_id', ejwt({
 router.get('/search',
 	// ejwt({ secret: app.get('superSecret')}),
 	(req, res) => {
-
   console.log(req.query);
-
   // if (!req.user) {
   //   return res.sendStatus(401)
   // } else {
