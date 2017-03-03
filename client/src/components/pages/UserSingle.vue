@@ -59,6 +59,21 @@
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
       </div>
+
+      <div class="container">
+        <section>
+          <youtube
+            :video-id="videoId"
+            player-width="50%"
+            player-height="350"
+            :player-vars="{autoplay: 1}"
+            @ready="ready"
+            @playing="playing">
+          </youtube>
+        </section>
+
+      </div>
+
     </div>
   </div>
 </template>
@@ -67,6 +82,7 @@
 
 export default {
   data () {
+
     return {
       error: null,
       user: {
@@ -81,27 +97,32 @@ export default {
         soundcloud_link: '',
         isAvailable: false,
         looking_for: false
-      }
+      },
+      url: '',
+      videoId: ''
     };
   },
 
-
-
-
   created () {
-    console.log('this.$route.params.id', this.$route.params.id)
+    console.log('this.$route.params.id --->', this.$route.params.id)
     this.$http.get('users/' + this.$route.params.id).then(response => {
       this.user = response.data[0];
-    });
+      this.url = this.user.soundcloud_link;
+      let sliceit = this.user.soundcloud_link.indexOf('=');
+      this.videoId = this.user.soundcloud_link.slice(sliceit+1, 100);
+    })
+
   },
-  computed: {},
+  computed: {
+
+  },
   methods: {
     submit(){
       this.$http.post('users/update', this.user)
         .then(response => {
         this.user = response.body;
       });
-    }
+    },
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
   //       title: this.note.title,
@@ -116,9 +137,41 @@ export default {
   //       this.error = error;
   //     });
   //   }
+    method (url) {
+      this.videoId = this.$youtube.getIdFromURL(url)
+      this.startTime = this.$youtube.getTimeFromURL(url)
+    },
+    ready (player) {
+      this.player = player
+    },
+    playing (player) {
+      // The player is playing a video.
+    },
+    stop () {
+      this.player.stopVideo()
+    },
+    pause () {
+      this.player.pauseVideo()
+    }
+    // launchVideo() {
+    //   this.videoLaunched = true;
+    //   this.player.playVideo();
+    //   document.getElementsByTagName('body')[0].classList.add('overlay');
+    // },
+    // ready: function(player) {
+    //   fitvids();
+    //   this.player = player;
+    //   this.videoLoaded = true;
+    // },
+    // ended() {
+    //   console.log('Ended');
+    // }
   },
+
   components: {}
+
 };
+
 </script>
 
 <style lang="css">
