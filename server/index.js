@@ -542,11 +542,11 @@ router.get('/bands/:band_id', ejwt({
     });
 });
 
-router.get('/bandtracks/:band_id'
-  , ejwt({
+router.get('/bandtracks/:band_id',
+	ejwt({
     secret: app.get('superSecret')
-  })
-  , (req, res) => {
+  }),
+	(req, res) => {
   // console.log("Req User check in Band Detail: ", req.user);
   // console.log("Param in Get Band Tracks: ", req.params);
   let param_id = req.params.band_id;
