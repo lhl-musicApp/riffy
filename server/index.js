@@ -3,6 +3,8 @@ require('dotenv').config() //passed
 //Imports
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const multer = require('multer');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -30,14 +32,15 @@ const knex = require('knex')(knexConfig[ENV]);
 //Express Config
 app.use(flash());
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.static('./public'));
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb'} ));
+app.use(bodyParser.json({limit: '5mb'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.set('superSecret', 'lkmaspokjsafpaoskdpa8asda0s9a'); // secret variable
 const LocalStrategy = require('passport-local').Strategy;
 const jwtSecret = 'lkmaspokjsafpaoskdpa8asda0s9a';
-
+const upload = multer();
 //NodeMailer config
 var transporter = nodemailer.createTransport({
 	service: 'Gmail',
@@ -492,6 +495,43 @@ router.delete('/users/:id', (req, res) => {
     res.json(data);
   })
 })
+
+
+
+router.post('/upload', upload.array(), (req, res) => {
+  var base64Data = req.body.imageObj.image;
+
+    console.log('writing file...', base64Data);
+
+    function decodeBase64Image(dataString) {
+      var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+        response = {};
+
+      if (matches.length !== 3) {
+        return new Error('Invalid input string');
+      }
+
+      response.type = matches[1];
+      response.data = new Buffer(matches[2], 'base64');
+
+      return response;
+    }
+
+    var imageBuffer = decodeBase64Image(base64Data);
+    console.log(imageBuffer);
+
+
+
+    fs.writeFile(__dirname + "/upload/out.jpeg", imageBuffer.data, 'base64', function(err) {
+        if (err) console.log(err);
+        fs.readFile(__dirname + "/upload/out.jpeg", function(err, data) {
+            if (err) throw err;
+            console.log('reading file...', data.toString('base64'));
+            res.send(data);
+        });
+    });
+})
+
 
 //// ok
 router.get('/bands',
