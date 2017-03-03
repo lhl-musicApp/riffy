@@ -137,7 +137,6 @@ router.get('/users', ejwt({
 });
 
 router.post('/auth/login', function(req, res, next) {
-	console.log(req);
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
 			return res.status(400).json({ error: err });
@@ -457,6 +456,34 @@ router.get('/users/:user_id', ejwt({
       res.status(400).json(err);
     });
 });
+
+router.get('/userskills/:user_id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+  // console.log(req.params);
+  // Grab data from the URL parameters
+  console.log('userskills/:id : ', req.params);
+  let param_id = req.params.user_id;
+
+	knex('skill_user')
+  .join('skills', 'skill_user.skill_id', 'skills.id')
+    .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+    .where({ user_id: param_id })
+  // knex.select().from('users').where({id: param_id})
+    .then((data) => {
+			console.log(data);
+      let userdata = data[0];
+      if (!userdata) {
+        res.status(400).redirect('/login')
+      } else {
+        res.json(data);
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
+
 
 // Route for update form
 router.post('/users/:id', ejwt({
