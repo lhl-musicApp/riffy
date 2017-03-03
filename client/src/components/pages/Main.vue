@@ -43,7 +43,7 @@
                   <img src="http://www.fillmurray.com/200/200" alt="">
                   <h3>{{ main.first_name }} {{ main.last_name }}</h3>
                   <ul>
-                    <li>{{ main.id }}</li>
+                    <li><a :href="'users/' + main.id">{{ main.id }}</a></li>
                     <li>{{ main.user_city }}</li>
                     <li>{{ main.user_country }}</li>
                     <li>{{ main.user_influence }}</li>

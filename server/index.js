@@ -56,29 +56,28 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
   },
   function(username, password, done) {
-
+    // console.log(user);
     console.log('from passport.use = >username:', username);
-
 
     knex.select().from('users').where({ email: username })
     .then((result) => {
-      // console.log(result);
+      console.log(result);
       const user = result[0];
       if (!user) {
-          return done("Incorrect credentials", false);
+          return done(null, false, { message: "Please login"});
       } else {
-        if (user.email == null) {
-          return done("Incorrect credentials", false);
+        if (!user.email) {
+          return done(null, false, { message: "no email"});
         }
-        if (user.verified_email == null || user.verified_email == false) {
-          return done("Please verify your email first. Check your inbox for our verification email.", false);
+        if (!user.verified_email) {
+          return done(null, false, { message: "Please verify your email first. Check your inbox for our verification email."});
         }
         bcrypt.compare(password, user.password, function(err, res) {
         // res == true
           if (res == true) {
             return done(null, user);
           } else {
-            return done("Incorrect credentials", false);
+            return done(null, false, { message: "Incorrect credentials"});
           }
         });
       }
@@ -86,6 +85,20 @@ passport.use(new LocalStrategy({
     .catch((err) =>{
       res.status(400).json(err);
     })
+
+///////////////
+    // User.findOne({ email: username }, (err, user) => {
+    //   // console.log(result);
+    //   if (err) { return done(err); }
+    //   if (!user) {
+    //     return done(null, false, { message: 'Incorrect username.' });
+    //   }
+    //   if (!user.validPassword(password)) {
+    //     return done(null, false, { message: 'Incorrect password.' });
+    //   }
+    //   return done(null, user);
+    // });
+//////////////
 }));
 
 // used to serialize the user for the session
@@ -96,15 +109,9 @@ passport.serializeUser((user, done) => {
 
 // used to deserialize the user
 passport.deserializeUser((id, done) => {
-
-	knex.select().from('users').where({id: id}).orderBy('id')
-	.then((data) => {
-		res.json(data);
-	})
-	.catch((err) => {
-		res.status(400).json(err);
-	});
-
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
 });
 
 
@@ -135,11 +142,11 @@ router.post('/auth/login', function(req, res, next) {
 			return res.status(400).json({ error: err });
 		} else {
 			//user has authenticated correctly thus we create a JWT token
-			var token = jwt.sign(user, app.get('superSecret'));
-
+			delete user.password;
+      const token = jwt.sign(user, app.get('superSecret'));
+      const user_id = user.id;
 			// console.log('auth/login-user toke =>: ', token);
-
-			return res.json({ success: true, role: user.role, token: token });
+			return res.json({ user_id: user_id, role: user.role, token: token });
 		}
 	})(req, res, next);
 });

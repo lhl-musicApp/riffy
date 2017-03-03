@@ -104,7 +104,8 @@ export default {
   },
 
   created () {
-    console.log('this.$route.params.id --->', this.$route.params.id)
+    console.log('this.$route.params.id: ', this.$route.params.id)
+    console.log('localStorage.user_id: ', localStorage.user_id)
     this.$http.get('users/' + this.$route.params.id).then(response => {
       this.user = response.data[0];
       this.url = this.user.soundcloud_link;
