@@ -8,6 +8,7 @@
   <div v-else>
     <img :src="image" />
     <button @click="removeImage">Remove image</button>
+    <button @click="saveImage">Save image</button>
   </div>
   </div>
 </template>
@@ -30,6 +31,7 @@ export default {
 
   },
   methods: {
+
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length)
@@ -49,6 +51,20 @@ export default {
     },
     removeImage: function (e) {
       this.image = '';
+    },
+    saveImage: function (e) {
+      const imageObj = {
+        image : this.image
+      }
+      // console.log('reader', this.image)
+      this.$http.post('upload', {imageObj,
+        headers: {
+          'Content-Type': 'image/jpeg'
+        }
+      })
+        .then(response => {
+        console.log('saveImage =>', response.data)
+      });
     }
   },
   components: {}
