@@ -62,6 +62,11 @@
         <button @click="show = !show">Edit</button>
       </div>
 
+      <h3>skill ?</h3>
+      <div class="user col-lg-4" v-for="skill in skills">
+        <p>Skill Name: {{ skill.skill_name }}</p>
+      </div>
+
       <div class="container">
         <section>
           <youtube
@@ -102,7 +107,8 @@ export default {
         looking_for: false
       },
       url: '',
-      videoId: ''
+      videoId: '',
+      skills: []
     };
   },
 
@@ -115,6 +121,13 @@ export default {
       let sliceit = this.user.soundcloud_link.indexOf('=');
       this.videoId = this.user.soundcloud_link.slice(sliceit+1, 100);
     })
+///userskills/:user_id'
+    this.$http.get('userskills/' + this.$route.params.id).then(response => {
+      // console.log(response);
+      this.skills = response.body;
+
+    })
+
 
   },
   computed: {
