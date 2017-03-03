@@ -48,7 +48,7 @@ export var router = new Router({
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
-    { name: 'userSingle', path: '/users/profile', component: UserSingle, meta: { requiresAuth: true } },
+    { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } },
 		// { name: 'userEditor', path: '/edituser', component: UserSingle, meta: { requiresAuth: true } }
     { path: '/bands', component: Bands, meta: { requiresAuth: true } },
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { requiresAuth: true } },

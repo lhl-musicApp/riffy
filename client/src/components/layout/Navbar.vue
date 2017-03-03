@@ -24,7 +24,7 @@
         <router-link to="/users" v-if="user.authenticated && user.role == 'admin'"><a class="nav-link">Admin</a></router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/users/profile"><a class="nav-link">Profile</a></router-link>
+        <router-link :to="{ path: 'users/' + ls.user_id }"><a class="nav-link">Profile</a></router-link>
       </li>
       <li class="nav-item">
         <a href="#" @click="logout()" v-if="user.authenticated" class="nav-link">Log Out</a>
@@ -38,7 +38,8 @@ import auth from '../../auth';
 export default {
   data() {
     return {
-      user: auth.user
+      user: auth.user,
+      ls: localStorage
     }
   },
   methods: {
