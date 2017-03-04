@@ -13,14 +13,14 @@
           <span>Selected Region: {{ checkedRegions }}</span>
         </div>
         <div class="container">
-          <input type="checkbox" id="all" value="All" v-model="checkedInstruments">
+          <input type="checkbox" id="all" value="All" v-model="checkedGenders">
           <label for="all">All</label>
-          <input type="checkbox" id="male" value="M" v-model="checkedInstruments">
+          <input type="checkbox" id="male" value="M" v-model="checkedGenders">
           <label for="male">Male</label>
-          <input type="checkbox" id="female" value="F" v-model="checkedInstruments">
+          <input type="checkbox" id="female" value="F" v-model="checkedGenders">
           <label for="female">Female</label>
           <br>
-          <span>Selected Instruments: {{ checkedInstruments }}</span>
+          <span>Selected Genders: {{ checkedGenders }}</span>
         </div>
         <div class="container">
           <input type="checkbox" id="all" value="All" v-model="checkedGenres">
@@ -78,7 +78,7 @@ export default {
 
     return {
       checkedRegions: [],
-      checkedInstruments: [],
+      checkedGenders: [],
       checkedGenres: [],
       result: [],
       user: auth.user

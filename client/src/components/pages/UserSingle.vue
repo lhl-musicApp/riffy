@@ -33,8 +33,8 @@
             <label for="user_influence">Influence</label>
             <input v-model="user.user_influence" placeholder="influence">
             <br>
-            <label for="soundcloud_link">Soundcloud Link</label>
-            <input v-model="user.soundcloud_link" placeholder="soundcloud link">
+            <label for="youtube_link">Youtube Link</label>
+            <input v-model="user.youtube_link" placeholder="soundcloud link">
             <br>
             <input type="checkbox" id="isAvailable" v-model="user.isAvailable">Available to join band?</input>
             <br>
@@ -54,7 +54,7 @@
         <p>City: {{ user.user_city }}</p>
         <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
         <p>Influence: {{ user.user_influence }}</p>
-        <p>Soundcloud Link: {{ user.soundcloud_link }} </p>
+        <p>Youtube Link: {{ user.youtube_link }} </p>
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
@@ -66,11 +66,31 @@
             :video-id="videoId"
             player-width="50%"
             player-height="350"
-            :player-vars="{autoplay: 1}"
-            @ready="ready"
-            @playing="playing">
+          >
           </youtube>
         </section>
+
+        <div class="container">
+          <form v-on:submit.prevent="postmessage">
+            <div v-show="error" class="alert alert-danger" role="alert">
+              <strong>Oh snap!</strong> {{ error }}
+            </div>
+            <h3>Write them a message...</h3>
+            <div class="form-group">
+              <input type="text" class="form-control" v-model="messages.author" id="text">
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" v-model="messages.content" id="text">
+            </div>
+            <button type="postmessage" class="btn btn-primary">Send the message</button>
+          </form>
+        </div>
+
+        <div class="container" v-for="message in messages">
+          <p>{{ message.first_name }} {{ message.last_name }}</p>
+          <p>{{ message.content }}</p>
+        </div>
+
 
       </div>
 
@@ -79,12 +99,21 @@
 </template>
 
 <script>
-
+import auth from '../../auth.js';
 export default {
+
   data () {
 
     return {
+      user: auth.user,
       error: null,
+      messages: {
+        author: '',
+        content: '',
+        first_name: '',
+        last_name: ''
+      },
+
       user: {
         first_name: '',
         last_name: '',
@@ -94,7 +123,7 @@ export default {
         user_country: '',
         user_bio: '',
         user_influence: '',
-        soundcloud_link: '',
+        youtube_link: '',
         isAvailable: false,
         looking_for: false
       },
@@ -108,15 +137,20 @@ export default {
     console.log('localStorage.user_id: ', localStorage.user_id)
     this.$http.get('users/' + this.$route.params.id).then(response => {
       this.user = response.data[0];
-      this.url = this.user.soundcloud_link;
-      let sliceit = this.user.soundcloud_link.indexOf('=');
-      this.videoId = this.user.soundcloud_link.slice(sliceit+1, 100);
+      this.url = this.user.youtube_link;
+      let sliceit = this.user.youtube_link.indexOf('=');
+      this.videoId = this.user.youtube_link.slice(sliceit+1, 100);
     })
-
+    this.$http.get('users/' + this.$route.params.id + '/message' ).then(response => {
+      this.messages = response.data;
+      console.log(response);
+    })
   },
+
   computed: {
 
   },
+
   methods: {
     submit(){
       this.$http.post('users/update', this.user)
@@ -124,6 +158,28 @@ export default {
         this.user = response.body;
       });
     },
+
+    postmessage(){
+      this.$validator.validateAll();
+      if (!this.errors.any()) {
+        this.$http.post('users/' + this.$route.params.id + '/message', {
+          author_id: localStorage.user_id,
+          content: this.messages.content,
+          created_at: Date.now()
+        })
+        .then(function (response) {
+          console.log(response);
+          if (response.status == 200) {
+              console.log('Form submitted');
+              location.reload(true);
+          }
+        })
+        .catch(function (error) {
+          this.error = error;
+          });
+        }
+      },
+
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
   //       title: this.note.title,
