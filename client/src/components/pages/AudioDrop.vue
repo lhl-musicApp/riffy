@@ -47,19 +47,10 @@ export default {
         vm.audio = event.target.result.split(',');
          var decodedImageData = btoa(vm.audio[1]);                    // the actual conversion of data from binary to base64 format
         // callback(decodedImageData);
+        return decodedImageData
       };
       reader.readAsDataURL(audioFile);
-
-
-    //   var image = new Image();
-    //   var reader = new FileReader();
-    //   var vm = this;
-
-    //   reader.onload = (e) => {
-    //     vm.image = e.target.result;
-    //   };
-    //   reader.readAsDataURL(file);
-    //   console.log(reader);
+      console.log(reader);
     },
     removeAudio: function (e) {
       this.audio = '';
@@ -69,10 +60,7 @@ export default {
         audio : this.audio
       }
       // console.log('reader', this.image)
-      this.$http.post('upload/audio', { audioObj,
-        headers: {
-          'Content-Type': 'audio/mpeg'
-        }
+      this.$http.post('upload/audio', { audioObj
       })
         .then(response => {
         console.log('saveAudi =>', response)
