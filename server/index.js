@@ -310,7 +310,6 @@ router.get('/verify/:id/:token', function(req, res) {
 });
 
 
-
 // DATA ROUTES --> this is where pages are rendered
 router.get('/main', (req, res) => {
 	// const resultsArr = [];
@@ -504,7 +503,6 @@ router.delete('/users/:id', (req, res) => {
 })
 
 
-
 router.post('/upload', upload.array(), (req, res) => {
   var base64Data = req.body.imageObj.image;
 
@@ -540,14 +538,13 @@ router.post('/upload', upload.array(), (req, res) => {
 })
 
 
-
 // Audio Post
-router.post('/upload/audio', upload.array(), (req, res) => {
-  var base64Data = req.body.audioObj.audio[1];
+router.post('/upload/audio', upload.single(), (req, res) => {
+  var base64Data = req.body.audioObj.audio;
 
     console.log('writing file...', base64Data);
 
-    function decodeBase64Image(dataString) {
+    function decodeBase64Audio(data) {
       // var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
       //   response = {};
 
@@ -555,23 +552,24 @@ router.post('/upload/audio', upload.array(), (req, res) => {
       //   return new Error('Invalid input string');
       // }
       response = {};
-      response.type = dataString[1];
-      response.data = new Buffer(dataString[2], 'base64');
-
+      response.type = data[0];
+      response.data = new Buffer(data[1], 'base64');
+      console.log('response =>', response)
       return response;
     }
 
-    var imageBuffer = decodeBase64Image(base64Data);
-    console.log(imageBuffer);
+    var audioBuffer = decodeBase64Audio(base64Data);
+    console.log('audioBuffer', audioBuffer);
 
 
-    fs.writeFile(__dirname + "/../client/src/uploads/audio/out.mp3", imageBuffer.data, 'base64', function(err) {
-        if (err) console.log(err);
-        fs.readFile(__dirname + "/../client/src/uploads/audio/out.mp3", function(err, data) {
-            if (err) throw err;
-            console.log('reading file...', data.toString('base64'));
-            res.send(data);
-        });
+    fs.writeFile(__dirname + "/../client/src/uploads/audio/out.mp3", audioBuffer.data, 'base64', function(err) {
+      if (err) console.log(err);
+        // fs.readFile(__dirname + "/../client/src/uploads/audio/out.mp3", function(err, data) {
+        //     if (err) throw err;
+        //     console.log('reading file...', data.toString('base64'));
+        //     res.send(data);
+        // });
+        res.status(201).send();
     });
 })
 
