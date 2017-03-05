@@ -527,9 +527,9 @@ router.post('/upload', upload.array(), (req, res) => {
 
 
 
-    fs.writeFile(__dirname + "/../client/src/uploads/out.jpeg", imageBuffer.data, 'base64', function(err) {
+    fs.writeFile(__dirname + "/upload/out.jpeg", imageBuffer.data, 'base64', function(err) {
         if (err) console.log(err);
-        fs.readFile(__dirname + "/../client/src/uploads/out.jpeg", function(err, data) {
+        fs.readFile(__dirname + "/upload/out.jpeg", function(err, data) {
             if (err) throw err;
             console.log('reading file...', data.toString('base64'));
             res.send(data);
@@ -569,7 +569,7 @@ router.post('/upload/audio', upload.single(), (req, res) => {
         //     console.log('reading file...', data.toString('base64'));
         //     res.send(data);
         // });
-        res.status(201).send();
+      res.status(201).send();
     });
 })
 
