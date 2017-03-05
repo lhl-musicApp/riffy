@@ -27,9 +27,7 @@ export default {
     };
   },
   created () {
-    // this.$http.get('main').then(response => {
-    //   this.main = response.data;
-    // });
+
   },
   computed: {
 
