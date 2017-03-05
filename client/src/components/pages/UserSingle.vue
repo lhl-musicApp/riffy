@@ -62,9 +62,16 @@
         <button @click="show = !show">Edit</button>
       </div>
 
-      <h3>skill ?</h3>
-      <div class="user col-lg-4" v-for="skill in skills">
-        <p>Skill Name: {{ skill.skill_name }}</p>
+      <h3>Skills</h3>
+        <form id="edit_skills"  v-on:submit.prevent="edit_skills">
+          <div class="user col-lg-4" v-for="skill in skillOptions">
+            <input type="checkbox" :id="skill.label" :value="skill.value" v-model="skills">
+            <label :for="skill.label"> {{ skill.label }} </label>
+          </div>
+          <button form="edit_skills" name="edit_skills" type="submit">Save</button>
+        </form>
+      <div v-for="skill in skills">
+        <p>Name: {{ skill.skill_name }} </p>
       </div>
 
       <div class="container">
@@ -78,9 +85,7 @@
             @playing="playing">
           </youtube>
         </section>
-
       </div>
-
     </div>
   </div>
 </template>
@@ -93,6 +98,7 @@ export default {
     return {
       show: true,
       error: null,
+      skills: [],
       user: {
         first_name: '',
         last_name: '',
@@ -104,17 +110,24 @@ export default {
         user_influence: '',
         soundcloud_link: '',
         isAvailable: false,
-        looking_for: false
+        looking_for: false,
       },
       url: '',
       videoId: '',
-      skills: []
+      skillOptions: []
+        // {'label': 'vocals', 'value': 'vocals'},
+        //               {'label': 'guitar', 'value': 'guitar'},
+        //               {'label': 'bass', 'value': 'bass'},
+        //               {'label': 'drums', 'value': 'drums'},
+        //               {'label': 'keyboard', 'value': 'keyboard'}
+        //             ]
+                        // 'guitar', 'bass', 'drums', 'keyboard']
     };
   },
 
   created () {
-    console.log('this.$route.params.id: ', this.$route.params.id)
-    console.log('localStorage.user_id: ', localStorage.user_id)
+    // console.log('this.$route.params.id: ', this.$route.params.id)
+    // console.log('localStorage.user_id: ', localStorage.user_id)
     this.$http.get('users/' + this.$route.params.id).then(response => {
       this.user = response.data[0];
       this.url = this.user.soundcloud_link;
@@ -128,6 +141,16 @@ export default {
 
     })
 
+    this.$http.get('skills/').then(response => {
+      console.log(response);
+      response.body.forEach((skill) => {
+        let skillset = {
+          label: skill.skill_name,
+          value: skill.id
+        }
+        this.skillOptions.push(skillset);
+      })
+    })
 
   },
   computed: {
@@ -135,9 +158,20 @@ export default {
   },
   methods: {
     submit(){
-      this.$http.post('users/update', this.user)
+      this.$http.post('users/' + this.$route.params.id, this.user)
         .then(response => {
+        console.log(response);
         this.user = response.body;
+      });
+    },
+    edit_skills(){
+      console.log('post skills array: ', this.skills);
+      const skill_length = this.skills.length;
+      console.log('post skills slice: ', this.skills.slice(1, skill_length));
+      this.$http.post('userskills/' + this.$route.params.id, this.skills)
+        .then(response => {
+        // this.skills = response.body;
+        console.log(response);
       });
     },
   //   edit() {
