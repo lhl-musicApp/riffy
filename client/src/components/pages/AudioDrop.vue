@@ -1,8 +1,7 @@
 <template lang="html">
   <div>
-    <div>
-      <h1>Audio Upload</h1>
-      <div v-if="!audio">
+    <h1>Audio Upload</h1>
+    <div v-if="!audio">
       <h2>Select audio file to up load</h2>
       <input type="file" @change="onFileAudio">
     </div>
@@ -12,7 +11,6 @@
       <button @click="saveAudio">Save Audio</button>
     </div>
     <button @click="loadSound">loadsong</button>
-
   </div>
 </template>
 <script>
