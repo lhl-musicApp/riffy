@@ -577,8 +577,6 @@ router.post('/upload', upload.array(), (req, res) => {
     var imageBuffer = decodeBase64Image(base64Data);
     console.log(imageBuffer);
 
-
-
     fs.writeFile(__dirname + "/upload/out.jpeg", imageBuffer.data, 'base64', function(err) {
         if (err) console.log(err);
         fs.readFile(__dirname + "/upload/out.jpeg", function(err, data) {
@@ -594,35 +592,24 @@ router.post('/upload', upload.array(), (req, res) => {
 router.post('/upload/audio', upload.single(), (req, res) => {
   var base64Data = req.body.audioObj.audio;
 
-    console.log('writing file...', base64Data);
+  console.log('writing file...', base64Data);
 
-    function decodeBase64Audio(data) {
-      // var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-      //   response = {};
+  function decodeBase64Audio(data) {
 
-      // if (matches.length !== 3) {
-      //   return new Error('Invalid input string');
-      // }
-      response = {};
-      response.type = data[0];
-      response.data = new Buffer(data[1], 'base64');
-      console.log('response =>', response)
-      return response;
-    }
+    response = {};
+    response.type = data[0];
+    response.data = new Buffer(data[1], 'base64');
+    console.log('response =>', response)
+    return response;
+  }
 
-    var audioBuffer = decodeBase64Audio(base64Data);
-    console.log('audioBuffer', audioBuffer);
+  var audioBuffer = decodeBase64Audio(base64Data);
+  console.log('audioBuffer', audioBuffer);
 
-
-    fs.writeFile(__dirname + "/../client/src/uploads/audio/out.mp3", audioBuffer.data, 'base64', function(err) {
-      if (err) console.log(err);
-        // fs.readFile(__dirname + "/../client/src/uploads/audio/out.mp3", function(err, data) {
-        //     if (err) throw err;
-        //     console.log('reading file...', data.toString('base64'));
-        //     res.send(data);
-        // });
-      res.status(201).send();
-    });
+  fs.writeFile(__dirname + "/upload/out.mp3", audioBuffer.data, 'base64', function(err) {
+    if (err) console.log(err);
+    res.status(201).send();
+  });
 })
 
 
