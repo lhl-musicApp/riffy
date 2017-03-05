@@ -10,6 +10,7 @@
     <button @click="removeImage">Remove image</button>
     <button @click="saveImage">Save image</button>
   </div>
+
   <img :src="imageSrc" />
 
   </div>
@@ -17,11 +18,12 @@
 
 <script>
 import auth from '../../auth.js'
+
 export default {
   data () {
     return {
-      image: ''
-
+      image: '',
+      imageSrc: 'http://localhost:3000/uploads/out.jpeg'
     };
   },
   created () {
