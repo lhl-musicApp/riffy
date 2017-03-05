@@ -460,24 +460,17 @@ router.get('/users/:user_id', ejwt({
 router.get('/userskills/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  // console.log(req.params);
-  // Grab data from the URL parameters
-  console.log('userskills/:id : ', req.params);
   let param_id = req.params.user_id;
-
 	knex('skill_user')
   .join('skills', 'skill_user.skill_id', 'skills.id')
     .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
     .where({ user_id: param_id })
-  // knex.select().from('users').where({id: param_id})
     .then((data) => {
 			console.log(data);
       let userdata = data[0];
       if (!userdata) {
         res.status(400).redirect('/login')
-      } else {
-        res.json(data);
-      }
+      } else { res.json(data); }
     })
     .catch((err) => {
       res.status(400).json(err);
@@ -485,17 +478,53 @@ router.get('/userskills/:user_id', ejwt({
 });
 
 
-// Route for update form
-router.post('/users/:id', ejwt({
+// TODO update skills query
+
+router.post('/userskills/:id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  let param_id = req.user.id;
-  console.log(user);
-  const result = req.body;
+	console.log(req);
+  // console.log('userskill post req user: ', req.user);
+	// console.log('userskill post req params:', req.params )
+	console.log('userskill post req body:', req.body )
+
+	let param_id = req.user.id;
+	const result = req.body;
 
   knex.select().from('users').returning('*')
 		.where({id: param_id}).update(result)
 		.then((data) => {
+			res.json(data[0]);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+})
+
+
+
+
+
+// Route for update form
+router.post('/users/:id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+	console.log('user post req.params: ', req.params)
+	console.log('user post req.user: ',req.user);
+	console.log('user post req.body: ', req.body);
+	let param_id = req.params.id;
+  const result = req.body;
+
+
+  // knex.select().from('users').returning()
+	// 	.where({id: param_id}).update(result)
+
+
+	knex('users').update(req.body)
+	.where({ id: req.params.id})
+	.returning('*')
+		.then((data) => {
+			console.log('post user data return:', data);
 			res.json(data[0]);
     })
     .catch((err) => {
@@ -532,6 +561,23 @@ router.delete('/users/:id', (req, res) => {
     res.json(data);
   })
 })
+
+
+//// ok
+router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else {
+    knex.select().from('skills')
+    .then((data) => {
+      // console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
+});
 
 
 
