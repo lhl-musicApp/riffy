@@ -137,6 +137,7 @@ router.get('/users', ejwt({
 });
 
 router.post('/auth/login', function(req, res, next) {
+	console.log(req);
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
 			return res.status(400).json({ error: err });
@@ -438,15 +439,16 @@ router.get('/users/:user_id', ejwt({
   }), (req, res) => {
   // console.log(req.params);
   // Grab data from the URL parameters
-  let param_id = req.user.id;
+  console.log(req.params);
+  let param_id = req.params.user_id;
 
   knex.select().from('users').where({id: param_id})
     .then((data) => {
       let userdata = data[0];
-      if (param_id === userdata.id) {
-        res.json(data);
+      if (!userdata) {
+        res.status(400).redirect('/login')
       } else {
-        res.status(400).redirect('/index')
+        res.json(data);
       }
     })
     .catch((err) => {
@@ -455,11 +457,11 @@ router.get('/users/:user_id', ejwt({
 });
 
 // Route for update form
-router.post('/users/update', ejwt({
+router.post('/users/:id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
   let param_id = req.user.id;
-
+  console.log(user);
   const result = req.body;
 
   knex.select().from('users').returning('*')
@@ -471,6 +473,56 @@ router.post('/users/update', ejwt({
       res.status(400).json(err);
     });
 })
+
+// THIS IS THE MESSAGES SECTION
+
+router.post('/users/:id/message',
+			ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }),
+	(req, res, next) => {
+		console.log('profile_id: ', req.params.id )
+		console.log('message content: ', req.body.content);
+		console.log('message date: ', req.body.createdAt);
+		console.log('message author_id: ', req.user.id);
+	if (!req.user) {
+    	return res.sendStatus(401)
+  	} else {
+			knex('messages').insert({
+				profile_id: req.params.id,
+				author_id: req.user.id,
+				content: req.body.content,
+			})
+	  	// .then((data) => {
+	    //   console.log(data);
+	    //   res.json(data);
+    	// })
+    	.catch((err) => {
+      	res.status(400).json(err);
+    	});
+  	}
+});
+
+router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+	// console.log(res);
+	console.log("I am the params: ", req.params);
+	knex('messages')
+	.join('users', 'messages.author_id', 'users.id')
+	.select('messages.profile_id as profile_id',
+					'messages.author_id as author_id',
+					'users.first_name as first_name',
+					'users.last_name as last_name',
+					'messages.content as content')
+	.where({
+	 	profile_id: req.params.id
+	})
+	.then((data) => {
+		console.log(data);
+		res.json(data);
+	})
+	.catch((err) => {
+		res.status(400).json(err);
+	});
+})
+
 
 // PUT users/:id
 // router.put('/edituser', ejwt({
@@ -600,7 +652,7 @@ router.post('/bands/new', (req, res) => {
   res.send('this is POST /bands/new Page');
 })
 
-
+// GET SPECIFIC BAND
 router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
@@ -709,9 +761,7 @@ router.get('/tracks/:track_id', ejwt({
 router.get('/search',
 	// ejwt({ secret: app.get('superSecret')}),
 	(req, res) => {
-
   console.log(req.query);
-
   // if (!req.user) {
   //   return res.sendStatus(401)
   // } else {
