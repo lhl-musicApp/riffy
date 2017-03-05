@@ -483,24 +483,36 @@ router.get('/userskills/:user_id', ejwt({
 router.post('/userskills/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-
 	let param_id = req.user.id;
-	const result = req.body;
-	console.log('/userskills/ result: ', result);
+	const skill_req = req.body;
+	console.log('/userskills/ skill_req: ', skill_req);
 
-	knex('skill_user')
-  .join('skills', 'skill_user.skill_id', 'skills.id')
-    .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
-		.returning('*')
-		.where({id: param_id})
-		.update(result)
-		.then((data) => {
-			console.log('router userskills data: ', data);
-			res.json(data[0]);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
+	const rows = skill_req;
+	var chunkSize = 1000;
+	//result = array or skills selected
+
+	knex.batchInsert('skill_user', rows, chunkSize)
+  .returning('user_id', 'band_id')
+  .then((data) => {
+		res.json(data);
+	})
+  .catch((error) => {
+		res.status(400).json(err)
+	});
+
+	// knex('skill_user')
+  // .join('skills', 'skill_user.skill_id', 'skills.id')
+  //   .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+	// 	.returning('*')
+	// 	.where({id: param_id})
+	// 	.update(result)
+	// 	.then((data) => {
+	// 		console.log('router userskills data: ', data);
+	// 		res.json(data[0]);
+  //   })
+  //   .catch((err) => {
+  //     res.status(400).json(err);
+  //   });
 })
 
 

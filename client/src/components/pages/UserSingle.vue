@@ -65,7 +65,7 @@
       <div>
         <h3>Skills</h3>
         <form id="edit_skills"  v-on:submit.prevent="edit_skills">
-          <div class="user col-lg-4" v-for="skill in skillOptions">
+          <div class="col-lg-4" v-for="skill in skillOptions">
             <input type="checkbox" :id="skill.label" :value="skill.value" v-model="skills">
             <label :for="skill.label"> {{ skill.label }} </label>
           </div>
@@ -97,7 +97,8 @@ export default {
     return {
       show: true,
       error: null,
-      skills: [],
+      skills: [
+      ],
       user: {
         first_name: '',
         last_name: '',
@@ -114,13 +115,6 @@ export default {
       url: '',
       videoId: '',
       skillOptions: []
-        // {'label': 'vocals', 'value': 'vocals'},
-        //               {'label': 'guitar', 'value': 'guitar'},
-        //               {'label': 'bass', 'value': 'bass'},
-        //               {'label': 'drums', 'value': 'drums'},
-        //               {'label': 'keyboard', 'value': 'keyboard'}
-        //             ]
-                        // 'guitar', 'bass', 'drums', 'keyboard']
     };
   },
 
@@ -131,13 +125,12 @@ export default {
       this.user = response.data[0];
       this.url = this.user.soundcloud_link;
       let sliceit = this.user.soundcloud_link.indexOf('=');
-      this.videoId = this.user.soundcloud_link.slice(sliceit+1, 100);
+      this.videoId = this.user.soundcloud_link.slice(sliceit + 1, 100);
     })
 ///userskills/:user_id'
     this.$http.get('userskills/' + this.$route.params.id).then(response => {
       // console.log(response);
       this.skills = response.body;
-
     })
 
     this.$http.get('skills/').then(response => {
@@ -162,29 +155,28 @@ export default {
       });
     },
     edit_skills(){
-      console.log('post skills array: ', this.skills);
       const skill_length = this.skills.length;
-      console.log('post skills slice: ', this.skills.slice(1, skill_length));
-      this.$http.post('userskills/' + this.$route.params.id, this.skills)
+      // console.log('post skills slice: ', this.skills.slice(0, skill_length));
+
+      let skillIdArr = this.skills.slice(0, skill_length)
+      let userSkillSets = [];
+      skillIdArr.forEach((skillId) => {
+        let skillIdset = {
+          user_id: localStorage.user_id,
+          skill_id: skillId
+        }
+        userSkillSets.push(skillIdset);
+      })
+      console.log('userSkillSets ?', userSkillSets)
+
+      this.$http.post('userskills/' + this.$route.params.id, userSkillSets)
         .then(response => {
-        this.skills = response.body;
         console.log('edit_skills method: ',response.body);
+        this.skills = response.body;
+
       });
     },
-  //   edit() {
-  //     this.$http.put('users/' + this.note.id, {
-  //       title: this.note.title,
-  //       text: this.note.text,
-  //     })
-  //     .then(function (response) {
-  //       if (response.status == 200) {
-  //          location.reload(true);
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       this.error = error;
-  //     });
-  //   }
+    // Youtube Vieo starts here
     method (url) {
       this.videoId = this.$youtube.getIdFromURL(url)
       this.startTime = this.$youtube.getTimeFromURL(url)
