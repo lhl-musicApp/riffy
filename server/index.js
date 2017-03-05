@@ -439,7 +439,6 @@ router.get('/users/:user_id', ejwt({
   }), (req, res) => {
   // console.log(req.params);
   // Grab data from the URL parameters
-  console.log(req.params);
   let param_id = req.params.user_id;
 
 
@@ -466,11 +465,12 @@ router.get('/userskills/:user_id', ejwt({
     .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
     .where({ user_id: param_id })
     .then((data) => {
-			console.log(data);
       let userdata = data[0];
       if (!userdata) {
         res.status(400).redirect('/login')
-      } else { res.json(data); }
+      } else {
+				console.log('get userskills: ', data[0]);
+				res.json(data); }
     })
     .catch((err) => {
       res.status(400).json(err);
@@ -480,20 +480,24 @@ router.get('/userskills/:user_id', ejwt({
 
 // TODO update skills query
 
-router.post('/userskills/:id', ejwt({
+// select skill_user.user_id as user_id, skills.skill_name as skill_name, skill_user.skill_rating as skill_rating, skill_user.skill_comment as skill_comment  from  skill_user join skills on skill_user.skill_id = skills.id;//
+
+router.post('/userskills/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-	console.log(req);
-  // console.log('userskill post req user: ', req.user);
-	// console.log('userskill post req params:', req.params )
-	console.log('userskill post req body:', req.body )
 
 	let param_id = req.user.id;
 	const result = req.body;
+	console.log('/userskills/ result: ', result);
 
-  knex.select().from('users').returning('*')
-		.where({id: param_id}).update(result)
+	knex('skill_user')
+  .join('skills', 'skill_user.skill_id', 'skills.id')
+    .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+		.returning('*')
+		.where({id: param_id})
+		.update(result)
 		.then((data) => {
+			console.log('router userskills data: ', data);
 			res.json(data[0]);
     })
     .catch((err) => {
@@ -509,9 +513,9 @@ router.post('/userskills/:id', ejwt({
 router.post('/users/:id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-	console.log('user post req.params: ', req.params)
-	console.log('user post req.user: ',req.user);
-	console.log('user post req.body: ', req.body);
+	// console.log('user post req.params: ', req.params)
+	// console.log('user post req.user: ',req.user);
+	// console.log('user post req.body: ', req.body);
 	let param_id = req.params.id;
   const result = req.body;
 

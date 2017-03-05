@@ -62,7 +62,8 @@
         <button @click="show = !show">Edit</button>
       </div>
 
-      <h3>Skills</h3>
+      <div>
+        <h3>Skills</h3>
         <form id="edit_skills"  v-on:submit.prevent="edit_skills">
           <div class="user col-lg-4" v-for="skill in skillOptions">
             <input type="checkbox" :id="skill.label" :value="skill.value" v-model="skills">
@@ -70,8 +71,6 @@
           </div>
           <button form="edit_skills" name="edit_skills" type="submit">Save</button>
         </form>
-      <div v-for="skill in skills">
-        <p>Name: {{ skill.skill_name }} </p>
       </div>
 
       <div class="container">
@@ -142,7 +141,6 @@ export default {
     })
 
     this.$http.get('skills/').then(response => {
-      console.log(response);
       response.body.forEach((skill) => {
         let skillset = {
           label: skill.skill_name,
@@ -160,7 +158,6 @@ export default {
     submit(){
       this.$http.post('users/' + this.$route.params.id, this.user)
         .then(response => {
-        console.log(response);
         this.user = response.body;
       });
     },
@@ -170,8 +167,8 @@ export default {
       console.log('post skills slice: ', this.skills.slice(1, skill_length));
       this.$http.post('userskills/' + this.$route.params.id, this.skills)
         .then(response => {
-        // this.skills = response.body;
-        console.log(response);
+        this.skills = response.body;
+        console.log('edit_skills method: ',response.body);
       });
     },
   //   edit() {
