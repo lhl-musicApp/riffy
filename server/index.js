@@ -33,8 +33,8 @@ const knex = require('knex')(knexConfig[ENV]);
 app.use(flash());
 app.use(cors());
 app.use(express.static('./public'));
-app.use(bodyParser.urlencoded({ extended: false, limit: '5mb'} ));
-app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({ extended: false, limit: '12mb' }));
+app.use(bodyParser.json({ limit: '12mb' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.set('superSecret', 'lkmaspokjsafpaoskdpa8asda0s9a'); // secret variable
@@ -310,7 +310,6 @@ router.get('/verify/:id/:token', function(req, res) {
 });
 
 
-
 // DATA ROUTES --> this is where pages are rendered
 router.get('/main', (req, res) => {
 	// const resultsArr = [];
@@ -441,7 +440,6 @@ router.get('/users/:user_id', ejwt({
   // Grab data from the URL parameters
   let param_id = req.params.user_id;
 
-
   knex.select().from('users').where({id: param_id})
     .then((data) => {
       let userdata = data[0];
@@ -536,6 +534,56 @@ router.post('/users/:id', ejwt({
     });
 })
 
+// THIS IS THE MESSAGES SECTION
+
+router.post('/users/:id/message',
+			ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }),
+	(req, res, next) => {
+		console.log('profile_id: ', req.params.id )
+		console.log('message content: ', req.body.content);
+		console.log('message date: ', req.body.createdAt);
+		console.log('message author_id: ', req.user.id);
+	if (!req.user) {
+    	return res.sendStatus(401)
+  	} else {
+			knex('messages').insert({
+				profile_id: req.params.id,
+				author_id: req.user.id,
+				content: req.body.content,
+			})
+	  	// .then((data) => {
+	    //   console.log(data);
+	    //   res.json(data);
+    	// })
+    	.catch((err) => {
+      	res.status(400).json(err);
+    	});
+  	}
+});
+
+router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+	// console.log(res);
+	console.log("I am the params: ", req.params);
+	knex('messages')
+	.join('users', 'messages.author_id', 'users.id')
+	.select('messages.profile_id as profile_id',
+					'messages.author_id as author_id',
+					'users.first_name as first_name',
+					'users.last_name as last_name',
+					'messages.content as content')
+	.where({
+	 	profile_id: req.params.id
+	})
+	.then((data) => {
+		console.log(data);
+		res.json(data);
+	})
+	.catch((err) => {
+		res.status(400).json(err);
+	});
+})
+
+
 // PUT users/:id
 // router.put('/edituser', ejwt({
 //     secret: app.get('superSecret')
@@ -583,8 +631,6 @@ router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
   }
 });
 
-
-
 router.post('/upload', upload.array(), (req, res) => {
   var base64Data = req.body.imageObj.image;
 
@@ -607,17 +653,43 @@ router.post('/upload', upload.array(), (req, res) => {
     var imageBuffer = decodeBase64Image(base64Data);
     console.log(imageBuffer);
 
-
-
-    fs.writeFile(__dirname + "/../client/src/uploads/out.jpeg", imageBuffer.data, 'base64', function(err) {
+    fs.writeFile(__dirname + "/upload/out.jpeg", imageBuffer.data, 'base64', function(err) {
         if (err) console.log(err);
-        fs.readFile(__dirname + "/../client/src/uploads/out.jpeg", function(err, data) {
+        fs.readFile(__dirname + "/upload/out.jpeg", function(err, data) {
             if (err) throw err;
             console.log('reading file...', data.toString('base64'));
             res.send(data);
         });
     });
 })
+
+
+// Audio Post
+router.post('/upload/audio', upload.single(), (req, res) => {
+  var base64Data = req.body.audioObj.audio;
+
+  console.log('writing file...', base64Data);
+
+  function decodeBase64Audio(data) {
+
+    response = {};
+    response.type = data[0];
+    response.data = new Buffer(data[1], 'base64');
+    console.log('response =>', response)
+    return response;
+  }
+
+  var audioBuffer = decodeBase64Audio(base64Data);
+  console.log('audioBuffer', audioBuffer);
+
+  fs.writeFile(__dirname + "/upload/out.mp3", audioBuffer.data, 'base64', function(err) {
+    if (err) console.log(err);
+    res.status(201).send();
+  });
+})
+
+
+
 
 
 //// ok
@@ -643,7 +715,7 @@ router.post('/bands/new', (req, res) => {
   res.send('this is POST /bands/new Page');
 })
 
-
+// GET SPECIFIC BAND
 router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
@@ -752,9 +824,7 @@ router.get('/tracks/:track_id', ejwt({
 router.get('/search',
 	// ejwt({ secret: app.get('superSecret')}),
 	(req, res) => {
-
   console.log(req.query);
-
   // if (!req.user) {
   //   return res.sendStatus(401)
   // } else {

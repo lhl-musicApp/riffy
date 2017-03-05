@@ -1,9 +1,10 @@
-import Vue from 'vue';
-import vSelect from 'vue-select'
-import Router from 'vue-router';
-import Resource from 'vue-resource';
-import App from './App';
-import VeeValidate from 'vee-validate';
+import Vue 							from 'vue';
+import vSelect				 	from 'vue-select'
+import Router 					from 'vue-router';
+import Resource 				from 'vue-resource';
+import App 							from './App';
+import VeeValidate 			from 'vee-validate';
+
 
 // Import components
 import Register from './components/pages/Register.vue';
@@ -11,19 +12,20 @@ import Hello from './components/pages/Hello.vue';
 import Login from './components/pages/Login.vue';
 import Users from './components/pages/Users.vue';
 import DragDrop from './components/pages/DragDrop.vue';
+import AudioDrop from './components/pages/AudioDrop.vue';
 import VueYouTubeEmbed from 'vue-youtube-embed';
 // import UserEditor from './components/pages/UserEditor.vue';
-import UserSingle from './components/pages/UserSingle.vue';
-import Main from './components/pages/Main.vue';
-import NoteSingle from './components/pages/NoteSingle.vue';
-import Verify from './components/pages/Verify.vue';
-import Search from './components/pages/Search.vue';
+import UserSingle 		from './components/pages/UserSingle.vue';
+import Main 					from './components/pages/Main.vue';
+import NoteSingle	 		from './components/pages/NoteSingle.vue';
+import Verify 				from './components/pages/Verify.vue';
+import Search 				from './components/pages/Search.vue';
 import ForgotPassword from './components/pages/ForgotPassword.vue';
-import ResetPassword from './components/pages/ResetPassword.vue';
-import Bands from './components/pages/Bands.vue';
-import BandSingle from './components/pages/BandSingle.vue';
-import Tracks from './components/pages/Tracks.vue';
-import TrackSingle from './components/pages/TrackSingle.vue';
+import ResetPassword 	from './components/pages/ResetPassword.vue';
+import Bands 					from './components/pages/Bands.vue';
+import BandSingle 		from './components/pages/BandSingle.vue';
+import Tracks 				from './components/pages/Tracks.vue';
+import TrackSingle 		from './components/pages/TrackSingle.vue';
 
 //Auth Setup
 // Check the user's auth status when the app starts
@@ -46,6 +48,7 @@ export var router = new Router({
 		{ path: '/search', component: Search },
 		{ path: '/verify', component: Verify },
     { path: '/drop', component: DragDrop },
+    { path: '/audiodrop', component: AudioDrop },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },

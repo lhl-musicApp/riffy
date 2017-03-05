@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <h1>Drag and Drop Page</h1>
+    <h1>Image upload Page</h1>
     <div v-if="!image">
     <h2>Select an image</h2>
     <input type="file" @change="onFileChange">
@@ -10,24 +10,24 @@
     <button @click="removeImage">Remove image</button>
     <button @click="saveImage">Save image</button>
   </div>
-<img :src="imageSrc" />
+
+  <img :src="imageSrc" />
 
   </div>
 </template>
 
 <script>
 import auth from '../../auth.js'
+
 export default {
   data () {
     return {
-      image: ''
-
+      image: '',
+      imageSrc: 'http://localhost:3000/uploads/out.jpeg'
     };
   },
   created () {
-    // this.$http.get('main').then(response => {
-    //   this.main = response.data;
-    // });
+
   },
   computed: {
 
@@ -82,4 +82,3 @@ img {
 }
 button {}
 </style>
-
