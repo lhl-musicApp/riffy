@@ -555,7 +555,7 @@ router.delete('/users/:id', (req, res) => {
 })
 
 
-router.post('/upload', upload.array(), (req, res) => {
+router.post('/upload', (req, res) => {
   var base64Data = req.body.imageObj.image;
 
     console.log('writing file...', base64Data);
