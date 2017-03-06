@@ -57,9 +57,9 @@
               <label for="user_influence">Influence</label>
               <input v-model="user.user_influence" placeholder="influence">
               <br>
-              <label for="youtube">Youtube</label>
+ <!--              <label for="youtube">Youtube</label>
               <input v-model="user.youtube_link" placeholder="influence">
-              <br>
+              <br> -->
               <label for="soundcloud_link">Soundcloud Link</label>
               <input v-model="user.soundcloud_link" placeholder="soundcloud link">
               <br>
