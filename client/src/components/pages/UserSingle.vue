@@ -2,6 +2,30 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-4">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        <image-component></image-component>
+      </div>
+      <div class="col-lg-2">
+        <audio-component></audio-component>
+      </div>
+
+      <div class="user col-lg-4">
+        <p>First Name: {{ user.first_name }}</p>
+        <p>Last Name: {{ user.last_name }}</p>
+        <p>Influence: {{ user.user_influence }}</p>
+        <p>email: {{ user.email }}</p>
+        <span>Gender: {{ user.gender }}</span>
+        <p>City: {{ user.user_city }}</p>
+        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
+        <p>Influence: {{ user.user_influence }}</p>
+        <p>Youtube Link: {{ user.youtube_link }} </p>
+        <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
+        <br>
+        <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
+        <button @click="show = !show">Edit</button>
+      </div>
+
+      <div class="col-lg-4">
         <form id="registration" v-on:submit.prevent="submit">
           <transition name="slide-fade">
             <div v-if="show" class="registration form-group">
@@ -32,6 +56,9 @@
               <br>
               <label for="user_influence">Influence</label>
               <input v-model="user.user_influence" placeholder="influence">
+              <br>
+              <label for="youtube">Youtube</label>
+              <input v-model="user.youtube_link" placeholder="influence">
               <br>
               <label for="soundcloud_link">Soundcloud Link</label>
               <input v-model="user.soundcloud_link" placeholder="soundcloud link">
@@ -107,6 +134,25 @@
             @playing="playing">
           </youtube>
         </section>
+
+        <div class="container">
+          <form v-on:submit.prevent="postmessage">
+            <div v-show="error" class="alert alert-danger" role="alert">
+              <strong>Oh snap!</strong> {{ error }}
+            </div>
+            <h3>Write them a message...</h3>
+            <div class="form-group">
+              <input type="text" class="form-control" v-model="messages.content" id="text">
+            </div>
+            <button type="postmessage" class="btn btn-primary">Send the message</button>
+          </form>
+        </div>
+        <!-- <drag-drop></drag-drop> -->
+        <div class="container" v-for="message in messages">
+          <p>{{ message.first_name }} {{ message.last_name }}</p>
+          <p>{{ message.content }}</p>
+          <p>{{ message.created_at }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -114,12 +160,29 @@
 
 <script>
 
+import auth from '../../auth.js';
+import imageComponent from './DragDrop.vue';
+import audioComponent from './AudioDrop.vue';
+
 export default {
   data () {
 
     return {
       show: true,
       error: null,
+
+      show: false,
+      user: auth.user,
+
+      error: null,
+      messages: {
+        author: '',
+        content: '',
+        first_name: '',
+        last_name: '',
+        created_at: ''
+      },
+
       user: {
         first_name: '',
         last_name: '',
@@ -136,7 +199,9 @@ export default {
       url: '',
       videoId: '',
       skillOptions: [],
-      skills: []
+      skills: [],
+      image: '',
+      imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
     };
   },
 
@@ -204,6 +269,42 @@ export default {
       });
     },
     // Youtube Vieo starts here
+
+    postmessage(){
+      this.$validator.validateAll();
+      if (!this.errors.any()) {
+        this.$http.post('users/' + this.$route.params.id + '/message', {
+          author_id: localStorage.user_id,
+          content: this.messages.content
+        })
+        .then(function (response) {
+          console.log(response);
+          if (response.status === 200){
+              console.log('Form submitted');
+              location.reload(true);
+          }
+        })
+        .catch(function (error) {
+          this.error = error;
+          });
+        }
+      },
+
+
+  //   edit() {
+  //     this.$http.put('users/' + this.note.id, {
+  //       title: this.note.title,
+  //       text: this.note.text,
+  //     })
+  //     .then(function (response) {
+  //       if (response.status == 200) {
+  //          location.reload(true);
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       this.error = error;
+  //     });
+  //   }
     method (url) {
       this.videoId = this.$youtube.getIdFromURL(url)
       this.startTime = this.$youtube.getTimeFromURL(url)
@@ -219,7 +320,7 @@ export default {
     },
     pause () {
       this.player.pauseVideo()
-    }
+    },
     // launchVideo() {
     //   this.videoLaunched = true;
     //   this.player.playVideo();
@@ -233,9 +334,13 @@ export default {
     // ended() {
     //   console.log('Ended');
     // }
-  },
 
-  components: {}
+
+  },
+  components: {
+    imageComponent,
+    audioComponent
+  }
 
 };
 

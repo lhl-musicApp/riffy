@@ -576,7 +576,8 @@ router.post('/users/:id/message',
 	if (!req.user) {
     	return res.sendStatus(401)
   	} else {
-			knex('messages').insert({
+			knex('messages').update('created_at', knex.fn.now())
+			.insert({
 				profile_id: req.params.id,
 				author_id: req.user.id,
 				content: req.body.content,
@@ -600,7 +601,8 @@ router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
 					'messages.author_id as author_id',
 					'users.first_name as first_name',
 					'users.last_name as last_name',
-					'messages.content as content')
+					'messages.content as content',
+					'messages.created_at as created_at')
 	.where({
 	 	profile_id: req.params.id
 	})
@@ -644,7 +646,10 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-
+router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+  // console.log(res);
+  console.log("uploads param", req.user.id);
+})
 //// ok
 router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
   if (!req.user) {
@@ -683,22 +688,20 @@ router.post('/upload', upload.array(), (req, res) => {
     var imageBuffer = decodeBase64Image(base64Data);
     console.log(imageBuffer);
 
-    fs.writeFile(__dirname + "/upload/out.jpeg", imageBuffer.data, 'base64', function(err) {
-        if (err) console.log(err);
-        fs.readFile(__dirname + "/upload/out.jpeg", function(err, data) {
-            if (err) throw err;
-            console.log('reading file...', data.toString('base64'));
-            res.send(data);
-        });
+    fs.writeFile(__dirname + "/upload/image-" + req.user.id +".jpeg", imageBuffer.data, 'base64', function(err) {
+      if (err){
+        res.status(400).json(err);
+      }
     });
 })
 
 
 // Audio Post
-router.post('/upload/audio', upload.single(), (req, res) => {
+router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+
   var base64Data = req.body.audioObj.audio;
 
-  console.log('writing file...', base64Data);
+  console.log('audio params id:', req.user.id);
 
   function decodeBase64Audio(data) {
 
@@ -712,17 +715,13 @@ router.post('/upload/audio', upload.single(), (req, res) => {
   var audioBuffer = decodeBase64Audio(base64Data);
   console.log('audioBuffer', audioBuffer);
 
-  fs.writeFile(__dirname + "/upload/out.mp3", audioBuffer.data, 'base64', function(err) {
+  fs.writeFile(__dirname + '/upload/audio-' + req.user.id + '.mp3', audioBuffer.data, 'base64', function(err) {
     if (err) console.log(err);
     res.status(201).send();
   });
 })
 
-
-
-
-
-//// ok
+// GET all bands info
 router.get('/bands', ejwt({ secret: app.get('superSecret') }), (req, res) => {
   if (!req.user) {
     return res.sendStatus(401)
@@ -739,45 +738,52 @@ router.get('/bands', ejwt({ secret: app.get('superSecret') }), (req, res) => {
 });
 
 
+// POST new band
+router.post('/bands/new', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+  const newBand = req.body;
+  const newBandCreator = req.user.id;
 
-// New Band - Not Done
-router.post('/bands/new', (req, res) => {
-  res.send('this is POST /bands/new Page');
+  knex('bands').insert(newBand).returning('*')
+  .then((data) => {
+    knex('band_user')
+    .insert({
+      band_id: data[0].id,
+      user_id: newBandCreator,
+      isBandAdmin: true
+    }).returning('*')
+    .then((data) => {
+      res.json(data[0]);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    })
+  });
 })
 
-// GET SPECIFIC BAND
+// GET specific band info
 router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
   , (req, res) => {
-  // console.log("Req User check in Band Detail: ", req.user);
-  // console.log("Param in Get Band: ", req.params);
-
-  // Grab data from the URL parameters
   let param_id = req.params.band_id;
 
   knex.select().from('bands').where({ id: param_id })
     .then((data) => {
-      // console.log('band id data: ', data);
-      // let banddata = data[0];
-      // if (param_id === banddata.id) {
-      //   console.log(data);
         res.json(data);
-      // } else {
-      //   res.status(400).redirect('/index')
     })
     .catch((err) => {
       res.status(400).json(err);
     });
 });
 
+// GET all band with track information
 router.get('/bandtracks/:band_id',
 	ejwt({
     secret: app.get('superSecret')
   }),
 	(req, res) => {
-  // console.log("Req User check in Band Detail: ", req.user);
-  // console.log("Param in Get Band Tracks: ", req.params);
   let param_id = req.params.band_id;
 
   knex('bands')
@@ -785,7 +791,6 @@ router.get('/bandtracks/:band_id',
     .select('tracks.id as track_id', 'bands.id as band_id', 'tracks.track_name as track_name', 'tracks.isCreator as isCreator', 'tracks.original_artist as original_artist', 'tracks.soundcloud_link as soundcloud_link', 'tracks.isPublished as isPublished')
     .where({ band_id: param_id })
     .then((data) => {
-      // console.log('band track id data: ', data);
         res.json(data);
     })
     .catch((err) => {
@@ -892,10 +897,25 @@ router.get('/search',
   // }
 });
 
-
-router.post('/tracks/new', (req, res) => {
-  res.send('this is POST /tracks/new Page');
-})
+//
+router.post('/tracks/new', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+  // console.log('new track - req user: ', req.user);
+  // console.log('new track - req body: ', req.body);
+  const userId = req.user.id;
+  const trackInfo = req.body;
+  trackInfo.userId;
+  knex('tracks')
+  .insert(trackInfo).returning('*')
+  .then((data) => {
+    console.log(data[0]);
+    res.json(data[0]);
+  })
+  .catch((err) => {
+    res.json(err);
+  })
+});
 
 
 router.put('/tracks/:id', (req, res) => {

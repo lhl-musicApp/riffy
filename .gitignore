@@ -1,12 +1,13 @@
 .DS_Store
 client/node_modules/
-client/dist/
+client/src/uploads
 client/npm-debug.log
 client/selenium-debug.log
 test/unit/coverage
 test/e2e/reports
 rethinkdb_data/
 server/node_modules/
+server/upload/
 
 # Logs
 logs
