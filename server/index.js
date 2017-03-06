@@ -556,8 +556,10 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
+router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+  // console.log(res);
+  console.log("uploads param", req.user.id);
 
-router.post('/upload', (req, res) => {
   var base64Data = req.body.imageObj.image;
 
     console.log('writing file...', base64Data);
@@ -579,13 +581,10 @@ router.post('/upload', (req, res) => {
     var imageBuffer = decodeBase64Image(base64Data);
     console.log(imageBuffer);
 
-    fs.writeFile(__dirname + "/upload/out.jpeg", imageBuffer.data, 'base64', function(err) {
-        if (err) console.log(err);
-        fs.readFile(__dirname + "/upload/out.jpeg", function(err, data) {
-            if (err) throw err;
-            console.log('reading file...', data.toString('base64'));
-            res.send(data);
-        });
+    fs.writeFile(__dirname + "/upload/image-" + req.user.id +".jpeg", imageBuffer.data, 'base64', function(err) {
+      if (err){
+        res.status(400).json(err);
+      }
     });
 })
 
