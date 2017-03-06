@@ -2,6 +2,36 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-4">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        <img :src="imageSrc" />
+        <div v-if="!image">
+          <h6>Select an image</h6>
+          <input type="file" @change="onFileChange">
+        </div>
+        <div v-else>
+          <img :src="image" />
+          <button @click="removeImage">Remove image</button>
+          <button @click="saveImage">Save image</button>
+        </div>
+      </div>
+
+      <div class="user col-lg-4">
+        <p>First Name: {{ user.first_name }}</p>
+        <p>Last Name: {{ user.last_name }}</p>
+        <p>Influence: {{ user.user_influence }}</p>
+        <p>email: {{ user.email }}</p>
+        <span>Gender: {{ user.gender }}</span>
+        <p>City: {{ user.user_city }}</p>
+        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
+        <p>Influence: {{ user.user_influence }}</p>
+        <p>Youtube Link: {{ user.youtube_link }} </p>
+        <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
+        <br>
+        <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
+        <button @click="show = !show">Edit</button>
+      </div>
+
+      <div class="col-lg-4">
         <form id="registration" v-on:submit.prevent="submit">
           <transition name="slide-fade">
             <div v-if="show" class="registration form-group">
@@ -33,6 +63,9 @@
               <label for="user_influence">Influence</label>
               <input v-model="user.user_influence" placeholder="influence">
               <br>
+              <label for="youtube">Youtube</label>
+              <input v-model="user.youtube_link" placeholder="influence">
+              <br>
               <label for="soundcloud_link">Soundcloud Link</label>
               <input v-model="user.soundcloud_link" placeholder="soundcloud link">
               <br>
@@ -44,22 +77,6 @@
             </div>
           </transition>
         </form>
-      </div>
-
-      <div class="user col-lg-4">
-        <p>First Name: {{ user.first_name }}</p>
-        <p>Last Name: {{ user.last_name }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>email: {{ user.email }}</p>
-        <span>Gender: {{ user.gender }}</span>
-        <p>City: {{ user.user_city }}</p>
-        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>Youtube Link: {{ user.youtube_link }} </p>
-        <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
-        <br>
-        <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
-        <button @click="show = !show">Edit</button>
       </div>
 
       <div class="container">
@@ -84,7 +101,7 @@
             <button type="postmessage" class="btn btn-primary">Send the message</button>
           </form>
         </div>
-
+        <!-- <drag-drop></drag-drop> -->
         <div class="container" v-for="message in messages">
           <p>{{ message.first_name }} {{ message.last_name }}</p>
           <p>{{ message.content }}</p>
@@ -99,6 +116,7 @@
 </template>
 
 <script>
+
 import auth from '../../auth.js';
 export default {
 
@@ -106,7 +124,7 @@ export default {
 
     return {
 
-      show: true,
+      show: false,
       user: auth.user,
 
       error: null,
@@ -132,7 +150,9 @@ export default {
         looking_for: false
       },
       url: '',
-      videoId: ''
+      videoId: '',
+      image: '',
+      imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
     };
   },
 
@@ -213,7 +233,7 @@ export default {
     },
     pause () {
       this.player.pauseVideo()
-    }
+    },
     // launchVideo() {
     //   this.videoLaunched = true;
     //   this.player.playVideo();
@@ -227,9 +247,46 @@ export default {
     // ended() {
     //   console.log('Ended');
     // }
-  },
 
-  components: {}
+    // Image methods
+    onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
+
+      reader.onload = (e) => {
+        vm.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      console.log(reader);
+    },
+    removeImage: function (e) {
+      this.image = '';
+    },
+    saveImage: function (e) {
+      const imageObj = {
+        image : this.image
+      }
+      // console.log('reader', this.image)
+      this.$http.post('upload', {imageObj,
+        headers: {
+          'Content-Type': 'image/jpeg'
+        }
+      })
+        .then(response => {
+        console.log('saveImage =>', response)
+      });
+    }
+  },
+  components: {
+
+  }
 
 };
 
