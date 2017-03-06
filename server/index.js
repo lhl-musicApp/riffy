@@ -460,14 +460,14 @@ router.get('/userskills/:user_id', ejwt({
   let param_id = req.params.user_id;
 	knex('skill_user')
   .join('skills', 'skill_user.skill_id', 'skills.id')
-    .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+    .select('skill_user.user_id as user_id', 'skill_user.skill_id as skill_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
     .where({ user_id: param_id })
     .then((data) => {
-      let userdata = data[0];
+      let userdata = data;
       if (!userdata) {
         res.status(400).redirect('/login')
       } else {
-				console.log('get userskills: ', data[0]);
+				console.log('get userskills: ', data);
 				res.json(data); }
     })
     .catch((err) => {
@@ -487,18 +487,36 @@ router.post('/userskills/:user_id', ejwt({
 	const skill_req = req.body;
 	console.log('/userskills/ skill_req: ', skill_req);
 
-	const rows = skill_req;
+	// const rows = skill_req;
+
 	var chunkSize = 1000;
 	//result = array or skills selected
 
-	knex.batchInsert('skill_user', rows, chunkSize)
-  .returning('user_id', 'band_id')
-  .then((data) => {
-		res.json(data);
-	})
-  .catch((error) => {
-		res.status(400).json(err)
-	});
+	skill_req.forEach((skill) => {
+			console.log('skill log: ',skill);
+
+		knex('skill_user')
+			.where('skill.skill_id', '=', 'slill_id')
+			.update('*')
+		});
+		// 	knex('skill_user').insert('*')
+		// 	.then((data) => {
+		// 		res.json(data);
+		// 	})
+		//   .catch((err) => {
+		// 		res.status(400).json(err)
+		// 	});
+		//
+
+
+	// knex.batchInsert('skill_user', rows, chunkSize)
+  // .returning('user_id', 'band_id')
+  // .then((data) => {
+	// 	res.json(data);
+	// })
+  // .catch((err) => {
+	// 	res.status(400).json(err)
+	// });
 
 	// knex('skill_user')
   // .join('skills', 'skill_user.skill_id', 'skills.id')
