@@ -1,18 +1,21 @@
 <template lang="html">
   <div>
-    <h1>Image upload Page</h1>
+    <div v-if="!imageSrc">
+      <p>You don't have an image</p>
+    </div>
+    <div v-else>
+      <img :src="imageSrc" />
+    </div>
+
     <div v-if="!image">
-    <h2>Select an image</h2>
-    <input type="file" @change="onFileChange">
-  </div>
-  <div v-else>
-    <img :src="image" />
-    <button @click="removeImage">Remove image</button>
-    <button @click="saveImage">Save image</button>
-  </div>
-
-  <img :src="imageSrc" />
-
+      <h6>Select an image</h6>
+      <input type="file" @change="onFileChange">
+    </div>
+    <div v-else>
+      <img :src="image" />
+      <button @click="removeImage">Remove image</button>
+      <button @click="saveImage">Save image</button>
+    </div>
   </div>
 </template>
 
@@ -23,7 +26,7 @@ export default {
   data () {
     return {
       image: '',
-      imageSrc: 'http://localhost:3000/uploads/out.jpeg'
+      imageSrc: 'http://localhost:3000/uploads/image-' + this.$route.params.id +'.jpeg'
     };
   },
   created () {
