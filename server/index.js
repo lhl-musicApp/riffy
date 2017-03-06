@@ -486,7 +486,8 @@ router.post('/users/:id/message',
 	if (!req.user) {
     	return res.sendStatus(401)
   	} else {
-			knex('messages').insert({
+			knex('messages').update('created_at', knex.fn.now())
+			.insert({
 				profile_id: req.params.id,
 				author_id: req.user.id,
 				content: req.body.content,
@@ -510,7 +511,8 @@ router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
 					'messages.author_id as author_id',
 					'users.first_name as first_name',
 					'users.last_name as last_name',
-					'messages.content as content')
+					'messages.content as content',
+					'messages.created_at as created_at')
 	.where({
 	 	profile_id: req.params.id
 	})
