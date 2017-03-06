@@ -17,6 +17,7 @@ export var router = new Router({
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { checksAuth: true } },
     { path: '/bandtracks/:id', component: BandSingle, meta: { checksAuth: true }},
     { path: '/tracks', component: Tracks, meta: { requiresAuth: true }},
+    { path: '/tracks/new', component: TrackNew, meta: { requiresAuth: true }},
     { name: 'trackSingle', path: '/tracks/:id', component: TrackSingle, meta: { checksAuth: true } }
 	]
 });

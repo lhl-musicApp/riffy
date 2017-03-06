@@ -25,6 +25,7 @@ import Bands from './components/pages/Bands.vue';
 import BandNew from './components/pages/BandNew.vue';
 import BandSingle from './components/pages/BandSingle.vue';
 import Tracks from './components/pages/Tracks.vue';
+import TrackNew from './components/pages/TrackNew.vue';
 import TrackSingle from './components/pages/TrackSingle.vue';
 
 //Auth Setup
@@ -61,6 +62,7 @@ export var router = new Router({
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { requiresAuth: true } },
     { path: '/bandtracks/:id', component: BandSingle, meta: { checksAuth: true }},
     { path: '/tracks', component: Tracks, meta: { requiresAuth: true } },
+    { path: '/tracks/new', component: TrackNew, meta: { requiresAuth: true } },
     { name: 'trackSingle', path: '/tracks/:id', component: TrackSingle, meta: { requiresAuth: true } }
 	]
 });
