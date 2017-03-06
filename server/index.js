@@ -633,10 +633,31 @@ router.get('/bands', ejwt({ secret: app.get('superSecret') }), (req, res) => {
 });
 
 
-
 // New Band - Not Done
-router.post('/bands/new', (req, res) => {
-  res.send('this is POST /bands/new Page');
+router.post('/bands/new', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+  // console.log(req.user);
+  // console.log(req.body);
+  const newBand = req.body;
+  const newBandCreator = req.user.id;
+
+  knex('bands').insert(newBand)
+  .returning('*')
+  .then((data) => {
+    knex('band_user')
+    .insert({
+      band_id: data[0].id,
+      user_id: newBandCreator,
+      isBandAdmin: true
+    }).returning('*')
+    .then((data) => {
+      res.json(data[0]);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    })
+  });
 })
 
 // GET SPECIFIC BAND
