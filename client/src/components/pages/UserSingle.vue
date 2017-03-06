@@ -5,6 +5,9 @@
         <h1>{{ user.first_name }} {{ user.last_name }}</h1>
         <image-component></image-component>
       </div>
+      <div class="col-lg-2">
+        <audio-component></audio-component>
+      </div>
 
       <div class="user col-lg-4">
         <p>First Name: {{ user.first_name }}</p>
@@ -110,6 +113,7 @@
 
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
+import audioComponent from './AudioDrop.vue';
 export default {
 
   data () {
@@ -243,7 +247,8 @@ export default {
 
   },
   components: {
-    imageComponent
+    imageComponent,
+    audioComponent
   }
 
 };
