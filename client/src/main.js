@@ -21,6 +21,7 @@ import Search from './components/pages/Search.vue';
 import ForgotPassword from './components/pages/ForgotPassword.vue';
 import ResetPassword from './components/pages/ResetPassword.vue';
 import Bands from './components/pages/Bands.vue';
+import BandNew from './components/pages/BandNew.vue';
 import BandSingle from './components/pages/BandSingle.vue';
 import Tracks from './components/pages/Tracks.vue';
 import TrackSingle from './components/pages/TrackSingle.vue';
@@ -51,8 +52,8 @@ export var router = new Router({
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } },
-		// { name: 'userEditor', path: '/edituser', component: UserSingle, meta: { requiresAuth: true } }
     { path: '/bands', component: Bands, meta: { requiresAuth: true } },
+    { path: '/bands/new', component: BandNew, meta: { requiresAuth: true } },
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { requiresAuth: true } },
     { path: '/bandtracks/:id', component: BandSingle, meta: { checksAuth: true }},
     { path: '/tracks', component: Tracks, meta: { requiresAuth: true } },
