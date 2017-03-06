@@ -27,6 +27,7 @@ export default {
     };
   },
   created () {
+    // console.log('From DragDrop Vue :', localStorage.user_id)
 
   },
   computed: {
@@ -69,7 +70,7 @@ export default {
       });
     }
   },
-  components: {}
+  components: { }
 };
 </script>
 
