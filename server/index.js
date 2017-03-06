@@ -590,10 +590,11 @@ router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, 
 
 
 // Audio Post
-router.post('/upload/audio', upload.single(), (req, res) => {
+router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+
   var base64Data = req.body.audioObj.audio;
 
-  console.log('writing file...', base64Data);
+  console.log('audio params id:', req.user.id);
 
   function decodeBase64Audio(data) {
 
@@ -607,7 +608,7 @@ router.post('/upload/audio', upload.single(), (req, res) => {
   var audioBuffer = decodeBase64Audio(base64Data);
   console.log('audioBuffer', audioBuffer);
 
-  fs.writeFile(__dirname + "/upload/out.mp3", audioBuffer.data, 'base64', function(err) {
+  fs.writeFile(__dirname + '/upload/audio-' + req.user.id + '.mp3', audioBuffer.data, 'base64', function(err) {
     if (err) console.log(err);
     res.status(201).send();
   });
