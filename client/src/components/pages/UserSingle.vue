@@ -79,9 +79,6 @@
             </div>
             <h3>Write them a message...</h3>
             <div class="form-group">
-              <input type="text" class="form-control" v-model="messages.author" id="text">
-            </div>
-            <div class="form-group">
               <input type="text" class="form-control" v-model="messages.content" id="text">
             </div>
             <button type="postmessage" class="btn btn-primary">Send the message</button>
@@ -91,6 +88,7 @@
         <div class="container" v-for="message in messages">
           <p>{{ message.first_name }} {{ message.last_name }}</p>
           <p>{{ message.content }}</p>
+          <p>{{ message.created_at }}</p>
         </div>
 
 
@@ -116,7 +114,8 @@ export default {
         author: '',
         content: '',
         first_name: '',
-        last_name: ''
+        last_name: '',
+        created_at: ''
       },
 
       user: {
@@ -169,12 +168,11 @@ export default {
       if (!this.errors.any()) {
         this.$http.post('users/' + this.$route.params.id + '/message', {
           author_id: localStorage.user_id,
-          content: this.messages.content,
-          created_at: Date.now()
+          content: this.messages.content
         })
         .then(function (response) {
           console.log(response);
-          if (response.status == 200) {
+          if (response.status === 200){
               console.log('Form submitted');
               location.reload(true);
           }
@@ -184,6 +182,7 @@ export default {
           });
         }
       },
+
 
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {

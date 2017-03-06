@@ -486,7 +486,8 @@ router.post('/users/:id/message',
 	if (!req.user) {
     	return res.sendStatus(401)
   	} else {
-			knex('messages').insert({
+			knex('messages').update('created_at', knex.fn.now())
+			.insert({
 				profile_id: req.params.id,
 				author_id: req.user.id,
 				content: req.body.content,
@@ -510,7 +511,8 @@ router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
 					'messages.author_id as author_id',
 					'users.first_name as first_name',
 					'users.last_name as last_name',
-					'messages.content as content')
+					'messages.content as content',
+					'messages.created_at as created_at')
 	.where({
 	 	profile_id: req.params.id
 	})
@@ -633,10 +635,31 @@ router.get('/bands', ejwt({ secret: app.get('superSecret') }), (req, res) => {
 });
 
 
-
 // New Band - Not Done
-router.post('/bands/new', (req, res) => {
-  res.send('this is POST /bands/new Page');
+router.post('/bands/new', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+  // console.log(req.user);
+  // console.log(req.body);
+  const newBand = req.body;
+  const newBandCreator = req.user.id;
+
+  knex('bands').insert(newBand)
+  .returning('*')
+  .then((data) => {
+    knex('band_user')
+    .insert({
+      band_id: data[0].id,
+      user_id: newBandCreator,
+      isBandAdmin: true
+    }).returning('*')
+    .then((data) => {
+      res.json(data[0]);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    })
+  });
 })
 
 // GET SPECIFIC BAND

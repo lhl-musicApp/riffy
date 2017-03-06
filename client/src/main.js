@@ -5,7 +5,6 @@ import Resource 				from 'vue-resource';
 import App 							from './App';
 import VeeValidate 			from 'vee-validate';
 
-
 // Import components
 import Register from './components/pages/Register.vue';
 import Hello from './components/pages/Hello.vue';
@@ -21,11 +20,12 @@ import NoteSingle	 		from './components/pages/NoteSingle.vue';
 import Verify 				from './components/pages/Verify.vue';
 import Search 				from './components/pages/Search.vue';
 import ForgotPassword from './components/pages/ForgotPassword.vue';
-import ResetPassword 	from './components/pages/ResetPassword.vue';
-import Bands 					from './components/pages/Bands.vue';
-import BandSingle 		from './components/pages/BandSingle.vue';
-import Tracks 				from './components/pages/Tracks.vue';
-import TrackSingle 		from './components/pages/TrackSingle.vue';
+import ResetPassword from './components/pages/ResetPassword.vue';
+import Bands from './components/pages/Bands.vue';
+import BandNew from './components/pages/BandNew.vue';
+import BandSingle from './components/pages/BandSingle.vue';
+import Tracks from './components/pages/Tracks.vue';
+import TrackSingle from './components/pages/TrackSingle.vue';
 
 //Auth Setup
 // Check the user's auth status when the app starts
@@ -36,6 +36,8 @@ Vue.use(Resource);
 Vue.use(Router);
 Vue.use(VueYouTubeEmbed);
 Vue.component(vSelect);
+
+
 // Routes
 export var router = new Router({
 	mode: 'history',
@@ -54,8 +56,8 @@ export var router = new Router({
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } },
-		// { name: 'userEditor', path: '/edituser', component: UserSingle, meta: { requiresAuth: true } }
     { path: '/bands', component: Bands, meta: { requiresAuth: true } },
+    { path: '/bands/new', component: BandNew, meta: { requiresAuth: true } },
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { requiresAuth: true } },
     { path: '/bandtracks/:id', component: BandSingle, meta: { checksAuth: true }},
     { path: '/tracks', component: Tracks, meta: { requiresAuth: true } },
