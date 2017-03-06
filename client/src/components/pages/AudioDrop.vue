@@ -14,6 +14,7 @@
     <button @click="loadSound">loadsong</button>
 
   </div>
+</div>
 </template>
 <script>
 
@@ -107,4 +108,3 @@ img {
 }
 button {}
 </style>
-

@@ -5,7 +5,6 @@ import Resource 				from 'vue-resource';
 import App 							from './App';
 import VeeValidate 			from 'vee-validate';
 
-
 // Import components
 import Register from './components/pages/Register.vue';
 import Hello from './components/pages/Hello.vue';
@@ -36,6 +35,8 @@ Vue.use(Resource);
 Vue.use(Router);
 Vue.use(VueYouTubeEmbed);
 Vue.component(vSelect);
+
+
 // Routes
 export var router = new Router({
 	mode: 'history',
