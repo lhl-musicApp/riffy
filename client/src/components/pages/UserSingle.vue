@@ -3,16 +3,7 @@
     <div class="row">
       <div class="col-lg-4">
         <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-        <img :src="imageSrc" />
-        <div v-if="!image">
-          <h6>Select an image</h6>
-          <input type="file" @change="onFileChange">
-        </div>
-        <div v-else>
-          <img :src="image" />
-          <button @click="removeImage">Remove image</button>
-          <button @click="saveImage">Save image</button>
-        </div>
+        <image-component></image-component>
       </div>
 
       <div class="user col-lg-4">
@@ -118,6 +109,7 @@
 <script>
 
 import auth from '../../auth.js';
+import imageComponent from './DragDrop.vue';
 export default {
 
   data () {
@@ -248,44 +240,10 @@ export default {
     //   console.log('Ended');
     // }
 
-    // Image methods
-    onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length)
-        return;
-      this.createImage(files[0]);
-    },
-    createImage(file) {
-      var image = new Image();
-      var reader = new FileReader();
-      var vm = this;
 
-      reader.onload = (e) => {
-        vm.image = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      console.log(reader);
-    },
-    removeImage: function (e) {
-      this.image = '';
-    },
-    saveImage: function (e) {
-      const imageObj = {
-        image : this.image
-      }
-      // console.log('reader', this.image)
-      this.$http.post('upload', {imageObj,
-        headers: {
-          'Content-Type': 'image/jpeg'
-        }
-      })
-        .then(response => {
-        console.log('saveImage =>', response)
-      });
-    }
   },
   components: {
-
+    imageComponent
   }
 
 };
