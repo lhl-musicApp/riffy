@@ -1,8 +1,9 @@
 <template lang="html">
   <div>
     <label class="typo__label">Simple select / dropdown</label>
-    <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Pick some" label="name" track-by="name"></multiselect>
+    <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Pick some" label="skill_name" track-by="skill_name"></multiselect>
     <!-- <pre class="language-json"><code>{{ value  }}</code></pre> -->
+    <
   </div>
 
 </template>
@@ -20,22 +21,35 @@ export default {
       value: [
       ],
       options: [
-        { name: 'Guitar', },
-        { name: 'Bass', },
-        { name: 'Drums', },
-        { name: 'Trumpet', },
-        { name: 'Piano', },
-        { name: 'Violin', },
-        { name: 'Singing', },
-        { name: 'Writing', },
-        { name: 'Ukulele', },
-        { name: 'Saxophone', },
-        { name: 'Electric Guitar', },
-        { name: 'Acoustic Guitar', },
+        { skill_name: 'Guitar', },
+        { skill_name: 'Bass', },
+        { skill_name: 'Drums', },
+        { skill_name: 'Trumpet', },
+        { skill_name: 'Piano', },
+        { skill_name: 'Violin', },
+        { skill_name: 'Singing', },
+        { skill_name: 'Writing', },
+        { skill_name: 'Ukulele', },
+        { skill_name: 'Saxophone', },
+        { skill_name: 'Electric Guitar', },
+        { skill_name: 'Acoustic Guitar', },
       ]
     }
+  },
+
+  created () {
+    this.$http.get('users/skills/' + this.$route.params.id).then(response => {
+    console.log('get skills data: ', response.body);
+    this.value = response.body;
+    console.log(this.value);
+    });
+  },
+  methods: {
+    saveSkills() {
+      this.$http.post('users/skills/' + this.$route.params.id, this.value);
+    }
   }
-}
+};
 
 </script>
 
