@@ -36,7 +36,6 @@ Vue.use(Router);
 Vue.use(VueYouTubeEmbed);
 Vue.component(vSelect);
 
-
 // Routes
 export var router = new Router({
 	mode: 'history',

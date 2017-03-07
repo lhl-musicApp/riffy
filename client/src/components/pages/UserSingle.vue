@@ -88,7 +88,7 @@
         <div class="container" v-for="message in messages">
           <p>{{ message.first_name }} {{ message.last_name }}</p>
           <p>{{ message.content }}</p>
-          <p>{{ message.created_at }}</p>
+          <p>{{ moment(message.created_at) }}</p>
         </div>
 
 
@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import auth from '../../auth.js';
 export default {
 
@@ -133,8 +134,13 @@ export default {
       },
       url: '',
       videoId: ''
-    };
+    }
   },
+    ready: function(){
+        $("p.timeago").timeago();
+        this.timestamp();
+        $("p.timeago").timeago('updateFromDOM');
+      },
 
   created () {
     console.log('this.$route.params.id: ', this.$route.params.id)
@@ -183,6 +189,9 @@ export default {
         }
       },
 
+      moment(date){
+        return moment(date).fromNow();
+      },
 
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
