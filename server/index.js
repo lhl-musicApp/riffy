@@ -612,6 +612,10 @@ router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), 
     if (err) console.log(err);
     res.status(201).send();
   });
+
+
+  // const buffer = fs.createWriteStream(filename);
+  // req.request.pipe(buffer);
 })
 
 
