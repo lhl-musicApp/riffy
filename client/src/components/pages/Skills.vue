@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
     <label class="typo__label">Simple select / dropdown</label>
-    <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Pick some" label="skill_name" track-by="skill_name"></multiselect>
+    <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Pick some" label="skill_name" track-by="skill_name" ></multiselect>
+    <button @click="saveSkills"></button>
     <!-- <pre class="language-json"><code>{{ value  }}</code></pre> -->
-    <
   </div>
 
 </template>
@@ -18,8 +18,7 @@ export default {
   components: { Multiselect },
   data () {
     return {
-      value: [
-      ],
+      value: [],
       options: [
         { skill_name: 'Guitar', },
         { skill_name: 'Bass', },
@@ -41,12 +40,15 @@ export default {
     this.$http.get('users/skills/' + this.$route.params.id).then(response => {
     console.log('get skills data: ', response.body);
     this.value = response.body;
-    console.log(this.value);
+    console.log('this.value:', this.value);
     });
   },
   methods: {
-    saveSkills() {
-      this.$http.post('users/skills/' + this.$route.params.id, this.value);
+    saveSkills(skill) {
+      this.$http.post('users/skills/' + this.$route.params.id, this.value ).then(response => {
+        console.log('post from client')
+      });
+      console.log('saveSkills: ', this.value)
     }
   }
 };
