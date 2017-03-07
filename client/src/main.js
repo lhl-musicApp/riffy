@@ -13,6 +13,8 @@ import Users from './components/pages/Users.vue';
 import DragDrop from './components/pages/DragDrop.vue';
 import AudioDrop from './components/pages/AudioDrop.vue';
 import Howler from './components/pages/Howler.vue';
+import Radio from './components/pages/Radio.vue';
+import Streaming from './components/pages/Stream.vue';
 import VueYouTubeEmbed from 'vue-youtube-embed';
 // import UserEditor from './components/pages/UserEditor.vue';
 import UserSingle 		from './components/pages/UserSingle.vue';
@@ -53,6 +55,8 @@ export var router = new Router({
     { path: '/drop', component: DragDrop },
     { path: '/audiodrop', component: AudioDrop },
     { path: '/howler', component: Howler },
+    { path: '/stream', component: Streaming },
+    { path: '/radio', component: Radio },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
