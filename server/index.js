@@ -485,31 +485,31 @@ router.post('/users/skills/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
 	let param_id = req.user.id;
-	console.log('/users/skills/skill_req: ', skill_req);
+	let rows = req.body;
+	console.log('/users/skills/skill_req: ', rows);
 
 	// const rows = skill_req;
 
 	// var chunkSize = 1000;
-	//result = array or skills selected
 
-	skill_req.forEach((skill) => {
-			console.log('skill log: ',skill);
+	// skill_req.forEach((skill) => {
+	// 		console.log('skill log: ',skill);
+	//
+	// 	knex('skill_user')
+	// 		.where('skill.skill_id', '=', 'skill_id')
+	// 		.returning('*')
+	// 		.update(skill)
+	// 	});
+	// 	// 	knex('skill_user').insert('*')
+	// 	// 	.then((data) => {
+	// 	// 		res.json(data);
+	// 	// 	})
+	// 	//   .catch((err) => {
+	// 	// 		res.status(400).json(err)
+	// 	// 	});
+	// 	//
 
-		knex('skill_user')
-			.where('skill.skill_id', '=', 'skill_id')
-			.returning('*')
-			.update(skill)
-		});
-		// 	knex('skill_user').insert('*')
-		// 	.then((data) => {
-		// 		res.json(data);
-		// 	})
-		//   .catch((err) => {
-		// 		res.status(400).json(err)
-		// 	});
-		//
-
-
+	//
 	// knex.batchInsert('skill_user', rows, chunkSize)
   // .returning('user_id', 'band_id')
   // .then((data) => {
