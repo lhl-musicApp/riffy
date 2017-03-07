@@ -1,13 +1,6 @@
 <template lang="html">
   <div class="container">
     <div class="row">
-      <div class="col-lg-4">
-        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-        <image-component></image-component>
-      </div>
-      <div class="col-lg-2">
-        <audio-component></audio-component>
-      </div>
 
       <div class="user col-lg-4">
         <p>First Name: {{ user.first_name }}</p>
@@ -22,7 +15,8 @@
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
-        <button @click="show = !show">Edit</button>
+
+        <button v-if="(this.$route.params.id) === ls " @click="show = !show">Edit</button>
       </div>
 
       <div class="col-lg-4">
@@ -64,6 +58,13 @@
               <br>
               <input type="checkbox" id="looking_for" v-model="user.looking_for">Looking for band to join?</input>
               <br>
+              <div class="col-lg-4">
+                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+                <image-component></image-component>
+              </div>
+              <div class="col-lg-2">
+                <audio-component></audio-component>
+              </div>
               <button form="registration" name="registration" type="submit">Save</button>
             </div>
           </transition>
@@ -114,6 +115,7 @@ export default {
       show: false,
       user: auth.user,
       error: null,
+      ls: localStorage.user_id,
       messages: {
         author_id: '',
         content: '',
