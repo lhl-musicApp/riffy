@@ -67,7 +67,7 @@
 
 <script>
 import auth from '../../auth.js'
-import AudioPlayer from './Radio.vue';
+import AudioPlayer from './AudioDrop.vue';
 // import vSelect from "vue-select"
 export default {
   // components: {vSelect},
