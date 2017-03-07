@@ -457,22 +457,24 @@ router.get('/users/:user_id', ejwt({
 });
 
 // Route for update form
-router.post('/users/:id', ejwt({
-    secret: app.get('superSecret')
-  }), (req, res) => {
-  let param_id = req.user.id;
-  console.log(user);
-  const result = req.body;
+router.post('/users/:id',
+    ejwt({
+			secret: 'lkmaspokjsafpaoskdpa8asda0s9a'
+		}),
+		(req, res) => {
+			console.log(req.body.user);
+		  // console.log(req.user);
+			let param_id = req.body.user.id;
+		  const result = req.body.user;
 
-  knex.select().from('users').returning('*')
-		.where({id: param_id}).update(result)
-		.then((data) => {
-			res.json(data[0]);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
-})
+		  knex('users').where({id: param_id}).update(result)
+				.then((data) => {
+					res.json(data[0]);
+		    })
+		    .catch((err) => {
+		      res.status(400).json(err);
+		    });
+			})
 
 // THIS IS THE MESSAGES SECTION
 
@@ -681,7 +683,13 @@ router.get('/bandtracks/:band_id',
 
   knex('bands')
   .join('tracks', 'bands.id', 'tracks.band_id')
-    .select('tracks.id as track_id', 'bands.id as band_id', 'tracks.track_name as track_name', 'tracks.isCreator as isCreator', 'tracks.original_artist as original_artist', 'tracks.soundcloud_link as soundcloud_link', 'tracks.isPublished as isPublished')
+    .select('tracks.id as track_id',
+						'bands.id as band_id',
+						'tracks.track_name as track_name',
+						'tracks.isCreator as isCreator',
+						'tracks.original_artist as original_artist',
+						'tracks.youtube_link as youtube_link',
+						'tracks.isPublished as isPublished')
     .where({ band_id: param_id })
     .then((data) => {
         res.json(data);

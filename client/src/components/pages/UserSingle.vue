@@ -57,11 +57,16 @@
               <label for="user_influence">Influence</label>
               <input v-model="user.user_influence" placeholder="influence">
               <br>
+<<<<<<< HEAD
               <label for="youtube">Youtube</label>
               <input v-model="user.youtube_link" placeholder="influence">
               <br>
               <label for="soundcloud_link">Soundcloud Link</label>
               <input v-model="user.soundcloud_link" placeholder="soundcloud link">
+=======
+              <label for="youtube_link">Youtube Link</label>
+              <input v-model="user.youtube_link" placeholder="youtube link">
+>>>>>>> editbutton
               <br>
               <input type="checkbox" id="isAvailable" v-model="user.isAvailable">Available to join band?</input>
               <br>
@@ -122,7 +127,6 @@ export default {
 
       show: false,
       user: auth.user,
-
       error: null,
       messages: {
         author: '',
@@ -168,15 +172,27 @@ export default {
   },
 
   computed: {
-
+    // timeago(){
+    //   jQuery(document).ready(function() {
+    //     jQuery("time.timeago").timeago();
+    //   })
+    // }
   },
 
   methods: {
     submit(){
-      this.$http.post('users/update', this.user)
-        .then(response => {
-        this.user = response.body;
-      });
+      this.$http.post('users/' + this.$route.params.id, {
+        user: this.user
+      })
+      .then(function (response) {
+        if (response.status === 200){
+            this.user = response.body;
+            location.reload(true);
+          }
+        })
+      .catch(function (error) {
+        this.error = error;
+      })
     },
 
     postmessage(){
@@ -187,18 +203,15 @@ export default {
           content: this.messages.content
         })
         .then(function (response) {
-          console.log(response);
           if (response.status === 200){
-              console.log('Form submitted');
               location.reload(true);
           }
         })
         .catch(function (error) {
           this.error = error;
-          });
-        }
-      },
-
+        });
+      }
+    },
 
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
