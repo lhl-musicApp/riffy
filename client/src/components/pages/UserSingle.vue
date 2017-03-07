@@ -16,11 +16,12 @@
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
 
-        <button v-if="(this.$route.params.id) === ls " @click="show = !show">Edit</button>
+
       </div>
 
-      <div class="col-lg-4">
+      <div class="col-lg-4" v-if="(this.$route.params.id) === ls">
         <form id="registration" v-on:submit.prevent="submit">
+          <button  @click="show = !show">Edit</button>
           <transition name="slide-fade">
             <div v-if="show" class="registration form-group">
               <label for="first_name">First Name</label>
