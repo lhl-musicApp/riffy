@@ -3,11 +3,14 @@
     <div class="row">
       <div class="col-lg-4">
         <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+
         <image-component></image-component>
       </div>
       <div class="col-lg-2">
-        <audio-component></audio-component>
       </div>
+      <div>
+    <audio-player :sources="audioSources" :loop="true"></audio-player>
+  </div>
 
       <div class="user col-lg-4">
         <p>First Name: {{ user.first_name }}</p>
@@ -114,6 +117,8 @@
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
+import AudioPlayer from './Howler.vue';
+
 export default {
 
   data () {
@@ -148,7 +153,11 @@ export default {
       url: '',
       videoId: '',
       image: '',
-      imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
+      imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg',
+      audioSources: [
+          'http://localhost:3000/uploads/audio-' + this.$route.params.id +'.mp3',
+
+        ]
     };
   },
 
@@ -248,7 +257,8 @@ export default {
   },
   components: {
     imageComponent,
-    audioComponent
+    audioComponent,
+    AudioPlayer
   }
 
 };

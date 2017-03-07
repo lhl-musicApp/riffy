@@ -117,9 +117,9 @@
 
 <script>
 import auth from '../../auth.js'
-import vSelect from "vue-select"
+// import vSelect from "vue-select"
 export default {
-  components: {vSelect},
+  // components: {vSelect},
   data () {
     return {
       searchString: "",
