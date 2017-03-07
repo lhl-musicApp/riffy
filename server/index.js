@@ -454,13 +454,14 @@ router.get('/users/:user_id', ejwt({
     });
 });
 
-router.get('/userskills/:user_id', ejwt({
+//get user current skills
+router.get('/users/skills/:user_id', ejwt({
   	secret: app.get('superSecret')
   }), (req, res) => {
   let param_id = req.params.user_id;
 	knex('skill_user')
   .join('skills', 'skill_user.skill_id', 'skills.id')
-    .select('skill_user.user_id as user_id', 'skill_user.skill_id as skill_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+    .select('skills.skill_name as skill_name')
     .where({ user_id: param_id })
     .then((data) => {
       let userdata = data;
@@ -480,12 +481,11 @@ router.get('/userskills/:user_id', ejwt({
 
 // select skill_user.user_id as user_id, skills.skill_name as skill_name, skill_user.skill_rating as skill_rating, skill_user.skill_comment as skill_comment  from  skill_user join skills on skill_user.skill_id = skills.id;//
 
-router.post('/userskills/:user_id', ejwt({
+router.post('/users/skills/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
 	let param_id = req.user.id;
-	const skill_req = req.body;
-	console.log('/userskills/ skill_req: ', skill_req);
+	console.log('/users/skills/skill_req: ', skill_req);
 
 	// const rows = skill_req;
 
