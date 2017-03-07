@@ -4,6 +4,7 @@ import Router 					from 'vue-router';
 import Resource 				from 'vue-resource';
 import App 							from './App';
 import VeeValidate 			from 'vee-validate';
+import Multiselect from 'vue-multiselect';
 
 // Import components
 import Register from './components/pages/Register.vue';
@@ -13,6 +14,8 @@ import Users from './components/pages/Users.vue';
 import DragDrop from './components/pages/DragDrop.vue';
 import AudioDrop from './components/pages/AudioDrop.vue';
 import VueYouTubeEmbed from 'vue-youtube-embed';
+// import Multiselect from 'vue-multiselect';
+import Skills from './components/pages/Skills.vue';
 // import UserEditor from './components/pages/UserEditor.vue';
 import UserSingle 		from './components/pages/UserSingle.vue';
 import Main 					from './components/pages/Main.vue';
@@ -28,6 +31,7 @@ import Tracks from './components/pages/Tracks.vue';
 import TrackNew from './components/pages/TrackNew.vue';
 import TrackSingle from './components/pages/TrackSingle.vue';
 
+
 //Auth Setup
 // Check the user's auth status when the app starts
 import auth from './auth'
@@ -36,7 +40,9 @@ Vue.use(VeeValidate);
 Vue.use(Resource);
 Vue.use(Router);
 Vue.use(VueYouTubeEmbed);
-Vue.component(vSelect);
+Vue.component(Multiselect);
+
+// Vue.component(vSelect);
 
 
 // Routes
@@ -51,13 +57,15 @@ export var router = new Router({
 		{ path: '/search', component: Search },
 		{ path: '/verify', component: Verify },
     { path: '/drop', component: DragDrop },
+		{ path: '/skills', component: Skills },
     { path: '/audiodrop', component: AudioDrop },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { requiresAuth: true } },
-    { path: '/userskills/:id', component: UserSingle, meta: { checksAuth: true }},
+    // { path: '/userskills/:id', component: UserSingle, meta: { checksAuth: true }},
+
     { path: '/bands', component: Bands, meta: { requiresAuth: true } },
     { path: '/bands/new', component: BandNew, meta: { requiresAuth: true } },
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { requiresAuth: true } },

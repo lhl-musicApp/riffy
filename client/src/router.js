@@ -12,10 +12,7 @@ export var router = new Router({
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { checksAuth: true } },
-<<<<<<< HEAD
 		{ path: '/userskills/:id', component: UserSingle, meta: { checksAuth: true }},
-=======
->>>>>>> c4dd8af4be349375f2a8e4e15f6f02a0e51599c1
     { path: '/bands', component: Bands, meta: { requiresAuth: true }},
     { path: '/bands/new', component: BandNew, meta: { requiresAuth: true }},
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { checksAuth: true } },

@@ -73,55 +73,10 @@
         </form>
       </div>
 
-      <div class="user col-lg-4">
-        <p>First Name: {{ user.first_name }}</p>
-        <p>Last Name: {{ user.last_name }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>email: {{ user.email }}</p>
-        <span>Gender: {{ user.gender }}</span>
-        <p>City: {{ user.user_city }}</p>
-        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>Soundcloud Link: {{ user.soundcloud_link }} </p>
-        <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
-        <br>
-        <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
-        <button @click="show = !show">Edit</button>
+      <div class="col-lg-2">
+        <skills-component></skills-component>
       </div>
 
-
-      <div id="edit_skills" class="container">
-        <div class="col-xs-12">
-          <div class="row  form-row" v-for="skill in skills">
-            <div class="col-xs-12">
-              <div class="row">
-                <div class="col-xs-12">
-                  <div class="col-xs-2">
-                    <select name="" id="" class="form-control" v-model="skill.skill_id" :value="skill.skill_name">
-                      <option :value="skill.id" v-model="skill.skill_name" v-for="skillOption in skillOptions">{{ skillOption.label }}</option>
-                    </select>
-                  </div>
-                  <div class="col-xs-2">
-                    <input type="text" class="form-control" placeholder="Rating" v-model="skill.skill_rating">
-                  </div>
-                  <div class="col-xs-3">
-                    <input type="text" class="form-control" placeholder="Comment" v-model="skill.skill_comment">
-                  </div>
-                  <div class="col-xs-1">
-                    <button class="btn btn-danger" @click="deleteSkill(skill)">X</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <button type="Submit" v-on:click="edit_skills" class="btn btn-info">Submit</button>
-              <button type="submit" class="btn btn-success" @click="addSkill">Add Skill</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="container">
         <section>
@@ -163,6 +118,8 @@
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
+import skillsComponent from './Skills.vue';
+
 
 export default {
   data () {
@@ -199,7 +156,14 @@ export default {
       url: '',
       videoId: '',
       skillOptions: [],
-      skills: [],
+      skills: [{
+        skill_id: 0,
+        skill_name: '',
+        skill_rating: 0,
+        skill_comment: '',
+        user_id: 0
+      }],
+
       image: '',
       imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
     };
@@ -214,26 +178,6 @@ export default {
       let sliceit = this.user.soundcloud_link.indexOf('=');
       this.videoId = this.user.soundcloud_link.slice(sliceit + 1, 100);
     })
-///userskills/:user_id'
-    this.$http.get('userskills/' + this.$route.params.id).then(response => {
-      let skillset = response.body;
-      skillset.forEach((skill) => {
-        this.skills.push(skill)
-      })
-      console.log('response skills', this.skills);
-    })
-
-    this.$http.get('skills/').then(response => {
-      response.body.forEach((skill) => {
-        let skillset = {
-          label: skill.skill_name,
-          value: skill.id
-        }
-        this.skillOptions.push(skillset);
-      })
-      console.log(this.skillOptions);
-    })
-
   },
   computed: {
 
@@ -246,26 +190,6 @@ export default {
       this.$http.post('users/' + this.$route.params.id, this.user)
         .then(response => {
         this.user = response.body;
-      });
-    },
-    addSkill: function() {
-      this.skills.push({
-        'skill_id': 1,
-        'user_id': localStorage.user_id,
-        'skill_name': '',
-        'skill_rating': 1,
-        'skill_comment': ''
-      });
-    },
-    deleteSkill: function(skill) {
-      this.skills.$remove(skill);
-    },
-    edit_skills(){
-      console.log(this.skills);
-      this.$http.post('userskills/' + this.$route.params.id, this.skills)
-        .then(response => {
-        console.log('edit_skills method: ',response.body);
-        this.skills = response.body;
       });
     },
     // Youtube Vieo starts here
@@ -339,7 +263,8 @@ export default {
   },
   components: {
     imageComponent,
-    audioComponent
+    audioComponent,
+    skillsComponent
   }
 
 };
