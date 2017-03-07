@@ -7,29 +7,29 @@ import VeeValidate 			from 'vee-validate';
 import Multiselect 			from 'vue-multiselect';
 
 // Import components
-import Register from './components/pages/Register.vue';
-import Hello from './components/pages/Hello.vue';
-import Login from './components/pages/Login.vue';
-import Users from './components/pages/Users.vue';
-import DragDrop from './components/pages/DragDrop.vue';
-import AudioDrop from './components/pages/AudioDrop.vue';
-import VueYouTubeEmbed from 'vue-youtube-embed';
+import Register 				from './components/pages/Register.vue';
+import Hello 						from './components/pages/Hello.vue';
+import Login 						from './components/pages/Login.vue';
+import Users 						from './components/pages/Users.vue';
+import DragDrop 				from './components/pages/DragDrop.vue';
+import AudioDrop 				from './components/pages/AudioDrop.vue';
+import VueYouTubeEmbed 	from 'vue-youtube-embed';
 // import Multiselect from 'vue-multiselect';
-import Skills from './components/pages/Skills.vue';
+import Skills 					from './components/pages/Skills.vue';
 // import UserEditor from './components/pages/UserEditor.vue';
-import UserSingle 		from './components/pages/UserSingle.vue';
-import Main 					from './components/pages/Main.vue';
-import NoteSingle	 		from './components/pages/NoteSingle.vue';
-import Verify 				from './components/pages/Verify.vue';
-import Search 				from './components/pages/Search.vue';
-import ForgotPassword from './components/pages/ForgotPassword.vue';
-import ResetPassword from './components/pages/ResetPassword.vue';
-import Bands from './components/pages/Bands.vue';
-import BandNew from './components/pages/BandNew.vue';
-import BandSingle from './components/pages/BandSingle.vue';
-import Tracks from './components/pages/Tracks.vue';
-import TrackNew from './components/pages/TrackNew.vue';
-import TrackSingle from './components/pages/TrackSingle.vue';
+import UserSingle 			from './components/pages/UserSingle.vue';
+import Main 						from './components/pages/Main.vue';
+import NoteSingle	 			from './components/pages/NoteSingle.vue';
+import Verify 					from './components/pages/Verify.vue';
+import Search 					from './components/pages/Search.vue';
+import ForgotPassword 	from './components/pages/ForgotPassword.vue';
+import ResetPassword 		from './components/pages/ResetPassword.vue';
+import Bands 						from './components/pages/Bands.vue';
+import BandNew 					from './components/pages/BandNew.vue';
+import BandSingle 			from './components/pages/BandSingle.vue';
+import Tracks 					from './components/pages/Tracks.vue';
+import TrackNew 				from './components/pages/TrackNew.vue';
+import TrackSingle 			from './components/pages/TrackSingle.vue';
 
 
 //Auth Setup

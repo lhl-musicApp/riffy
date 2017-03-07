@@ -82,9 +82,7 @@
             :video-id="videoId"
             player-width="50%"
             player-height="350"
-            :player-vars="{autoplay: 1}"
-            @ready="ready"
-            @playing="playing">
+            @ready="ready">
           </youtube>
         </section>
 
@@ -172,6 +170,9 @@ export default {
       let sliceit = this.user.youtube_link.indexOf('=');
       this.videoId = this.user.youtube_link.slice(sliceit + 1, 100);
     })
+    this.$http.get('users/' + this.$route.params.id + '/message' ).then(response => {
+       this.messages = response.data;
+     })
   },
   computed: {
 
@@ -252,19 +253,7 @@ export default {
     pause () {
       this.player.pauseVideo()
     },
-    // launchVideo() {
-    //   this.videoLaunched = true;
-    //   this.player.playVideo();
-    //   document.getElementsByTagName('body')[0].classList.add('overlay');
-    // },
-    // ready: function(player) {
-    //   fitvids();
-    //   this.player = player;
-    //   this.videoLoaded = true;
-    // },
-    // ended() {
-    //   console.log('Ended');
-    // }
+
   },
   components: {
     imageComponent,
