@@ -455,7 +455,7 @@ router.get('/users/:user_id', ejwt({
 });
 
 router.get('/userskills/:user_id', ejwt({
-    secret: app.get('superSecret')
+  	secret: app.get('superSecret')
   }), (req, res) => {
   let param_id = req.params.user_id;
 	knex('skill_user')
@@ -489,15 +489,16 @@ router.post('/userskills/:user_id', ejwt({
 
 	// const rows = skill_req;
 
-	var chunkSize = 1000;
+	// var chunkSize = 1000;
 	//result = array or skills selected
 
 	skill_req.forEach((skill) => {
 			console.log('skill log: ',skill);
 
 		knex('skill_user')
-			.where('skill.skill_id', '=', 'slill_id')
-			.update('*')
+			.where('skill.skill_id', '=', 'skill_id')
+			.returning('*')
+			.update(skill)
 		});
 		// 	knex('skill_user').insert('*')
 		// 	.then((data) => {
