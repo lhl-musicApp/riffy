@@ -58,16 +58,16 @@
               <br>
               <input type="checkbox" id="looking_for" v-model="user.looking_for">Looking for band to join?</input>
               <br>
-              <div class="col-lg-4">
-                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-                <image-component></image-component>
-              </div>
-              <div class="col-lg-2">
-                <audio-component></audio-component>
-              </div>
-              <button form="registration" name="registration" type="submit">Save</button>
             </div>
           </transition>
+          <div class="col-lg-4">
+            <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+            <image-component></image-component>
+          </div>
+          <div class="col-lg-2">
+            <audio-component></audio-component>
+          </div>
+          <button form="registration" name="registration" type="submit">Save</button>
         </form>
       </div>
 
@@ -174,13 +174,9 @@ export default {
     })
   },
   computed: {
-
-
   },
   methods: {
-
-
-    submit(){
+    submit() {
       this.$http.post('users/' + this.$route.params.id, {
         user: this.user
       })
