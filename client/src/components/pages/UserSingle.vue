@@ -143,7 +143,7 @@ export default {
         user_country: '',
         user_bio: '',
         user_influence: '',
-        soundcloud_link: '',
+        youtube_link: '',
         isAvailable: false,
         looking_for: false,
       },
@@ -168,9 +168,9 @@ export default {
     // console.log('localStorage.user_id: ', localStorage.user_id)
     this.$http.get('users/' + this.$route.params.id).then(response => {
       this.user = response.data[0];
-      this.url = this.user.soundcloud_link;
-      let sliceit = this.user.soundcloud_link.indexOf('=');
-      this.videoId = this.user.soundcloud_link.slice(sliceit + 1, 100);
+      this.url = this.user.youtube_link;
+      let sliceit = this.user.youtube_link.indexOf('=');
+      this.videoId = this.user.youtube_link.slice(sliceit + 1, 100);
     })
   },
   computed: {
@@ -193,10 +193,10 @@ export default {
       .catch(function (error) {
         this.error = error;
       })
-      this.$http.post('users/' + this.$route.params.id, this.user)
-        .then(response => {
-        this.user = response.body;
-      });
+      // this.$http.post('users/' + this.$route.params.id, this.user)
+      //   .then(response => {
+      //   this.user = response.body;
+      // });
     },
     // Youtube Vieo starts here
 
