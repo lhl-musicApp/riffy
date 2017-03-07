@@ -96,7 +96,7 @@
         <div class="container" v-for="message in messages">
           <p>{{ message.first_name }} {{ message.last_name }}</p>
           <p>{{ message.content }}</p>
-          <p>{{ message.created_at }}</p>
+          <p>{{ moment(message.created_at) }}</p>
         </div>
 
 
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-
+import moment from 'moment';
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
@@ -164,11 +164,7 @@ export default {
   },
 
   computed: {
-    // timeago(){
-    //   jQuery(document).ready(function() {
-    //     jQuery("time.timeago").timeago();
-    //   })
-    // }
+
   },
 
   methods: {
@@ -201,9 +197,13 @@ export default {
         })
         .catch(function (error) {
           this.error = error;
-        });
-      }
-    },
+          });
+        }
+      },
+
+      moment(date){
+        return moment(date).fromNow();
+      },
 
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
