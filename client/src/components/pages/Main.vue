@@ -25,8 +25,8 @@
         <button type="submit" class="btn btn-primary">Create Item</button>
         <hr>
       </form> -->
-
-    <form id="main" v-cloak>
+    <audio-player></audio-player>
+    <form id="main" v-cloak v-on:submit.prevent="submit">
       <div class="bar">
           <!-- Create a binding between the searchString model and the text field -->
         <input type="text" v-model="searchString" placeholder="Enter your search terms" />
@@ -38,6 +38,7 @@
           <div class="row">
             <div class="col-sm-6 col-md-4" v-for="main in filteredArticles">
               <div class="thumbnail">
+              <audio-player></audio-player>
                 <img src="" alt="">
                 <div class="caption">
                   <img src="http://www.fillmurray.com/200/200" alt="">
@@ -57,66 +58,16 @@
               </div>
             </div>
           </div>
-          <!-- <a v-bind:href="article.url"><img v-bind:src="article.image" /></a>
-          <p>{{article.title}}</p> -->
         </li>
       </ul>
-
     </form>
-
-   <!--    <div class="row">
-        <div class="col-sm-6 col-md-4" v-for="note in main">
-          <div class="thumbnail">
-            <img src="" alt="">
-            <div class="caption">
-              <img src="http://www.fillmurray.com/200/200" alt="">
-              <h3>{{ note.first_name }} {{ note.last_name }}</h3>
-              <ul>
-                <li>{{ note.id }}</li>
-                <li>{{ note.user_city }}</li>
-                <li>{{ note.user_country }}</li>
-              </ul>
-
-
-              <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-            </div>
-          </div>
-        </div>
-      </div> -->
-  <!--     <table class="table">
-        <thead class="thead thead-inverse">
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Created By</th>
-            <th>Creation Date</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody v-for="note in main">
-          <tr>
-            <td>{{ note.id }}</td>
-            <td><router-link :to="{ name: 'noteSingle', params: { id: note.id }}">{{ note.title }}</router-link></td>
-            <td>{{ note.id }}</td>
-            <td>{{ note.first_name }}</td>
-            <td>{{ note.last_name }}</td>
-            <td>{{ note.user_city }}</td>
-            <td>{{ note.country }}</td>
-            <td>
-              <a v-on:click="remove(note.id)">
-                <i class="fa fa-trash"></i>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table> -->
     </div>
   </div>
 </template>
 
 <script>
 import auth from '../../auth.js'
+import AudioPlayer from './Radio.vue';
 // import vSelect from "vue-select"
 export default {
   // components: {vSelect},
@@ -129,7 +80,10 @@ export default {
       body: {
         title: '',
         text: '',
-      }
+      },
+      audio: [
+        // 'http://localhost:3000/uploads/audio-' + this.$route.params.id +'.mp3',
+      ]
     };
   },
   created () {
@@ -199,7 +153,9 @@ export default {
       }
     }
   },
-  components: {}
+  components: {
+    AudioPlayer
+  }
 };
 </script>
 
