@@ -57,16 +57,8 @@
               <label for="user_influence">Influence</label>
               <input v-model="user.user_influence" placeholder="influence">
               <br>
-<<<<<<< HEAD
-              <label for="youtube">Youtube</label>
-              <input v-model="user.youtube_link" placeholder="influence">
-              <br>
-              <label for="soundcloud_link">Soundcloud Link</label>
-              <input v-model="user.soundcloud_link" placeholder="soundcloud link">
-=======
               <label for="youtube_link">Youtube Link</label>
               <input v-model="user.youtube_link" placeholder="youtube link">
->>>>>>> editbutton
               <br>
               <input type="checkbox" id="isAvailable" v-model="user.isAvailable">Available to join band?</input>
               <br>
