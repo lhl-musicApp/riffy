@@ -94,14 +94,11 @@
         </div>
         <!-- <drag-drop></drag-drop> -->
         <div class="container" v-for="message in messages">
-          <p>{{ message.first_name }} {{ message.last_name }}</p>
+          <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
           <p>{{ message.content }}</p>
           <p>{{ moment(message.created_at) }}</p>
         </div>
-
-
       </div>
-
     </div>
   </div>
 </template>
@@ -112,22 +109,18 @@ import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
 export default {
-
   data () {
-
     return {
-
       show: false,
       user: auth.user,
       error: null,
       messages: {
-        author: '',
+        author_id: '',
         content: '',
         first_name: '',
         last_name: '',
         created_at: ''
       },
-
       user: {
         first_name: '',
         last_name: '',
@@ -248,14 +241,11 @@ export default {
     // ended() {
     //   console.log('Ended');
     // }
-
-
   },
   components: {
     imageComponent,
     audioComponent
   }
-
 };
 
 </script>
