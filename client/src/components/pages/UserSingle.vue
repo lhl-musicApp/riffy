@@ -71,13 +71,20 @@
         </form>
       </div>
 
+      <div class="col-lg-2">
+        <skills-component></skills-component>
+      </div>
+
+
       <div class="container">
         <section>
           <youtube
             :video-id="videoId"
             player-width="50%"
             player-height="350"
-          >
+            :player-vars="{autoplay: 1}"
+            @ready="ready"
+            @playing="playing">
           </youtube>
         </section>
 
@@ -109,10 +116,14 @@ import moment from 'moment';
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
+import skillsComponent from './Skills.vue';
+
+
 export default {
   data () {
     return {
-      show: false,
+      show: true,
+      error: null,
       user: auth.user,
       error: null,
       ls: localStorage.user_id,
@@ -132,37 +143,43 @@ export default {
         user_country: '',
         user_bio: '',
         user_influence: '',
-        youtube_link: '',
+        soundcloud_link: '',
         isAvailable: false,
-        looking_for: false
+        looking_for: false,
       },
       url: '',
       videoId: '',
+      skillOptions: [],
+      skills: [{
+        skill_id: 0,
+        skill_name: '',
+        skill_rating: 0,
+        skill_comment: '',
+        user_id: 0
+      }],
+
       image: '',
       imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
     };
   },
 
   created () {
-    console.log('this.$route.params.id: ', this.$route.params.id)
-    console.log('localStorage.user_id: ', localStorage.user_id)
+    // console.log('this.$route.params.id: ', this.$route.params.id)
+    // console.log('localStorage.user_id: ', localStorage.user_id)
     this.$http.get('users/' + this.$route.params.id).then(response => {
       this.user = response.data[0];
-      this.url = this.user.youtube_link;
-      let sliceit = this.user.youtube_link.indexOf('=');
-      this.videoId = this.user.youtube_link.slice(sliceit+1, 100);
-    })
-    this.$http.get('users/' + this.$route.params.id + '/message' ).then(response => {
-      this.messages = response.data;
-      console.log(response);
+      this.url = this.user.soundcloud_link;
+      let sliceit = this.user.soundcloud_link.indexOf('=');
+      this.videoId = this.user.soundcloud_link.slice(sliceit + 1, 100);
     })
   },
-
   computed: {
 
-  },
 
+  },
   methods: {
+
+
     submit(){
       this.$http.post('users/' + this.$route.params.id, {
         user: this.user
@@ -176,7 +193,12 @@ export default {
       .catch(function (error) {
         this.error = error;
       })
+      this.$http.post('users/' + this.$route.params.id, this.user)
+        .then(response => {
+        this.user = response.body;
+      });
     },
+    // Youtube Vieo starts here
 
     postmessage(){
       this.$validator.validateAll();
@@ -246,13 +268,15 @@ export default {
   },
   components: {
     imageComponent,
-    audioComponent
+    audioComponent,
+    skillsComponent
   }
 };
 
 </script>
 
 <style lang="css">
+
   /* Enter and leave animations can use different */
   /* durations and timing functions.              */
   .slide-fade-enter-active {
@@ -266,4 +290,11 @@ export default {
     transform: translateX(10px);
     opacity: 0;
   }
+  .form-row {
+    border:  1px solid #e2e2e2;
+    margin:  2px;
+    padding: 5px;
+    background: #f2f2f2;
+  }
+
 </style>

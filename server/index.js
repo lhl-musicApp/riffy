@@ -137,7 +137,6 @@ router.get('/users', ejwt({
 });
 
 router.post('/auth/login', function(req, res, next) {
-	console.log(req);
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
 			return res.status(400).json({ error: err });
@@ -439,7 +438,6 @@ router.get('/users/:user_id', ejwt({
   }), (req, res) => {
   // console.log(req.params);
   // Grab data from the URL parameters
-  console.log(req.params);
   let param_id = req.params.user_id;
 
   knex.select().from('users').where({id: param_id})
@@ -456,28 +454,110 @@ router.get('/users/:user_id', ejwt({
     });
 });
 
-// Route for update form
-router.post('/users/:id',
-    ejwt({
-			secret: 'lkmaspokjsafpaoskdpa8asda0s9a'
-		}),
-		(req, res) => {
-			console.log(req.body.user);
-		  // console.log(req.user);
-			let param_id = req.body.user.id;
-		  const result = req.body.user;
+router.get('/userskills/:user_id', ejwt({
+  	secret: app.get('superSecret')
+  }), (req, res) => {
+  let param_id = req.params.user_id;
+	knex('skill_user')
+  .join('skills', 'skill_user.skill_id', 'skills.id')
+    .select('skill_user.user_id as user_id', 'skill_user.skill_id as skill_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+    .where({ user_id: param_id })
+    .then((data) => {
+      let userdata = data;
+      if (!userdata) {
+        res.status(400).redirect('/login')
+      } else {
+				console.log('get userskills: ', data);
+				res.json(data); }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
 
-		  knex('users').where({id: param_id}).update(result)
-				.then((data) => {
-					res.json(data[0]);
-		    })
-		    .catch((err) => {
-		      res.status(400).json(err);
-		    });
-			})
+
+// TODO update skills query
+
+// select skill_user.user_id as user_id, skills.skill_name as skill_name, skill_user.skill_rating as skill_rating, skill_user.skill_comment as skill_comment  from  skill_user join skills on skill_user.skill_id = skills.id;//
+
+router.post('/userskills/:user_id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+	let param_id = req.user.id;
+	const skill_req = req.body;
+	console.log('/userskills/ skill_req: ', skill_req);
+
+	// const rows = skill_req;
+
+	// var chunkSize = 1000;
+	//result = array or skills selected
+
+	skill_req.forEach((skill) => {
+			console.log('skill log: ',skill);
+
+		knex('skill_user')
+			.where('skill.skill_id', '=', 'skill_id')
+			.returning('*')
+			.update(skill)
+		});
+		// 	knex('skill_user').insert('*')
+		// 	.then((data) => {
+		// 		res.json(data);
+		// 	})
+		//   .catch((err) => {
+		// 		res.status(400).json(err)
+		// 	});
+		//
+
+
+	// knex.batchInsert('skill_user', rows, chunkSize)
+  // .returning('user_id', 'band_id')
+  // .then((data) => {
+	// 	res.json(data);
+	// })
+  // .catch((err) => {
+	// 	res.status(400).json(err)
+	// });
+
+	// knex('skill_user')
+  // .join('skills', 'skill_user.skill_id', 'skills.id')
+  //   .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+	// 	.returning('*')
+	// 	.where({id: param_id})
+	// 	.update(result)
+	// 	.then((data) => {
+	// 		console.log('router userskills data: ', data);
+	// 		res.json(data[0]);
+  //   })
+  //   .catch((err) => {
+  //     res.status(400).json(err);
+  //   });
+})
+
+
+
+
+
+// Route for update form
+router.post('/users/:id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+
+	let param_id = req.params.id;
+  const result = req.body;
+	knex('users').update(req.body)
+	.where({ id: req.params.id})
+	.returning('*')
+		.then((data) => {
+			console.log('post user data return:', data);
+			res.json(data[0]);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+})
 
 // THIS IS THE MESSAGES SECTION
-
 router.post('/users/:id/message',
 			ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }),
 	(req, res, next) => {
@@ -561,7 +641,24 @@ router.delete('/users/:id', (req, res) => {
 router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
   // console.log(res);
   console.log("uploads param", req.user.id);
+})
+//// ok
+router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
+  if (!req.user) {
+    return res.sendStatus(401)
+  } else {
+    knex.select().from('skills')
+    .then((data) => {
+      // console.log(data);
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+  }
+});
 
+router.post('/upload', upload.array(), (req, res) => {
   var base64Data = req.body.imageObj.image;
 
     console.log('writing file...', base64Data);
