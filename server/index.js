@@ -598,6 +598,7 @@ router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
 	.where({
 	 	profile_id: req.params.id
 	})
+	.orderBy('created_at', 'desc')
 	.then((data) => {
 		console.log(data);
 		res.json(data);
