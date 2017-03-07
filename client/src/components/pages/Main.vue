@@ -32,7 +32,7 @@
         <input type="text" v-model="searchString" placeholder="Enter your search terms" />
       </div>
 
-      <ul>
+      
             <!-- Render a li element for every entry in the computed filteredArticles array. -->
         <li v-for="article in filteredArticles">
           <div class="row">

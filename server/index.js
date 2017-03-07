@@ -436,7 +436,7 @@ router.delete('/notes/:note_id', (req, res, next) => {
 router.get('/users/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  // console.log(req.params);
+  console.log("I AM A TEST", req.params);
   // Grab data from the URL parameters
   let param_id = req.params.user_id;
 
@@ -598,6 +598,7 @@ router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
 	.where({
 	 	profile_id: req.params.id
 	})
+	.orderBy('created_at', 'desc')
 	.then((data) => {
 		console.log(data);
 		res.json(data);
