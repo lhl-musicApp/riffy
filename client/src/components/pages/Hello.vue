@@ -47,4 +47,7 @@
 </script>
 
 <style lang="css">
+.jumbotron {
+  background-image: url("/src/assets/hero_1.jpg");
+}
 </style>
