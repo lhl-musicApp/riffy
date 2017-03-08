@@ -15,15 +15,18 @@
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
-
-
+        <p>SKILLZ</p>
       </div>
 
       <div class="col-lg-4" v-if="(this.$route.params.id) === ls">
+        <div v-show="error" class="alert alert-danger" role="alert">
+          <strong>Oh snap!</strong> {{ error }}
+        </div>
+        <button @click="show_edit = !show_edit">Edit Your Profile</button>
         <form id="registration" v-on:submit.prevent="submit">
-          <button  @click="show = !show">Edit</button>
-          <transition name="slide-fade">
-            <div v-if="show" class="registration form-group">
+          <!-- <transition name="slide-fade"> -->
+            <div v-show="show_edit" class="registration form-group">
+              <button form="registration" name="registration" type="submit">Save</button>
               <label for="first_name">First Name</label>
               <input v-model="user.first_name" placeholder="first name">
               <br>
@@ -60,35 +63,37 @@
               <input type="checkbox" id="looking_for" v-model="user.looking_for">Looking for band to join?</input>
               <br>
             </div>
-          </transition>
-          <div class="col-lg-4">
-            <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-            <image-component></image-component>
-          </div>
-          <div class="col-lg-2">
-            <audio-component></audio-component>
-          </div>
-          <button form="registration" name="registration" type="submit">Save</button>
+          <!-- </transition> -->
         </form>
+        <div class="col-lg-2">
+          <skills-component></skills-component>
+        </div>
       </div>
 
-      <div class="col-lg-2">
-        <skills-component></skills-component>
-      </div>
 
 
-      <div class="container">
-        <section>
-          <youtube
-            :video-id="videoId"
-            player-width="50%"
-            player-height="350"
-            @ready="ready">
-          </youtube>
-        </section>
+      <button @click="show_media = !show_media">Media</button>
+        <div v-show="show_media" class="container">
+            <div class="col-lg-4">
+              <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+              <image-component></image-component>
+            </div>
+            <div class="col-lg-2">
+              <audio-component></audio-component>
+            </div>
+            <section>
+              <youtube
+                :video-id="videoId"
+                player-width="50%"
+                player-height="350"
+                @ready="ready">
+              </youtube>
+            </section>
+        </div>
 
-        <div class="container">
-          <form v-on:submit.prevent="postmessage">
+        <button @click="show_messages = !show_messages">Message...</button>
+        <div class="container" v-show="show_messages">
+          <form v-on:postmessage="postmessage">
             <div v-show="error" class="alert alert-danger" role="alert">
               <strong>Oh snap!</strong> {{ error }}
             </div>
@@ -98,13 +103,15 @@
             </div>
             <button type="postmessage" class="btn btn-primary">Send the message</button>
           </form>
+          <div class="container" v-for="message in messages">
+            <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
+            <p>{{ message.content }}</p>
+            <p>{{ moment(message.created_at) }}</p>
+          </div>
         </div>
+
         <!-- <drag-drop></drag-drop> -->
-        <div class="container" v-for="message in messages">
-          <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
-          <p>{{ message.content }}</p>
-          <p>{{ moment(message.created_at) }}</p>
-        </div>
+
       </div>
     </div>
   </div>
@@ -121,7 +128,9 @@ import skillsComponent from './Skills.vue';
 export default {
   data () {
     return {
-      show: true,
+      show_edit: false,
+      show_media: false,
+      show_messages: false,
       error: null,
       user: auth.user,
       error: null,
@@ -191,10 +200,6 @@ export default {
       .catch(function (error) {
         this.error = error;
       })
-      // this.$http.post('users/' + this.$route.params.id, this.user)
-      //   .then(response => {
-      //   this.user = response.body;
-      // });
     },
     // Youtube Vieo starts here
 
@@ -216,9 +221,9 @@ export default {
         }
       },
 
-      moment(date){
-        return moment(date).fromNow();
-      },
+    moment(date){
+      return moment(date).fromNow();
+    },
 
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {

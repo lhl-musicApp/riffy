@@ -1,21 +1,22 @@
 <template lang="html">
-  <div>
-    <div v-if="!imageSrc">
-      <p>You don't have an image</p>
-    </div>
-    <div v-else>
-      <img :src="imageSrc" />
-    </div>
-
-    <div v-if="!image">
-      <h6>Select an image</h6>
-      <input type="file" @change="onFileChange">
-    </div>
-    <div v-else>
-      <img :src="image" />
-      <button @click="removeImage">Remove image</button>
-      <button @click="saveImage">Save image</button>
-    </div>
+  <div class="container">
+      <div class="row" v-if="!imageSrc">
+        <div class="col-sm-4">
+          <p>You don't have an image</p>
+        </div>
+        <div class="col-sm-4">
+          <img :src="imageSrc" />
+        </div>
+        <div class="col-sm-8">
+          <h6>Select an image</h6>
+          <input type="file" @change="onFileChange">
+        </div>
+      </div>
+      <div class="row" v-else>
+        <img :src="image" />
+        <button @click="removeImage">Remove image</button>
+        <button @click="saveImage">Save image</button>
+      </div>
   </div>
 </template>
 

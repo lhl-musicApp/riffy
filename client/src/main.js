@@ -5,6 +5,7 @@ import Resource 				from 'vue-resource';
 import App 							from './App';
 import VeeValidate 			from 'vee-validate';
 import Multiselect 			from 'vue-multiselect';
+import vuefaker					from 'vue-faker';
 
 // Import components
 import Register 				from './components/pages/Register.vue';
@@ -40,6 +41,7 @@ Vue.use(VeeValidate);
 Vue.use(Resource);
 Vue.use(Router);
 Vue.use(VueYouTubeEmbed);
+Vue.use(vuefaker);
 Vue.component(Multiselect);
 
 // Vue.component(vSelect);

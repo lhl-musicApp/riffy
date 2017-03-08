@@ -1,17 +1,17 @@
 <template lang="html">
-  <div>
-    <div>
-      <h1>Audio Upload</h1>
-      <div v-if="!audio">
-        <h2>Select audio file to up load</h2>
-        <input type="file" @change="onFileAudio">
+  <div class="container">
+    <div class="row">
+      <h3 class="col-sm-6">Audio Upload</h3>
+      <div class="row" v-if="!audio">
+        <p class="col-sm-4">Select audio file to up load</p>
+        <input class="col-sm-4" type="file" @change="onFileAudio">
       </div>
-      <div v-else>
+      <div class="row" v-else>
         <!-- <img :src="image" /> -->
-        <button @click="removeAudio">Remove Audio</button>
-        <button @click="saveAudio">Save Audio</button>
+        <button class="col-sm-4" @click="removeAudio">Remove Audio</button>
+        <button class="col-sm-4" @click="saveAudio">Save Audio</button>
+        <button class="col-sm-4" @click="loadSound">loadsong</button>
       </div>
-      <button @click="loadSound">loadsong</button>
     </div>
   </div>
 </template>

@@ -1,9 +1,20 @@
 <template lang="html">
   <div>
-    <label class="typo__label">Simple select / dropdown</label>
-    <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Pick some" label="skill_name" track-by="skill_name"></multiselect>
+    <form id="saveSkills" v-on:saveSkills.prevent="saveSkills">
+      <label class="typo__label">Simple select / dropdown</label>
+        <multiselect v-model="value"
+          :options="options"
+          :multiple="true"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :hide-selected="true"
+          placeholder="Pick some"
+          label="skill_name"
+          track-by="skill_name">
+        </multiselect>
+      <button form="saveSkills" name="saveSkills" type="saveSkills">Update</button>
+    </form>
     <!-- <pre class="language-json"><code>{{ value  }}</code></pre> -->
-    <
   </div>
 
 </template>
@@ -46,7 +57,17 @@ export default {
   },
   methods: {
     saveSkills() {
-      this.$http.post('users/skills/' + this.$route.params.id, this.value);
+      this.$http.post('users/skills/' + this.$route.params.id,
+      { skills: this.value })
+      // console.log("I AM VALUES", this.value);
+      .then(function (response) {
+        if (response.status === 200){
+            location.reload(true);
+        }
+      })
+      .catch(function (error) {
+        this.error = error;
+      });
     }
   }
 };

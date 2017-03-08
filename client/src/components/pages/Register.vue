@@ -44,11 +44,11 @@ export default {
     return {
       error: null,
       body: {
-        email: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        password2: ''
+        email:  this.$faker().internet.email(),
+        firstName: this.$faker().name.firstName(),
+        lastName: this.$faker().name.lastName(),
+        password: 'billy',
+        password2: 'billy'
       }
     };
   },
