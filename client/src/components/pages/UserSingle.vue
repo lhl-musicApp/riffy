@@ -1,26 +1,28 @@
 <template lang="html">
   <div class="container">
     <div class="row">
-      <div class="col-lg-4">
+      <div class="col-lg-6">
         <h1>{{ user.first_name }} {{ user.last_name }}</h1>
         <image-component></image-component>
       </div>
-      <div class="col-lg-2">
+      <div class="col-lg-6">
         <audio-component></audio-component>
       </div>
-      <div class="user col-lg-4">
-        <p>First Name: {{ user.first_name }}</p>
-        <p>Last Name: {{ user.last_name }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>email: {{ user.email }}</p>
-        <span>Gender: {{ user.gender }}</span>
-        <p>City: {{ user.user_city }}</p>
-        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>Youtube Link: {{ user.youtube_link }} </p>
-        <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
-        <br>
-        <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
+      <div class="user col-lg-6">
+        <div>
+          <p>First Name: {{ user.first_name }}</p>
+          <p>Last Name: {{ user.last_name }}</p>
+          <p>Influence: {{ user.user_influence }}</p>
+          <p>email: {{ user.email }}</p>
+          <span>Gender: {{ user.gender }}</span>
+          <p>City: {{ user.user_city }}</p>
+          <p style="">Bio: {{ user.user_bio }}</p>
+          <p>Influence: {{ user.user_influence }}</p>
+          <p>Youtube Link: {{ user.youtube_link }} </p>
+          <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
+          <br>
+          <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
+        </div>
       </div>
 
       <div class="col-lg-4" v-if="(this.$route.params.id) === local_id">
