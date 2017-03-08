@@ -314,11 +314,13 @@ router.get('/verify/:id/:token', function(req, res) {
 // DATA ROUTES --> this is where pages are rendered
 router.get('/main', (req, res) => {
 	// const resultsArr = [];
-	knex.select().from('users').then( function (result) {
+  knex('users')
+  .join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
+  .select().then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
-		// console.log('results from main: ', result)
+		console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
-		return res.json(result);
+		return res.send(result);
 	}).catch(function (err) {
 		return res.status(500).json({ success: false, data: err });
 	});
@@ -585,6 +587,13 @@ router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, 
       if (err){
         res.status(400).json(err);
       }
+      else {
+        knex().from('users').where({ id: req.user.id })
+        .update({ image_link:  '//localhost:3000/uploads/image-' + req.user.id + '.jpeg'})
+        .then((data) => {
+          res.status(200).send('created an image')
+        })
+      }
     });
 })
 
@@ -593,8 +602,10 @@ router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, 
 router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
 
   var base64Data = req.body.audioObj.audio;
+  var trackName = req.body.audioObj.trackname;
+  console.log('trackName:', trackName);
+  console.log('req.user.id:', req.user.id);
 
-  console.log('audio params id:', req.user.id);
 
   function decodeBase64Audio(data) {
 
@@ -609,9 +620,56 @@ router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), 
   console.log('audioBuffer', audioBuffer);
 
   fs.writeFile(__dirname + '/upload/audio-' + req.user.id + '.mp3', audioBuffer.data, 'base64', function(err) {
-    if (err) console.log(err);
-    res.status(201).send();
+    if (err){
+      console.log(err);
+    }
+    else{
+
+      var trackLink = '//localhost:3000/uploads/audio-' + req.user.id + '.mp3';
+      res.send('/upload/audio-' + req.user.id + '.mp3')
+
+      knex.select().from('tracks').where({ user_id: req.user.id })
+      .then((data) => {
+        console.log('audiopost=> ',data)
+        if(!data[0]) {
+          knex('tracks')
+          .insert({ user_id: req.user.id, track_link: trackLink, track_name: trackName })
+          .then((data) => {
+            res.json(data[0]);
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+          });
+        }
+        if(data[0]) {
+          knex.select().from('tracks')
+          .where({ user_id: req.user.id} ).update({ track_link: trackLink,  track_name: trackName })
+          .then((data) => {
+            res.json(data[0]);
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+          });
+          res.json(data[0]);
+        }
+
+      }).catch((err) => {
+          res.status(400).json(err);
+        });
+      // knex.select().from('tracks').returning('*')
+      //   .where({id}).update(trackLink)
+      //   .then((data) => {
+      //     res.json(data[0]);
+      //   })
+      //   .catch((err) => {
+      //     res.status(400).json(err);
+      //   });
+    }
   });
+
+
+  // const buffer = fs.createWriteStream(filename);
+  // req.request.pipe(buffer);
 })
 
 // GET all bands info
