@@ -8,6 +8,10 @@
     <div v-else>
       <!-- <img :src="image" /> -->
       <button @click="removeAudio">Remove Audio</button>
+          <label for="trackame">First Name</label>
+          <input v-model="trackname" placeholder="first name">
+              <br>
+      <p>trackame is: {{ trackname }}</p>
       <button @click="saveAudio">Save Audio</button>
     </div>
     <button @click="playSound">loadsong</button>
@@ -24,8 +28,8 @@ import auth from '../../auth.js'
 export default {
   data () {
     return {
-      audio : ''
-
+      audio : '',
+      trackname : ''
     };
   },
   // created () {
@@ -64,7 +68,8 @@ export default {
     },
     saveAudio: function (e) {
       const audioObj = {
-        audio : this.audio
+        audio : this.audio,
+        trackname : this.trackname
       }
       // console.log('reader', this.image)
       this.$http.post('upload/audio', { audioObj })
@@ -78,7 +83,7 @@ export default {
         return Promise.resolve(this.buffer);
       } else {
         console.log('Fetching')
-        return fetch('//localhost:3000/uploads/audio-12.mp3')
+        return fetch('//localhost:3000/uploads/audio-'+ this.$route.params.id +'.mp3')
           .then(data => data.arrayBuffer())
           .then(raw => context.decodeAudioData(raw))
           .then(buffer => {
