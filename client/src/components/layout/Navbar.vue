@@ -1,5 +1,5 @@
 <template lang="html">
-  <nav class="navbar navbar-full navbar-dark bg-inverse">
+  <nav class="navbar navbar-full navbar-dark">
     <a class="navbar-brand" href="/">Vue Boilerplate</a>
     <ul class="nav navbar-nav pull-xs-right">
       <li class="nav-item">
