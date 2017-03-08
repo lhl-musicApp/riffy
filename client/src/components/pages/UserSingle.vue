@@ -3,15 +3,11 @@
     <div class="row">
       <div class="col-lg-4">
         <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-
         <image-component></image-component>
       </div>
       <div class="col-lg-2">
+        <audio-component></audio-component>
       </div>
-      <div>
-       <!-- <audio-player :sources="audioSources" :loop="true"></audio-player> -->
-      <audio-component></audio-component>
-  </div>
 
       <div class="user col-lg-4">
         <p>First Name: {{ user.first_name }}</p>
@@ -26,11 +22,11 @@
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
-        <button @click="show = !show">Edit</button>
       </div>
 
-      <div class="col-lg-4">
+      <div class="col-lg-4" v-if="(this.$route.params.id) === ls">
         <form id="registration" v-on:submit.prevent="submit">
+          <button  @click="show = !show">Edit</button>
           <transition name="slide-fade">
             <div v-if="show" class="registration form-group">
               <label for="first_name">First Name</label>
@@ -61,21 +57,30 @@
               <label for="user_influence">Influence</label>
               <input v-model="user.user_influence" placeholder="influence">
               <br>
-              <label for="youtube">Youtube</label>
-              <input v-model="user.youtube_link" placeholder="influence">
-              <br>
-              <label for="soundcloud_link">Soundcloud Link</label>
-              <input v-model="user.soundcloud_link" placeholder="soundcloud link">
+              <label for="youtube_link">Youtube Link</label>
+              <input v-model="user.youtube_link" placeholder="youtube link">
               <br>
               <input type="checkbox" id="isAvailable" v-model="user.isAvailable">Available to join band?</input>
               <br>
               <input type="checkbox" id="looking_for" v-model="user.looking_for">Looking for band to join?</input>
               <br>
-              <button form="registration" name="registration" type="submit">Save</button>
             </div>
           </transition>
+          <div class="col-lg-4">
+            <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+            <image-component></image-component>
+          </div>
+          <div class="col-lg-2">
+            <audio-component></audio-component>
+          </div>
+          <button form="registration" name="registration" type="submit">Save</button>
         </form>
       </div>
+
+      <div class="col-lg-2">
+        <skills-component></skills-component>
+      </div>
+
 
       <div class="container">
         <section>
@@ -83,7 +88,7 @@
             :video-id="videoId"
             player-width="50%"
             player-height="350"
-          >
+            @ready="ready">
           </youtube>
         </section>
 
@@ -101,43 +106,37 @@
         </div>
         <!-- <drag-drop></drag-drop> -->
         <div class="container" v-for="message in messages">
-          <p>{{ message.first_name }} {{ message.last_name }}</p>
+          <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
           <p>{{ message.content }}</p>
-          <p>{{ message.created_at }}</p>
+          <p>{{ moment(message.created_at) }}</p>
         </div>
-
-
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-
+import moment from 'moment';
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
-// import AudioPlayer from './Howler.vue';
+import skillsComponent from './Skills.vue';
 
 export default {
-
   data () {
-
     return {
-
-      show: false,
-      user: auth.user,
-
+      show: true,
       error: null,
+      user: auth.user,
+      error: null,
+      ls: localStorage.user_id,
       messages: {
-        author: '',
+        author_id: '',
         content: '',
         first_name: '',
         last_name: '',
         created_at: ''
       },
-
       user: {
         first_name: '',
         last_name: '',
@@ -149,10 +148,19 @@ export default {
         user_influence: '',
         youtube_link: '',
         isAvailable: false,
-        looking_for: false
+        looking_for: false,
       },
       url: '',
       videoId: '',
+      skillOptions: [],
+      skills: [{
+        skill_id: 0,
+        skill_name: '',
+        skill_rating: 0,
+        skill_comment: '',
+        user_id: 0
+      }],
+
       image: '',
       imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg',
       audioSources: [
@@ -163,31 +171,40 @@ export default {
   },
 
   created () {
-    console.log('this.$route.params.id: ', this.$route.params.id)
-    console.log('localStorage.user_id: ', localStorage.user_id)
+    // console.log('this.$route.params.id: ', this.$route.params.id)
+    // console.log('localStorage.user_id: ', localStorage.user_id)
     this.$http.get('users/' + this.$route.params.id).then(response => {
       this.user = response.data[0];
       this.url = this.user.youtube_link;
       let sliceit = this.user.youtube_link.indexOf('=');
-      this.videoId = this.user.youtube_link.slice(sliceit+1, 100);
+      this.videoId = this.user.youtube_link.slice(sliceit + 1, 100);
     })
     this.$http.get('users/' + this.$route.params.id + '/message' ).then(response => {
-      this.messages = response.data;
-      console.log(response);
-    })
+       this.messages = response.data;
+     })
   },
-
   computed: {
-
   },
-
   methods: {
-    submit(){
-      this.$http.post('users/update', this.user)
-        .then(response => {
-        this.user = response.body;
-      });
+    submit() {
+      this.$http.post('users/' + this.$route.params.id, {
+        user: this.user
+      })
+      .then(function (response) {
+        if (response.status === 200){
+            this.user = response.body;
+            location.reload(true);
+          }
+        })
+      .catch(function (error) {
+        this.error = error;
+      })
+      // this.$http.post('users/' + this.$route.params.id, this.user)
+      //   .then(response => {
+      //   this.user = response.body;
+      // });
     },
+    // Youtube Vieo starts here
 
     postmessage(){
       this.$validator.validateAll();
@@ -197,9 +214,7 @@ export default {
           content: this.messages.content
         })
         .then(function (response) {
-          console.log(response);
           if (response.status === 200){
-              console.log('Form submitted');
               location.reload(true);
           }
         })
@@ -209,6 +224,9 @@ export default {
         }
       },
 
+      moment(date){
+        return moment(date).fromNow();
+      },
 
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {
@@ -240,33 +258,20 @@ export default {
     pause () {
       this.player.pauseVideo()
     },
-    // launchVideo() {
-    //   this.videoLaunched = true;
-    //   this.player.playVideo();
-    //   document.getElementsByTagName('body')[0].classList.add('overlay');
-    // },
-    // ready: function(player) {
-    //   fitvids();
-    //   this.player = player;
-    //   this.videoLoaded = true;
-    // },
-    // ended() {
-    //   console.log('Ended');
-    // }
-
 
   },
   components: {
     imageComponent,
     audioComponent,
-    // AudioPlayer
-  }
+    skillsComponent
 
+  }
 };
 
 </script>
 
 <style lang="css">
+
   /* Enter and leave animations can use different */
   /* durations and timing functions.              */
   .slide-fade-enter-active {
@@ -280,4 +285,11 @@ export default {
     transform: translateX(10px);
     opacity: 0;
   }
+  .form-row {
+    border:  1px solid #e2e2e2;
+    margin:  2px;
+    padding: 5px;
+    background: #f2f2f2;
+  }
+
 </style>

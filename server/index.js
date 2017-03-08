@@ -137,7 +137,6 @@ router.get('/users', ejwt({
 });
 
 router.post('/auth/login', function(req, res, next) {
-	console.log(req);
 	passport.authenticate('local', function(err, user, info) {
 		if (err) {
 			return res.status(400).json({ error: err });
@@ -440,9 +439,8 @@ router.delete('/notes/:note_id', (req, res, next) => {
 router.get('/users/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  // console.log(req.params);
+  console.log("I AM A TEST", req.params);
   // Grab data from the URL parameters
-  console.log(req.params);
   let param_id = req.params.user_id;
 
   knex.select().from('users').where({id: param_id})
@@ -459,17 +457,174 @@ router.get('/users/:user_id', ejwt({
     });
 });
 
+//get user current skills
+router.get('/users/skills/:user_id', ejwt({
+  	secret: app.get('superSecret')
+  }), (req, res) => {
+  let param_id = req.params.user_id;
+	knex('skill_user')
+  .join('skills', 'skill_user.skill_id', 'skills.id')
+    .select('skill_user.skill_id as skill_id', 'skill_user.user_id as user_id', 'skills.skill_name as skill_name')
+    .where({ user_id: param_id })
+    .then((data) => {
+      let userdata = data;
+      if (!userdata) {
+        res.status(400).redirect('/login')
+      } else {
+				console.log('get userskills: ', data);
+				res.json(data); }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
+
+
+// TODO update skills query
+
+// select skill_user.user_id as user_id, skills.skill_name as skill_name, skill_user.skill_rating as skill_rating, skill_user.skill_comment as skill_comment  from  skill_user join skills on skill_user.skill_id = skills.id;//
+
+router.post('/users/skills/:user_id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+	let param_id = req.user.id;
+	let skilluser_id = req.body.id;
+	// TODO: why do we just trust the user so blindly about their uid?
+	let skilladdition = {
+		user_id: param_id,
+		skill_id: skilluser_id
+		// created_at:
+	}
+	knex('skill_user').insert(skilladdition)
+	.catch((err) => {
+		res.json(err);
+	})
+
+	// console.log("skillNamesToInsert:", skillNamesToInsert);
+	// skillNamesToInsert.user_id = param_id
+
+	// knex('skills').select('skill_name', 'id')
+	// .then((skills_rows) => {
+	// 	var skillMap = {};
+	// 	skills_rows.forEach((row) => {
+	// 		skillMap[row.skill_name] = row.id;
+	// 	});
+	//
+		// var suObjectsToInsert = skillNamesToInsert.map((sn) => {
+		// 	return {
+		// 		user_id: param_id,
+		// 		skill_id: skillMap[sn.skill_name]
+		// 	}
+		// });
+
+		// return knex('skill_user')
+		// 	.insert(skillNamesToInsert);
+	// })
+	// .then(() => {
+	// 	// TODO: res response??
+	// 	console.log("bored now");
+	// 	res.send("DUDE IT IS FINE");
+	// })
+});
+
+router.delete('/users/skills/:user_id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+		console.log('delete req params: ', req.params);
+		console.log('delete req body: ', req.body);
+		let userId = parseInt(req.params.user_id);
+		let skillId = parseInt(req.body.skill_id);
+
+		delete req.body.skill_name
+		let canudelete = req.body;
+
+		let deleteObj = {
+			user_id: userId,
+			skill_id: skillId
+		}
+
+		// console.log(deleteObj);
+		console.log(canudelete);
+
+		knex('skill_user')
+		.where(canudelete)
+		.del()
+
+
+	});
+
+	router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
+	  if (!req.user) {
+	    return res.sendStatus(401)
+	  } else {
+	    knex.select().from('skills')
+	    .then((data) => {
+	      // console.log(data);
+	      res.json(data);
+	    })
+	    .catch((err) => {
+	      res.status(400).json(err);
+	    });
+	  }
+	});
+	// knex('skill_user')
+	// .join('skills', 'skill_user.skill_id', 'skills.id')
+	// 	.select('skills.skill_name as skill_name')
+	// 	.where({ user_id: param_id })
+	// 	.insert(skillNamesToInsert.skill_name)
+	// 	.then((data) => {
+	// 		let userdata = data;
+	// 		if (!userdata) {
+	// 			res.status(400).redirect('/login')
+	// 		} else {
+	// 			res.json(data); }
+	// 	})
+	// 	.catch((err) => {
+	// 		res.status(400).json(err);
+	// 	});
+
+
+	//
+	// var chunkSize = 1000;
+	// knex.batchInsert('skill_user', rows, chunkSize)
+  // .returning('user_id', 'skill_name')
+  // .then((data) => {
+	// 	res.json(data);
+	// })
+  // .catch((err) => {
+	// 	res.status(400).json(err)
+	// });
+
+	// knex('skill_user')
+  // .join('skills', 'skill_user.skill_id', 'skills.id')
+  //   .select('skill_user.user_id as user_id', 'skills.skill_name as skill_name', 'skill_user.skill_rating as skill_rating', 'skill_user.skill_comment as skill_comment')
+	// 	.returning('*')
+	// 	.where({id: param_id})
+	// 	.update(result)
+	// 	.then((data) => {
+	// 		console.log('router userskills data: ', data);
+	// 		res.json(data[0]);
+  //   })
+  //   .catch((err) => {
+  //     res.status(400).json(err);
+  //   });
+
+
+
+
+
 // Route for update form
 router.post('/users/:id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  let param_id = req.user.id;
-  console.log(user);
-  const result = req.body;
 
-  knex.select().from('users').returning('*')
-		.where({id: param_id}).update(result)
+	let param_id = req.params.id;
+  const result = req.body;
+	knex('users').update(req.body)
+	.where({ id: req.params.id})
+	.returning('*')
 		.then((data) => {
+			console.log('post user data return:', data);
 			res.json(data[0]);
     })
     .catch((err) => {
@@ -478,7 +633,6 @@ router.post('/users/:id', ejwt({
 })
 
 // THIS IS THE MESSAGES SECTION
-
 router.post('/users/:id/message',
 			ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }),
 	(req, res, next) => {
@@ -519,6 +673,7 @@ router.get('/users/:id/message', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
 	.where({
 	 	profile_id: req.params.id
 	})
+	.orderBy('created_at', 'desc')
 	.then((data) => {
 		console.log(data);
 		res.json(data);
@@ -562,7 +717,11 @@ router.delete('/users/:id', (req, res) => {
 router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
   // console.log(res);
   console.log("uploads param", req.user.id);
+})
+//// ok
 
+
+router.post('/upload', upload.array(), (req, res) => {
   var base64Data = req.body.imageObj.image;
 
     console.log('writing file...', base64Data);
@@ -673,11 +832,7 @@ router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), 
   // req.request.pipe(buffer);
 })
 
-
-
-
-
-//// ok
+// GET all bands info
 router.get('/bands', ejwt({ secret: app.get('superSecret') }), (req, res) => {
   if (!req.user) {
     return res.sendStatus(401)
@@ -694,17 +849,14 @@ router.get('/bands', ejwt({ secret: app.get('superSecret') }), (req, res) => {
 });
 
 
-// New Band - Not Done
+// POST new band
 router.post('/bands/new', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  // console.log(req.user);
-  // console.log(req.body);
   const newBand = req.body;
   const newBandCreator = req.user.id;
 
-  knex('bands').insert(newBand)
-  .returning('*')
+  knex('bands').insert(newBand).returning('*')
   .then((data) => {
     knex('band_user')
     .insert({
@@ -721,47 +873,41 @@ router.post('/bands/new', ejwt({
   });
 })
 
-// GET SPECIFIC BAND
+// GET specific band info
 router.get('/bands/:band_id', ejwt({
     secret: app.get('superSecret')
   })
   , (req, res) => {
-  // console.log("Req User check in Band Detail: ", req.user);
-  // console.log("Param in Get Band: ", req.params);
-
-  // Grab data from the URL parameters
   let param_id = req.params.band_id;
 
   knex.select().from('bands').where({ id: param_id })
     .then((data) => {
-      // console.log('band id data: ', data);
-      // let banddata = data[0];
-      // if (param_id === banddata.id) {
-      //   console.log(data);
         res.json(data);
-      // } else {
-      //   res.status(400).redirect('/index')
     })
     .catch((err) => {
       res.status(400).json(err);
     });
 });
 
+// GET all band with track information
 router.get('/bandtracks/:band_id',
 	ejwt({
     secret: app.get('superSecret')
   }),
 	(req, res) => {
-  // console.log("Req User check in Band Detail: ", req.user);
-  // console.log("Param in Get Band Tracks: ", req.params);
   let param_id = req.params.band_id;
 
   knex('bands')
   .join('tracks', 'bands.id', 'tracks.band_id')
-    .select('tracks.id as track_id', 'bands.id as band_id', 'tracks.track_name as track_name', 'tracks.isCreator as isCreator', 'tracks.original_artist as original_artist', 'tracks.soundcloud_link as soundcloud_link', 'tracks.isPublished as isPublished')
+    .select('tracks.id as track_id',
+						'bands.id as band_id',
+						'tracks.track_name as track_name',
+						'tracks.isCreator as isCreator',
+						'tracks.original_artist as original_artist',
+						'tracks.youtube_link as youtube_link',
+						'tracks.isPublished as isPublished')
     .where({ band_id: param_id })
     .then((data) => {
-      // console.log('band track id data: ', data);
         res.json(data);
     })
     .catch((err) => {
@@ -868,10 +1014,25 @@ router.get('/search',
   // }
 });
 
-
-router.post('/tracks/new', (req, res) => {
-  res.send('this is POST /tracks/new Page');
-})
+//
+router.post('/tracks/new', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+  // console.log('new track - req user: ', req.user);
+  // console.log('new track - req body: ', req.body);
+  const userId = req.user.id;
+  const trackInfo = req.body;
+  trackInfo.userId;
+  knex('tracks')
+  .insert(trackInfo).returning('*')
+  .then((data) => {
+    console.log(data[0]);
+    res.json(data[0]);
+  })
+  .catch((err) => {
+    res.json(err);
+  })
+});
 
 
 router.put('/tracks/:id', (req, res) => {

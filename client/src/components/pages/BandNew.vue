@@ -47,20 +47,10 @@ export default {
         has_open_position: false,
         looking_for: ''
       }
-      // ,
-      // band_user: {
-      //   user_id: localStorage.user_id,
-      //   isBandAdmin: true
-      // }
     };
   },
 
   created () {
-    // console.log('this.$route.params.id: ', this.$route.params.id)
-    // console.log('localStorage.user_id: ', localStorage.user_id)
-    // this.$http.get('users/' + this.$route.params.id).then(response => {
-    //   this.user = response.data[0];
-    // })
   },
   computed: {
 
@@ -69,11 +59,8 @@ export default {
     submit(){
       this.$http.post('bands/new', this.band)
         .then(response => {
-          console.log(response);
-          const newBandId = response.body.band_id
-        // this.user = response.body;
-          console.log('this $route: ', this.$route);
-          console.log('this $router: ', this.$router);
+          const newBandId = response.body.band_id;
+          // need to find a way to redirect to /bands/:band_id
           this.$router.push('/');
       });
     }

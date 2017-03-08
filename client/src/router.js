@@ -12,11 +12,14 @@ export var router = new Router({
 		{ path: '/verify/:id/:token', component: Verify },
 		{ name: 'noteSingle', path: '/notes/:id', component: NoteSingle },
     { name: 'userSingle', path: '/users/:id', component: UserSingle, meta: { checksAuth: true } },
+		{ path: '/userskills/:id', component: UserSingle, meta: { checksAuth: true }},
+    { name: 'skills', path: '/users/skills/:id', component: Skills, meta: { checksAuth: true } },
     { path: '/bands', component: Bands, meta: { requiresAuth: true }},
     { path: '/bands/new', component: BandNew, meta: { requiresAuth: true }},
     { name: 'bandSingle', path: '/bands/:id', component: BandSingle, meta: { checksAuth: true } },
     { path: '/bandtracks/:id', component: BandSingle, meta: { checksAuth: true }},
     { path: '/tracks', component: Tracks, meta: { requiresAuth: true }},
+    { path: '/tracks/new', component: TrackNew, meta: { requiresAuth: true }},
     { name: 'trackSingle', path: '/tracks/:id', component: TrackSingle, meta: { checksAuth: true } }
 	]
 });
