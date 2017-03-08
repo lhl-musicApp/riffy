@@ -1,10 +1,19 @@
 <template lang="html">
   <div>
-    <h1>Play Audio</h1>
-    <div v-if="!audio">
-      <h6>Select audio file to up load</h6>
-      <input type="file" @change="onFileAudio">
+    <div>
+      <h1>Audio Upload</h1>
+      <div v-if="!audio">
+        <h2>Select audio file to up load</h2>
+        <input type="file" @change="onFileAudio">
+      </div>
+      <div v-else>
+        <!-- <img :src="image" /> -->
+        <button @click="removeAudio">Remove Audio</button>
+        <button @click="saveAudio">Save Audio</button>
+      </div>
+      <button @click="loadSound">loadsong</button>
     </div>
+
     <div v-else>
       <!-- <img :src="image" /> -->
       <button @click="removeAudio">Remove Audio</button>
@@ -18,9 +27,7 @@
   </div>
 
 </template>
-<script>
 
-</script>
 <script>
 const context = new AudioContext();
 var source = null;

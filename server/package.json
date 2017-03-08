@@ -29,7 +29,8 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "pg": "^6.1.0",
-    "randomstring": "^1.1.5"
+    "randomstring": "^1.1.5",
+    "vue-moment": "^2.0.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",

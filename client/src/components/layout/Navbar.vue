@@ -24,7 +24,7 @@
         <router-link to="/users" v-if="user.authenticated && user.role == 'admin'"><a class="nav-link">Admin</a></router-link>
       </li>
       <li class="nav-item">
-        <router-link :to="{ name: 'userSingle', params: { id: ls.user_id }}"><a class="nav-link">Profile</a></router-link>
+        <router-link  :to="{ name: 'userSingle', params: { id: ls }}"><a class="nav-link">Profile</a></router-link>
       </li>
       <li class="nav-item">
         <a href="#" @click="logout()" v-if="user.authenticated" class="nav-link">Log Out</a>
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       user: auth.user,
-      ls: localStorage
+      ls: localStorage.user_id
     }
   },
   methods: {
