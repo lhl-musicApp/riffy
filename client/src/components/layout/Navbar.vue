@@ -6,13 +6,13 @@
         <router-link to="/"><a class="nav-link">Home</a></router-link>
       </li> -->
       <li class="nav-item">
-        <router-link to="/main" v-if="!user.authenticated"><a class="nav-link">Artists</a></router-link>
+        <router-link to="/main" v-if="user.authenticated"><a class="nav-link">Artists</a></router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/bands" v-if="!user.authenticated"><a class="nav-link">Bands</a></router-link>
+        <router-link to="/bands" v-if="user.authenticated"><a class="nav-link">Bands</a></router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/tracks" v-if="!user.authenticated"><a class="nav-link">Tracks</a></router-link>
+        <router-link to="/tracks" v-if="user.authenticated"><a class="nav-link">Tracks</a></router-link>
       </li>
       <li class="nav-item">
         <router-link  :to="{ name: 'userSingle', params: { id: ls }}" v-if="user.authenticated"><a class="nav-link">Profile</a></router-link>

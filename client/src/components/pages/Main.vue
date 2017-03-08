@@ -1,11 +1,11 @@
 <template lang="html">
   <div>
-    <div class="jumbotron jumbotron-fluid">
+<!--     <div class="jumbotron jumbotron-fluid">
       <div class="container">
         <h1 class="display-3">Vue.js Boilerplate</h1>
         <p class="lead">Vue + Passport + Express + Postgres</p>
       </div>
-    </div>
+    </div> -->
     <div class="container">
 
   <!--     <h1>Main List</h1>
@@ -32,7 +32,7 @@
         <input type="text" v-model="searchString" placeholder="Enter your search terms" />
       </div>
 
-      
+
             <!-- Render a li element for every entry in the computed filteredArticles array. -->
         <!-- <li v-for="article in filteredArticles"> -->
           <div class="container">
