@@ -315,8 +315,8 @@ router.get('/verify/:id/:token', function(req, res) {
 router.get('/main', (req, res) => {
 	// const resultsArr = [];
   knex('users')
-.join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
-.select().then( function (result) {
+  .join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
+  .select().then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
 		console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
