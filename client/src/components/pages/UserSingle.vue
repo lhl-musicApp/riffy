@@ -32,7 +32,7 @@
 
       </div>
 
-      <div class="col-lg-4" v-if="(this.$route.params.id) === ls">
+      <div class="col-lg-4" v-if="(this.$route.params.id) === local_id">
         <form id="registration" v-on:submit.prevent="submit">
           <button  @click="show = !show">Edit</button>
           <transition name="slide-fade">
@@ -74,13 +74,6 @@
               <br>
             </div>
           </transition>
-          <div class="col-lg-4">
-            <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-            <image-component></image-component>
-          </div>
-          <div class="col-lg-2">
-            <audio-component></audio-component>
-          </div>
           <button form="registration" name="registration" type="submit">Save</button>
         </form>
       </div>
@@ -140,7 +133,7 @@ export default {
       error: null,
       user: auth.user,
       error: null,
-      ls: localStorage.user_id,
+      local_id: localStorage.user_id,
       messages: {
         author_id: '',
         content: '',
