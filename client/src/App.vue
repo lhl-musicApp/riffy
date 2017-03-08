@@ -8,7 +8,7 @@
 <script>
 
 import Navbar from './components/layout/Navbar.vue';
-
+import "../style.css";
 export default {
   components: {
     Navbar,
