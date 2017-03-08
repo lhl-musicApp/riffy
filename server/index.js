@@ -314,11 +314,13 @@ router.get('/verify/:id/:token', function(req, res) {
 // DATA ROUTES --> this is where pages are rendered
 router.get('/main', (req, res) => {
 	// const resultsArr = [];
-	knex.select().from('users').then( function (result) {
+  knex('users')
+.join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
+.select().then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
-		// console.log('results from main: ', result)
+		console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
-		return res.json(result);
+		return res.send(result);
 	}).catch(function (err) {
 		return res.status(500).json({ success: false, data: err });
 	});
