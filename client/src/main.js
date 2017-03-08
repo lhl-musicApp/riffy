@@ -17,11 +17,7 @@ import Howler from './components/pages/Howler.vue';
 import Radio from './components/pages/Radio.vue';
 import Streaming from './components/pages/Stream.vue';
 import VueYouTubeEmbed from 'vue-youtube-embed';
-
 import Multiselect 			from 'vue-multiselect';
-
-
-// import Multiselect from 'vue-multiselect';
 import Skills 					from './components/pages/Skills.vue';
 
 // import UserEditor from './components/pages/UserEditor.vue';

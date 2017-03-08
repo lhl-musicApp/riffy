@@ -1,20 +1,13 @@
 <template lang="html">
   <div class="container">
     <div class="row">
-
       <div class="col-lg-4">
         <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-
         <image-component></image-component>
       </div>
       <div class="col-lg-2">
-      </div>
-      <div>
-       <!-- <audio-player :sources="audioSources" :loop="true"></audio-player> -->
         <audio-component></audio-component>
       </div>
-
-
       <div class="user col-lg-4">
         <p>First Name: {{ user.first_name }}</p>
         <p>Last Name: {{ user.last_name }}</p>
@@ -28,8 +21,6 @@
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
         <br>
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
-
-
       </div>
 
       <div class="col-lg-4" v-if="(this.$route.params.id) === local_id">
@@ -121,10 +112,7 @@ import moment from 'moment';
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
-
 import skillsComponent from './Skills.vue';
-
-
 
 export default {
   data () {
@@ -165,12 +153,8 @@ export default {
         user_id: 0
       }],
 
-      image: '',
-      imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg',
-      audioSources: [
-          'http://localhost:3000/uploads/audio-' + this.$route.params.id +'.mp3',
-
-        ]
+      // image: '',
+      // imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
     };
   },
 
@@ -191,7 +175,7 @@ export default {
   },
   methods: {
     submit() {
-      this.$http.post('users/' + this.$route.params.id, {
+      this.$http.post('users/' + this.$route.params.id + '/image', {
         user: this.user
       })
       .then(function (response) {

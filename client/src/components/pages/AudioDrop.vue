@@ -1,17 +1,16 @@
 <template lang="html">
   <div>
-    <div>
-      <h1>Audio Upload</h1>
-      <div v-if="!audio">
-        <h2>Select audio file to up load</h2>
-        <input type="file" @change="onFileAudio">
-      </div>
+    <h1>Audio Upload</h1>
+    <div v-if="!audio">
+      <h2>Select audio file to up load</h2>
+      <input type="file" @change="onFileAudio">
+    </div>
     <div v-else>
       <!-- <img :src="image" /> -->
       <button @click="removeAudio">Remove Audio</button>
-          <label for="trackame">First Name</label>
-          <input v-model="trackname" placeholder="first name">
-              <br>
+      <label for="trackame">First Name</label>
+      <input v-model="trackname" placeholder="first name">
+      <br>
       <p>trackame is: {{ trackname }}</p>
       <button @click="saveAudio">Save Audio</button>
     </div>
@@ -71,7 +70,7 @@ export default {
         trackname : this.trackname
       }
       // console.log('reader', this.image)
-      this.$http.post('upload/audio', { audioObj })
+      this.$http.post('upload/' + this.$route.params.id +'audio', { audioObj })
         .then(response => {
           console.log('saveAudi =>', response)
         });

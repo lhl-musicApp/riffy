@@ -315,7 +315,8 @@ router.get('/main', (req, res) => {
 	// const resultsArr = [];
   knex('users')
   .join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
-  .select().then( function (result) {
+  .select('users.id as id', 'users.first_name as first_name', 'users.last_name as last_name', 'users.user_city as user_city', 'users.user_country as user_country', 'tracks.track_name as track_name', 'tracks.track_link as track_link', 'users.image_link as image_link')
+  .then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
 		console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
@@ -713,14 +714,14 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
-  // console.log(res);
-  console.log("uploads param", req.user.id);
-})
-//// ok
+// router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+//   // console.log(res);
+//   console.log("uploads param", req.user.id);
+// })
+// //// ok
 
 
-router.post('/upload', upload.array(), (req, res) => {
+router.post('/upload/:id/image', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
   var base64Data = req.body.imageObj.image;
 
     console.log('writing file...', base64Data);
@@ -747,7 +748,7 @@ router.post('/upload', upload.array(), (req, res) => {
         res.status(400).json(err);
       }
       else {
-        knex().from('users').where({ id: req.user.id })
+        knex('users').where({ id: req.user.id })
         .update({ image_link:  '//localhost:3000/uploads/image-' + req.user.id + '.jpeg'})
         .then((data) => {
           res.status(200).send('created an image')
@@ -758,7 +759,7 @@ router.post('/upload', upload.array(), (req, res) => {
 
 
 // Audio Post
-router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+router.post('/upload/:id/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
 
   var base64Data = req.body.audioObj.audio;
   var trackName = req.body.audioObj.trackname;
