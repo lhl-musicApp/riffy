@@ -57,6 +57,8 @@ export var router = new Router({
 		{ path: '/verify', component: Verify },
     { path: '/drop', component: DragDrop },
 		{ path: '/skills', component: Skills },
+		// { path: '/users/skills/delete/:id', component: Skills },
+		{ name: 'skills', path: '/users/skills/:id', component: Skills, meta: { requiresAuth: true } },
     { path: '/audiodrop', component: AudioDrop },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
