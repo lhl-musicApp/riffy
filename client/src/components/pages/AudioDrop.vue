@@ -16,7 +16,7 @@
     </div>
     <button @click="playSound">loadsong</button>
   </div>
-</div>
+
 </template>
 <script>
 
