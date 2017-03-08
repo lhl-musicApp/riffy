@@ -34,10 +34,10 @@
 
       <ul>
             <!-- Render a li element for every entry in the computed filteredArticles array. -->
-        <li v-for="article in filteredArticles">
-          <div class="row">
-            <div class="col-sm-6 col-md-4" v-for="main in filteredArticles">
-              <div class="thumbnail">
+        <!-- <li v-for="article in filteredArticles"> -->
+          <div class="container">
+            <div class="row" v-for="main in filteredArticles">
+              <div class="thumbnail col-sm-6 col-md-4">
               <!-- <audio-player></audio-player> -->
 
                 <div class="caption user-container">
@@ -45,11 +45,9 @@
 
                   <h3>{{ main.first_name }} {{ main.last_name }}</h3>
                   <ul>
-                    <li><a :href="'users/' + main.id">{{ main.id }}</a></li>
+                    <li><a :href="'users/' + main.id">{{ main.first_name }} {{ main.last_name }}</a></li>
                     <li>{{ main.user_city }}</li>
                     <li>{{ main.user_country }}</li>
-                    <li>{{ main.image_link }}</li>
-                    <li>{{ main.track_link}}</li>
                   </ul>
                   <!-- This is the audio component -->
                   <div>
@@ -66,7 +64,7 @@
               </div>
             </div>
           </div>
-        </li>
+        <!-- </li> -->
       </ul>
     </form>
     </div>
@@ -111,25 +109,28 @@ export default {
       var searchArray = [];
 
       if(!searchString){
-        return articles_array = this.main;
+        return articles_array;
       }
-      searchString = searchString.trim().toLowerCase();
-      console.log("searchString: ", searchString)
+      else {
+        searchString = searchString.trim().toLowerCase();
+        console.log("searchString: ", searchString)
 
-      var loadArray = [];
-      articles_array = articles_array.filter(function(item){
-        for (var key in item) {
-            // console.log('obj[key]', typeof(item[key]));
-          if(typeof(item[key]) === typeof('string')){
-            if(item[key].toLowerCase().indexOf(stringArray[0]) !== -1){
-              console.log('item=>', item)
-              return loadArray.push(item);
+        var loadArray = [];
+        articles_array = articles_array.filter(function(item){
+          for (var key in item) {
+              // console.log('obj[key]', typeof(item[key]));
+            if(typeof(item[key]) === typeof('string')){
+              if(item[key].toLowerCase().indexOf(stringArray[0]) !== -1){
+                console.log('item=>', item)
+                return loadArray.push(item);
+              }
             }
           }
-        }
-      })
-            // Return an array with the filtered data.
-      return loadArray;
+        })
+              // Return an array with the filtered data.
+        return loadArray;
+      }
+
     }
   },
   methods: {
