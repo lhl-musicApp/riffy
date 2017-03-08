@@ -9,8 +9,8 @@
       <div class="col-lg-2">
       </div>
       <div>
-    <audio-player :sources="audioSources" :loop="true"></audio-player>
-
+       <!-- <audio-player :sources="audioSources" :loop="true"></audio-player> -->
+      <audio-component></audio-component>
   </div>
 
       <div class="user col-lg-4">
@@ -117,8 +117,8 @@
 
 import auth from '../../auth.js';
 import imageComponent from './DragDrop.vue';
-// import audioComponent from './AudioDrop.vue';
-import AudioPlayer from './Howler.vue';
+import audioComponent from './AudioDrop.vue';
+// import AudioPlayer from './Howler.vue';
 
 export default {
 
@@ -258,8 +258,8 @@ export default {
   },
   components: {
     imageComponent,
-    // audioComponent,
-    AudioPlayer
+    audioComponent,
+    // AudioPlayer
   }
 
 };
