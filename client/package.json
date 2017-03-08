@@ -67,7 +67,10 @@
     "webpack-merge": "^0.14.1"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "node-sass": "^4.5.0",
+    "nodemon": "^1.11.0",
+    "sass-loader": "^6.0.3",
+    "webpack": "^1.14.0"
   },
   "engines": {
     "node": ">= 4.0.0",
