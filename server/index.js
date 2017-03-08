@@ -461,7 +461,7 @@ router.get('/users/skills/:user_id', ejwt({
   let param_id = req.params.user_id;
 	knex('skill_user')
   .join('skills', 'skill_user.skill_id', 'skills.id')
-    .select('skills.skill_name as skill_name')
+    .select('skill_user.skill_id as skill_id', 'skill_user.user_id as user_id', 'skills.skill_name as skill_name')
     .where({ user_id: param_id })
     .then((data) => {
       let userdata = data;
@@ -485,33 +485,106 @@ router.post('/users/skills/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
 	let param_id = req.user.id;
-	let rows = req.body;
-	console.log('/users/skills/skill_req: ', rows);
+	let skilluser_id = req.body.id;
+	// TODO: why do we just trust the user so blindly about their uid?
+	let skilladdition = {
+		user_id: param_id,
+		skill_id: skilluser_id
+		// created_at:
+	}
+	knex('skill_user').insert(skilladdition)
+	.catch((err) => {
+		res.json(err);
+	})
 
-	// const rows = skill_req;
+	// console.log("skillNamesToInsert:", skillNamesToInsert);
+	// skillNamesToInsert.user_id = param_id
 
-	// var chunkSize = 1000;
-
-	// skill_req.forEach((skill) => {
-	// 		console.log('skill log: ',skill);
-	//
-	// 	knex('skill_user')
-	// 		.where('skill.skill_id', '=', 'skill_id')
-	// 		.returning('*')
-	// 		.update(skill)
+	// knex('skills').select('skill_name', 'id')
+	// .then((skills_rows) => {
+	// 	var skillMap = {};
+	// 	skills_rows.forEach((row) => {
+	// 		skillMap[row.skill_name] = row.id;
 	// 	});
-	// 	// 	knex('skill_user').insert('*')
-	// 	// 	.then((data) => {
-	// 	// 		res.json(data);
-	// 	// 	})
-	// 	//   .catch((err) => {
-	// 	// 		res.status(400).json(err)
-	// 	// 	});
-	// 	//
+	//
+		// var suObjectsToInsert = skillNamesToInsert.map((sn) => {
+		// 	return {
+		// 		user_id: param_id,
+		// 		skill_id: skillMap[sn.skill_name]
+		// 	}
+		// });
+
+		// return knex('skill_user')
+		// 	.insert(skillNamesToInsert);
+	// })
+	// .then(() => {
+	// 	// TODO: res response??
+	// 	console.log("bored now");
+	// 	res.send("DUDE IT IS FINE");
+	// })
+});
+
+router.delete('/users/skills/:user_id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+		console.log('delete req params: ', req.params);
+		console.log('delete req body: ', req.body);
+		let userId = parseInt(req.params.user_id);
+		let skillId = parseInt(req.body.skill_id);
+
+		delete req.body.skill_name
+		let canudelete = req.body;
+
+		let deleteObj = {
+			user_id: userId,
+			skill_id: skillId
+		}
+
+		// console.log(deleteObj);
+		console.log(canudelete);
+
+		knex('skill_user')
+		.where(canudelete)
+		.del()
+
+
+	});
+
+	router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
+	  if (!req.user) {
+	    return res.sendStatus(401)
+	  } else {
+	    knex.select().from('skills')
+	    .then((data) => {
+	      // console.log(data);
+	      res.json(data);
+	    })
+	    .catch((err) => {
+	      res.status(400).json(err);
+	    });
+	  }
+	});
+	// knex('skill_user')
+	// .join('skills', 'skill_user.skill_id', 'skills.id')
+	// 	.select('skills.skill_name as skill_name')
+	// 	.where({ user_id: param_id })
+	// 	.insert(skillNamesToInsert.skill_name)
+	// 	.then((data) => {
+	// 		let userdata = data;
+	// 		if (!userdata) {
+	// 			res.status(400).redirect('/login')
+	// 		} else {
+	// 			res.json(data); }
+	// 	})
+	// 	.catch((err) => {
+	// 		res.status(400).json(err);
+	// 	});
+
 
 	//
+	// var chunkSize = 1000;
 	// knex.batchInsert('skill_user', rows, chunkSize)
-  // .returning('user_id', 'band_id')
+  // .returning('user_id', 'skill_name')
   // .then((data) => {
 	// 	res.json(data);
 	// })
@@ -532,7 +605,6 @@ router.post('/users/skills/:user_id', ejwt({
   //   .catch((err) => {
   //     res.status(400).json(err);
   //   });
-})
 
 
 
@@ -644,20 +716,7 @@ router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, 
   console.log("uploads param", req.user.id);
 })
 //// ok
-router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
-  if (!req.user) {
-    return res.sendStatus(401)
-  } else {
-    knex.select().from('skills')
-    .then((data) => {
-      // console.log(data);
-      res.json(data);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
-  }
-});
+
 
 router.post('/upload', upload.array(), (req, res) => {
   var base64Data = req.body.imageObj.image;
