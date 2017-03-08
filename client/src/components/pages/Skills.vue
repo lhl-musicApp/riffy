@@ -1,19 +1,7 @@
 <template lang="html">
   <div>
-    <form id="saveSkills" v-on:saveSkills.prevent="saveSkills">
-      <label class="typo__label">Simple select / dropdown</label>
-        <multiselect v-model="value"
-          :options="options"
-          :multiple="true"
-          :close-on-select="false"
-          :clear-on-select="false"
-          :hide-selected="true"
-          placeholder="Pick some"
-          label="skill_name"
-          track-by="skill_name">
-        </multiselect>
-      <button form="saveSkills" name="saveSkills" type="saveSkills">Update</button>
-    </form>
+    <label class="typo__label">Simple select / dropdown</label>
+    <multiselect v-model="value" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false" :hide-selected="true" placeholder="Pick some" label="skill_name" track-by="skill_name" @remove="removeSkill" @select="saveSkills"></multiselect>
     <!-- <pre class="language-json"><code>{{ value  }}</code></pre> -->
   </div>
 
@@ -29,45 +17,36 @@ export default {
   components: { Multiselect },
   data () {
     return {
-      value: [
-      ],
-      options: [
-        { skill_name: 'Guitar', },
-        { skill_name: 'Bass', },
-        { skill_name: 'Drums', },
-        { skill_name: 'Trumpet', },
-        { skill_name: 'Piano', },
-        { skill_name: 'Violin', },
-        { skill_name: 'Singing', },
-        { skill_name: 'Writing', },
-        { skill_name: 'Ukulele', },
-        { skill_name: 'Saxophone', },
-        { skill_name: 'Electric Guitar', },
-        { skill_name: 'Acoustic Guitar', },
-      ]
+      value: [],
+      options: []
     }
   },
 
   created () {
+    this.$http.get('skills').then(response => {
+      console.log('get skills res: ', response);
+      this.options = response.body;
+    });
     this.$http.get('users/skills/' + this.$route.params.id).then(response => {
-    console.log('get skills data: ', response.body);
-    this.value = response.body;
-    console.log(this.value);
+      // response.body.user_id = this.$route.params.id;
+      this.value = response.body;
+      console.log('value: ',this.value);
     });
   },
   methods: {
-    saveSkills() {
-      this.$http.post('users/skills/' + this.$route.params.id,
-      { skills: this.value })
-      // console.log("I AM VALUES", this.value);
-      .then(function (response) {
-        if (response.status === 200){
-            location.reload(true);
-        }
-      })
-      .catch(function (error) {
-        this.error = error;
+    saveSkills(skill) {
+      this.$http.post('users/skills/' + this.$route.params.id, skill )
+      .then(response => {
+        console.log('post from client', response)
       });
+        console.log('saveSkills: ', skill)
+    },
+    removeSkill(skill) {
+      console.log(JSON.stringify(skill));
+      this.$http.delete('users/skills/' + this.$route.params.id, {body: skill})
+      .then(response => {
+        console.log('body:', response);
+      })
     }
   }
 };

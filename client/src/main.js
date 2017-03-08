@@ -4,9 +4,8 @@ import Router 					from 'vue-router';
 import Resource 				from 'vue-resource';
 import App 							from './App';
 import VeeValidate 			from 'vee-validate';
-import Multiselect 			from 'vue-multiselect';
 import vuefaker					from 'vue-faker';
-
+import VueHowler 				from 'vue-howler';
 // Import components
 import Register 				from './components/pages/Register.vue';
 import Hello 						from './components/pages/Hello.vue';
@@ -14,9 +13,13 @@ import Login 						from './components/pages/Login.vue';
 import Users 						from './components/pages/Users.vue';
 import DragDrop 				from './components/pages/DragDrop.vue';
 import AudioDrop 				from './components/pages/AudioDrop.vue';
+import Howler 					from './components/pages/Howler.vue';
+import Radio 						from './components/pages/Radio.vue';
+import Streaming 				from './components/pages/Stream.vue';
 import VueYouTubeEmbed 	from 'vue-youtube-embed';
-// import Multiselect from 'vue-multiselect';
+import Multiselect 			from 'vue-multiselect';
 import Skills 					from './components/pages/Skills.vue';
+
 // import UserEditor from './components/pages/UserEditor.vue';
 import UserSingle 			from './components/pages/UserSingle.vue';
 import Main 						from './components/pages/Main.vue';
@@ -59,7 +62,12 @@ export var router = new Router({
 		{ path: '/verify', component: Verify },
     { path: '/drop', component: DragDrop },
 		{ path: '/skills', component: Skills },
+		// { path: '/users/skills/delete/:id', component: Skills },
+		{ name: 'skills', path: '/users/skills/:id', component: Skills, meta: { requiresAuth: true } },
     { path: '/audiodrop', component: AudioDrop },
+    { path: '/howler', component: Howler },
+    { path: '/stream', component: Streaming },
+    { path: '/radio', component: Radio },
 		{ path: '/forgotpassword', component: ForgotPassword },
 		{ path: '/reset/:token', component: ResetPassword },
 		{ path: '/verify/:id/:token', component: Verify },

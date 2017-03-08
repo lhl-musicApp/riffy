@@ -1,7 +1,13 @@
 <template lang="html">
   <div class="container">
     <div class="row">
-
+      <div class="col-lg-4">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        <image-component></image-component>
+      </div>
+      <div class="col-lg-2">
+        <audio-component></audio-component>
+      </div>
       <div class="user col-lg-4">
         <p>First Name: {{ user.first_name }}</p>
         <p>Last Name: {{ user.last_name }}</p>
@@ -17,8 +23,8 @@
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
         <p>SKILLZ</p>
       </div>
-
-      <div class="col-lg-4" v-if="(this.$route.params.id) === ls">
+<!-- v-if="(this.$route.params.id) === ls" -->
+      <div class="col-lg-4" >
         <div v-show="error" class="alert alert-danger" role="alert">
           <strong>Oh snap!</strong> {{ error }}
         </div>
@@ -63,7 +69,8 @@
               <input type="checkbox" id="looking_for" v-model="user.looking_for">Looking for band to join?</input>
               <br>
             </div>
-          <!-- </transition> -->
+          </transition>
+          <button form="registration" name="registration" type="submit">Save</button>
         </form>
         <div class="col-lg-2">
           <skills-component></skills-component>
@@ -124,7 +131,6 @@ import imageComponent from './DragDrop.vue';
 import audioComponent from './AudioDrop.vue';
 import skillsComponent from './Skills.vue';
 
-
 export default {
   data () {
     return {
@@ -134,7 +140,7 @@ export default {
       error: null,
       user: auth.user,
       error: null,
-      ls: localStorage.user_id,
+      local_id: localStorage.user_id,
       messages: {
         author_id: '',
         content: '',
@@ -166,8 +172,8 @@ export default {
         user_id: 0
       }],
 
-      image: '',
-      imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
+      // image: '',
+      // imageSrc: 'http://localhost:3000/uploads/image-'+ this.$route.params.id +'.jpeg'
     };
   },
 
@@ -188,7 +194,7 @@ export default {
   },
   methods: {
     submit() {
-      this.$http.post('users/' + this.$route.params.id, {
+      this.$http.post('users/' + this.$route.params.id + '/image', {
         user: this.user
       })
       .then(function (response) {
@@ -261,6 +267,7 @@ export default {
     imageComponent,
     audioComponent,
     skillsComponent
+
   }
 };
 

@@ -313,11 +313,14 @@ router.get('/verify/:id/:token', function(req, res) {
 // DATA ROUTES --> this is where pages are rendered
 router.get('/main', (req, res) => {
 	// const resultsArr = [];
-	knex.select().from('users').then( function (result) {
+  knex('users')
+  .join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
+  .select('users.id as id', 'users.first_name as first_name', 'users.last_name as last_name', 'users.user_city as user_city', 'users.user_country as user_country', 'tracks.track_name as track_name', 'tracks.track_link as track_link', 'users.image_link as image_link')
+  .then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
-		// console.log('results from main: ', result)
+		console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
-		return res.json(result);
+		return res.send(result);
 	}).catch(function (err) {
 		return res.status(500).json({ success: false, data: err });
 	});
@@ -461,7 +464,7 @@ router.get('/users/skills/:user_id', ejwt({
   let param_id = req.params.user_id;
 	knex('skill_user')
   .join('skills', 'skill_user.skill_id', 'skills.id')
-    .select('skills.skill_name as skill_name')
+    .select('skill_user.skill_id as skill_id', 'skill_user.user_id as user_id', 'skills.skill_name as skill_name')
     .where({ user_id: param_id })
     .then((data) => {
       let userdata = data;
@@ -481,37 +484,109 @@ router.get('/users/skills/:user_id', ejwt({
 
 // select skill_user.user_id as user_id, skills.skill_name as skill_name, skill_user.skill_rating as skill_rating, skill_user.skill_comment as skill_comment  from  skill_user join skills on skill_user.skill_id = skills.id;//
 
-router.post('/users/skills/:user_id', ejwt({ secret: app.get('superSecret')}),
-			(req, res) => {
-					let param_id = req.body;
-					console.log('HOPEFULLY I AM THE BODY', req.body);
-					console.log('/users/skills/skill_req: ', skill_req);
+router.post('/users/skills/:user_id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+	let param_id = req.user.id;
+	let skilluser_id = req.body.id;
+	// TODO: why do we just trust the user so blindly about their uid?
+	let skilladdition = {
+		user_id: param_id,
+		skill_id: skilluser_id
+		// created_at:
+	}
+	knex('skill_user').insert(skilladdition)
+	.catch((err) => {
+		res.json(err);
+	})
 
-	// const rows = skill_req;
+	// console.log("skillNamesToInsert:", skillNamesToInsert);
+	// skillNamesToInsert.user_id = param_id
 
-	// var chunkSize = 1000;
-	//result = array or skills selected
+	// knex('skills').select('skill_name', 'id')
+	// .then((skills_rows) => {
+	// 	var skillMap = {};
+	// 	skills_rows.forEach((row) => {
+	// 		skillMap[row.skill_name] = row.id;
+	// 	});
+	//
+		// var suObjectsToInsert = skillNamesToInsert.map((sn) => {
+		// 	return {
+		// 		user_id: param_id,
+		// 		skill_id: skillMap[sn.skill_name]
+		// 	}
+		// });
 
-	skill_req.forEach((skill) => {
-			console.log('skill log: ',skill);
+		// return knex('skill_user')
+		// 	.insert(skillNamesToInsert);
+	// })
+	// .then(() => {
+	// 	// TODO: res response??
+	// 	console.log("bored now");
+	// 	res.send("DUDE IT IS FINE");
+	// })
+});
+
+router.delete('/users/skills/:user_id', ejwt({
+    secret: app.get('superSecret')
+  }), (req, res) => {
+		console.log('delete req params: ', req.params);
+		console.log('delete req body: ', req.body);
+		let userId = parseInt(req.params.user_id);
+		let skillId = parseInt(req.body.skill_id);
+		delete req.body.skill_name
+		let canudelete = req.body;
+
+		let deleteObj = {
+			user_id: userId,
+			skill_id: skillId
+		}
+
+		// console.log(deleteObj);
+		console.log(canudelete);
 
 		knex('skill_user')
-			.where('skill.skill_id', '=', 'skill_id')
-			.returning('*')
-			.update(skill)
-		});
-		// 	knex('skill_user').insert('*')
-		// 	.then((data) => {
-		// 		res.json(data);
-		// 	})
-		//   .catch((err) => {
-		// 		res.status(400).json(err)
-		// 	});
-		//
+		.where(canudelete)
+		.del()
 
 
+	});
+
+	router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
+	  if (!req.user) {
+	    return res.sendStatus(401)
+	  } else {
+	    knex.select().from('skills')
+	    .then((data) => {
+	      // console.log(data);
+	      res.json(data);
+	    })
+	    .catch((err) => {
+	      res.status(400).json(err);
+	    });
+	  }
+	});
+	// knex('skill_user')
+	// .join('skills', 'skill_user.skill_id', 'skills.id')
+	// 	.select('skills.skill_name as skill_name')
+	// 	.where({ user_id: param_id })
+	// 	.insert(skillNamesToInsert.skill_name)
+	// 	.then((data) => {
+	// 		let userdata = data;
+	// 		if (!userdata) {
+	// 			res.status(400).redirect('/login')
+	// 		} else {
+	// 			res.json(data); }
+	// 	})
+	// 	.catch((err) => {
+	// 		res.status(400).json(err);
+	// 	});
+
+
+	//
+	// var chunkSize = 1000;
 	// knex.batchInsert('skill_user', rows, chunkSize)
-  // .returning('user_id', 'band_id')
+  // .returning('user_id', 'skill_name')
   // .then((data) => {
 	// 	res.json(data);
 	// })
@@ -532,7 +607,6 @@ router.post('/users/skills/:user_id', ejwt({ secret: app.get('superSecret')}),
   //   .catch((err) => {
   //     res.status(400).json(err);
   //   });
-})
 
 
 
@@ -639,27 +713,14 @@ router.delete('/users/:id', (req, res) => {
   })
 })
 
-router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
-  // console.log(res);
-  console.log("uploads param", req.user.id);
-})
-//// ok
-router.get('/skills', ejwt({ secret: app.get('superSecret') }), (req, res) => {
-  if (!req.user) {
-    return res.sendStatus(401)
-  } else {
-    knex.select().from('skills')
-    .then((data) => {
-      // console.log(data);
-      res.json(data);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
-  }
-});
+// router.post('/upload', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+//   // console.log(res);
+//   console.log("uploads param", req.user.id);
+// })
+// //// ok
 
-router.post('/upload', upload.array(), (req, res) => {
+
+router.post('/upload/:id/image', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
   var base64Data = req.body.imageObj.image;
 
     console.log('writing file...', base64Data);
@@ -685,16 +746,25 @@ router.post('/upload', upload.array(), (req, res) => {
       if (err){
         res.status(400).json(err);
       }
+      else {
+        knex('users').where({ id: req.user.id })
+        .update({ image_link:  '//localhost:3000/uploads/image-' + req.user.id + '.jpeg'})
+        .then((data) => {
+          res.status(200).send('created an image')
+        })
+      }
     });
 })
 
 
 // Audio Post
-router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
+router.post('/upload/:id/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), (req, res, next) => {
 
   var base64Data = req.body.audioObj.audio;
+  var trackName = req.body.audioObj.trackname;
+  console.log('trackName:', trackName);
+  console.log('req.user.id:', req.user.id);
 
-  console.log('audio params id:', req.user.id);
 
   function decodeBase64Audio(data) {
 
@@ -709,9 +779,56 @@ router.post('/upload/audio', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' }), 
   console.log('audioBuffer', audioBuffer);
 
   fs.writeFile(__dirname + '/upload/audio-' + req.user.id + '.mp3', audioBuffer.data, 'base64', function(err) {
-    if (err) console.log(err);
-    res.status(201).send();
+    if (err){
+      console.log(err);
+    }
+    else{
+
+      var trackLink = '//localhost:3000/uploads/audio-' + req.user.id + '.mp3';
+      res.send('/upload/audio-' + req.user.id + '.mp3')
+
+      knex.select().from('tracks').where({ user_id: req.user.id })
+      .then((data) => {
+        console.log('audiopost=> ',data)
+        if(!data[0]) {
+          knex('tracks')
+          .insert({ user_id: req.user.id, track_link: trackLink, track_name: trackName })
+          .then((data) => {
+            res.json(data[0]);
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+          });
+        }
+        if(data[0]) {
+          knex.select().from('tracks')
+          .where({ user_id: req.user.id} ).update({ track_link: trackLink,  track_name: trackName })
+          .then((data) => {
+            res.json(data[0]);
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+          });
+          res.json(data[0]);
+        }
+
+      }).catch((err) => {
+          res.status(400).json(err);
+        });
+      // knex.select().from('tracks').returning('*')
+      //   .where({id}).update(trackLink)
+      //   .then((data) => {
+      //     res.json(data[0]);
+      //   })
+      //   .catch((err) => {
+      //     res.status(400).json(err);
+      //   });
+    }
   });
+
+
+  // const buffer = fs.createWriteStream(filename);
+  // req.request.pipe(buffer);
 })
 
 // GET all bands info

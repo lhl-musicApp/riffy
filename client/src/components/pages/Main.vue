@@ -26,7 +26,7 @@
         <hr>
       </form> -->
 
-    <form id="main" v-cloak>
+    <form id="main" v-cloak v-on:submit.prevent="submit">
       <div class="bar">
           <!-- Create a binding between the searchString model and the text field -->
         <input type="text" v-model="searchString" placeholder="Enter your search terms" />
@@ -34,92 +34,51 @@
 
       
             <!-- Render a li element for every entry in the computed filteredArticles array. -->
-        <li v-for="article in filteredArticles">
-          <div class="row">
-            <div class="col-sm-6 col-md-4" v-for="main in filteredArticles">
-              <div class="thumbnail">
-                <img src="" alt="">
-                <div class="caption">
-                  <img src="http://www.fillmurray.com/200/200" alt="">
+        <!-- <li v-for="article in filteredArticles"> -->
+          <div class="container">
+            <div class="row" v-for="main in filteredArticles">
+              <div class="thumbnail col-sm-6 col-md-4">
+              <!-- <audio-player></audio-player> -->
+
+                <div class="caption user-container">
+                  <img :src="main.image_link">
+
                   <h3>{{ main.first_name }} {{ main.last_name }}</h3>
                   <ul>
-                    <li><a :href="'users/' + main.id">{{ main.id }}</a></li>
+                    <li><a :href="'users/' + main.id">{{ main.first_name }} {{ main.last_name }}</a></li>
                     <li>{{ main.user_city }}</li>
                     <li>{{ main.user_country }}</li>
-                    <li>{{ main.user_influence }}</li>
-                    <li>{{ main.isAvailable }}</li>
-                    <li>{{ main.looking_for }}</li>
                   </ul>
+                  <!-- This is the audio component -->
+                  <div>
+                    <h1>Play Audio</h1>
 
+                      <!-- <img :src="image" /> -->
+
+<!-- <button  v-on:click="playSound('hi')" >hi</button> -->
+                    <button id="magic-click" v-on:click="playSound(main.track_link)">Play</button>
+                  </div>
 
                   <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
                 </div>
               </div>
             </div>
           </div>
-          <!-- <a v-bind:href="article.url"><img v-bind:src="article.image" /></a>
-          <p>{{article.title}}</p> -->
-        </li>
+        <!-- </li> -->
       </ul>
-
     </form>
-
-   <!--    <div class="row">
-        <div class="col-sm-6 col-md-4" v-for="note in main">
-          <div class="thumbnail">
-            <img src="" alt="">
-            <div class="caption">
-              <img src="http://www.fillmurray.com/200/200" alt="">
-              <h3>{{ note.first_name }} {{ note.last_name }}</h3>
-              <ul>
-                <li>{{ note.id }}</li>
-                <li>{{ note.user_city }}</li>
-                <li>{{ note.user_country }}</li>
-              </ul>
-
-
-              <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-            </div>
-          </div>
-        </div>
-      </div> -->
-  <!--     <table class="table">
-        <thead class="thead thead-inverse">
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Created By</th>
-            <th>Creation Date</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody v-for="note in main">
-          <tr>
-            <td>{{ note.id }}</td>
-            <td><router-link :to="{ name: 'noteSingle', params: { id: note.id }}">{{ note.title }}</router-link></td>
-            <td>{{ note.id }}</td>
-            <td>{{ note.first_name }}</td>
-            <td>{{ note.last_name }}</td>
-            <td>{{ note.user_city }}</td>
-            <td>{{ note.country }}</td>
-            <td>
-              <a v-on:click="remove(note.id)">
-                <i class="fa fa-trash"></i>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table> -->
     </div>
   </div>
 </template>
 
 <script>
 import auth from '../../auth.js'
-import vSelect from "vue-select"
+// import AudioPlayer from './AudioDrop.vue';
+const context = new AudioContext();
+var source = null;
+// import vSelect from "vue-select"
 export default {
-  components: {vSelect},
+  // components: {vSelect},
   data () {
     return {
       searchString: "",
@@ -129,7 +88,9 @@ export default {
       body: {
         title: '',
         text: '',
-      }
+      },
+      audio : '',
+      trackname : ''
     };
   },
   created () {
@@ -140,7 +101,7 @@ export default {
   computed: {
  // A computed property that holds only those articles that match the searchString.
     filteredArticles: function () {
-
+// TODO Fix later, this generates duplicate data
       var articles_array = this.main,
       searchString = this.searchString;
       var stringArray = searchString.split(' ');
@@ -150,27 +111,26 @@ export default {
       if(!searchString){
         return articles_array;
       }
-      searchString = searchString.trim().toLowerCase();
-      console.log("searchString: ", searchString)
+      else {
+        searchString = searchString.trim().toLowerCase();
+        console.log("searchString: ", searchString)
 
-      var loadArray = [];
-      articles_array = articles_array.filter(function(item){
-        for (var key in item) {
-            // console.log('obj[key]', typeof(item[key]));
-          if(typeof(item[key]) == typeof('string')){
-            if(item[key].toLowerCase().indexOf(stringArray[0]) !== -1){
-              console.log('item=>', item)
-              return loadArray.push(item);
-            }
-            if(item[key].toLowerCase().indexOf(stringArray[1]) !== -1){
-              console.log('item=>', item)
-              return loadArray.push(item);
+        var loadArray = [];
+        articles_array = articles_array.filter(function(item){
+          for (var key in item) {
+              // console.log('obj[key]', typeof(item[key]));
+            if(typeof(item[key]) === typeof('string')){
+              if(item[key].toLowerCase().indexOf(stringArray[0]) !== -1){
+                console.log('item=>', item)
+                return loadArray.push(item);
+              }
             }
           }
-        }
-      })
-            // Return an array with the filtered data.
-      return loadArray;
+        })
+              // Return an array with the filtered data.
+        return loadArray;
+      }
+
     }
   },
   methods: {
@@ -197,11 +157,108 @@ export default {
           console.log(error);
         });
       }
-    }
+    },
+    onFileAudio(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      this.createAudio(files[0]);
+    },
+    createAudio(audioFile) {
+      var reader = new FileReader();
+      var vm = this;
+      reader.onload = function(event) {
+
+        vm.audio = event.target.result.split(',');
+         var decodedImageData = btoa(vm.audio[1]);
+        return decodedImageData
+      };
+      reader.readAsDataURL(audioFile);
+      console.log(reader);
+    },
+    removeAudio: function (e) {
+      this.audio = '';
+    },
+    saveAudio: function (e) {
+      const audioObj = {
+        audio : this.audio,
+        trackname : this.trackname
+      }
+      // console.log('reader', this.image)
+      this.$http.post('upload/audio', { audioObj })
+        .then(response => {
+          console.log('saveAudi =>', response)
+        });
+    },
+    loadSound(track_link) {
+      console.log('this.main', track_link)
+      //Commented out some buffer conditions for now
+      // if(this.buffer) {
+      //   console.log('Resolving with buffer');
+      //   return Promise.resolve(this.buffer);
+      // } else {
+        console.log('Fetching', track_link)
+        return fetch(track_link)
+          .then(data => data.arrayBuffer())
+          .then(raw => context.decodeAudioData(raw))
+          .then(buffer => {
+            this.buffer = buffer;
+            return buffer;
+          });
+        // return new Promise((resolve, reject) => {
+        //   console.log('from audio this.$route.params.id:', this.$route.params.id)
+        //   const request = new XMLHttpRequest();
+        //   request.open('GET', '//localhost:3000/uploads/audio-12.mp3', true);
+        //   request.responseType = "arraybuffer";
+
+        //   request.onload = () => {
+        //     var Data = request.response;
+
+        //     context.decodeAudioData(Data, (buffer) => {
+        //       this.buffer = buffer;
+        //       resolve(buffer);
+        //     });
+        //   };
+        //   request.onerror = (err) => reject(err);
+        //   request.send();
+        // });
+      // }
+
+      // ES7
+      // async loadSound() {
+      //   if(!this.buffer) {
+      //     const data = await fetch('//url');
+      //     const raw = await data.arrayBuffer();
+      //     const buffer = await context.decodeAudioData(raw);
+      //     this.buffer = buffer;
+      //   }
+      //   return this.buffer;
+      // }
+
+
+    },
+    playSound(track_link) {
+      this.loadSound(track_link).then(buffer => {
+        if(source) {
+          source.stop(context.currenTime);
+          source.disconnect();
+        }
+        source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(context.currentTime);
+        source.stop(context.currentTime + 10);
+      });
+    },
   },
-  components: {}
+  components: {
+    // AudioPlayer
+  }
 };
 </script>
 
 <style lang="css">
+  .user-container {
+    border: 2px solid orange;
+  }
 </style>

@@ -64,7 +64,7 @@ export default {
         image : this.image
       }
       // console.log('reader', this.image)
-      this.$http.post('upload', {imageObj,
+      this.$http.post('upload/'+ this.$route.params.id +'/image', {imageObj,
         headers: {
           'Content-Type': 'image/jpeg'
         }
