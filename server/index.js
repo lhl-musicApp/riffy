@@ -436,7 +436,7 @@ router.delete('/notes/:note_id', (req, res, next) => {
 router.get('/users/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  console.log("I AM A TEST", req.params);
+  // console.log("I AM A TEST", req.params);
   // Grab data from the URL parameters
   let param_id = req.params.user_id;
 
@@ -481,11 +481,11 @@ router.get('/users/skills/:user_id', ejwt({
 
 // select skill_user.user_id as user_id, skills.skill_name as skill_name, skill_user.skill_rating as skill_rating, skill_user.skill_comment as skill_comment  from  skill_user join skills on skill_user.skill_id = skills.id;//
 
-router.post('/users/skills/:user_id', ejwt({
-    secret: app.get('superSecret')
-  }), (req, res) => {
-	let param_id = req.user.id;
-	console.log('/users/skills/skill_req: ', skill_req);
+router.post('/users/skills/:user_id', ejwt({ secret: app.get('superSecret')}),
+			(req, res) => {
+					let param_id = req.body;
+					console.log('HOPEFULLY I AM THE BODY', req.body);
+					console.log('/users/skills/skill_req: ', skill_req);
 
 	// const rows = skill_req;
 

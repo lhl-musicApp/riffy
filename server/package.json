@@ -18,6 +18,7 @@
     "drag-drop": "^2.13.2",
     "express": "^4.14.0",
     "express-jwt": "^5.1.0",
+    "faker": "^4.1.0",
     "jsonwebtoken": "^7.1.9",
     "knex": "^0.12.7",
     "lodash": "^4.17.2",
@@ -30,6 +31,7 @@
     "path": "^0.12.7",
     "pg": "^6.1.0",
     "randomstring": "^1.1.5",
+    "vue-faker": "^1.0.1",
     "vue-moment": "^2.0.2"
   },
   "devDependencies": {
