@@ -316,7 +316,8 @@ router.get('/main', (req, res) => {
 	// const resultsArr = [];
   knex('users')
   .join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
-  .select().then( function (result) {
+  .select('users.id as id', 'users.first_name as first_name', 'users.last_name as last_name', 'users.user_city as user_city', 'users.user_country as user_country', 'tracks.track_name as track_name', 'tracks.track_link as track_link', 'users.image_link as image_link')
+  .then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
 		console.log('results from main: ', result)
 		  // results.push(result)çc\\efsdafsfd
