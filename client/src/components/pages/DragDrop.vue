@@ -1,20 +1,23 @@
 <template lang="html">
   <div>
-    <div v-if="!imageSrc">
-      <p>You don't have an image</p>
-    </div>
-    <div v-else>
-      <img :src="imageSrc" />
-    </div>
-
-    <div v-if="!image">
-      <h6>Select an image</h6>
-      <input type="file" @change="onFileChange">
-    </div>
-    <div v-else>
-      <img :src="image" />
-      <button @click="removeImage">Remove image</button>
-      <button @click="saveImage">Save image</button>
+    <div class="">
+      <div v-if="!imageSrc">
+        <p>You don't have an image</p>
+      </div>
+      <div v-else>
+        <img class="avatar" :src="imageSrc" />
+      </div>
+      <div v-if="(this.$route.params.id) === local_id">
+        <div v-if="!image">
+          <h6>Select an image</h6>
+          <input type="file" @change="onFileChange">
+        </div>
+        <div v-else>
+          <img :src="image" />
+          <button class="btn btn-outline-primary" @click="removeImage">Remove image</button>
+          <button class="btn btn-outline-primary" @click="saveImage">Save image</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -25,13 +28,15 @@ import auth from '../../auth.js'
 export default {
   data () {
     return {
+      local_id: localStorage.user_id,
       image: '',
       imageSrc: 'http://localhost:3000/uploads/image-' + this.$route.params.id +'.jpeg'
     };
   },
   created () {
     // console.log('From DragDrop Vue :', localStorage.user_id)
-
+  console.log('this.$route.params.id', this.$route.params.id)
+  console.log('localStorage.user_id', localStorage.user_id)
   },
   computed: {
 

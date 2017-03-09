@@ -2,7 +2,7 @@
   <div>
 
     <div class="jumbotron jumbotron-fluid">
-      <img class="hero-image" src="~assets/hero-riffy.jpg" />
+      <!-- <img class="hero-image" src="~assets/hero-riffy.jpg" /> -->
 
     <div class="container">
 
@@ -25,10 +25,26 @@
       </form> -->
 
     <form id="main" v-cloak v-on:submit.prevent="submit">
-      <div class="bar">
-          <!-- Create a binding between the searchString model and the text field -->
-        <input class="input-text" type="text" v-model="searchString" placeholder="Enter your search terms" />
+
+
+      <div class="row">
+        <div class="col-lg-3">
+          <p> </p>
+        </div>
+        <div class="bar col-lg-6">
+            <!-- Create a binding between the searchString model and the text field -->
+          <div class="input-group">
+            <input type="text" class="form-control" v-model="searchString" placeholder="search" />
+            <span class="input-group-btn">
+              <!-- <button class="btn btn-default" type="button">Go!</button> -->
+            </span>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <p> </p>
+        </div>
       </div>
+
 
 
             <!-- Render a li element for every entry in the computed filteredArticles array. -->
@@ -56,7 +72,7 @@
                       <!-- <img :src="image" /> -->
 
 <!-- <button  v-on:click="playSound('hi')" >hi</button> -->
-                    <button id="magic-click" v-on:click="playSound(main.track_link)">Play</button>
+                    <button id="magic-click" v-on:click="playSound(main.track_link)" class="btn btn-outline-primary">Play</button>
                   </div>
 
                   <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
@@ -260,7 +276,4 @@ export default {
 </script>
 
 <style lang="css">
-  .user-container {
-    border: 2px solid orange;
-  }
 </style>

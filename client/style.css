@@ -16,6 +16,7 @@ ul {
   height: 50px;
   border: none;
   border-bottom: 2px solid black;
+
 }
 
 .hero-image {
@@ -24,7 +25,7 @@ ul {
 }
 
 .thumbnail {
-  background-color: grey;
+  background-color: lightgrey;
 }
 
 .user-info-edit {
@@ -32,12 +33,46 @@ ul {
 }
 
 .registration {
+  margin-top: 20px;
   background-color: whitesmoke;
   position: absolute;
   z-index: 100;
+  padding: 20px;
 }
 
 .user-info {
   height: 500px;
   overflow: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+.input-group input {
+  border-radius: 0px;
+}
+
+.user-container {
+  border: 2px solid lightgrey;
+}
+
+.btn {
+  transition: 0.3s;
+}
+
+.header-name {
+  text-align: center;
+}
+
+.avatar {
+  padding-top: 20px;
+}
+
+.audio-container {
+  background-color: #C6C6C6;
+}
+
+.image-container {
+
 }
