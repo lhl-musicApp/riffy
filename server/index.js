@@ -658,10 +658,10 @@ router.post('/users/:id/message',
 				author_id: req.user.id,
 				content: req.body.content,
 			})
-	  	// .then((data) => {
-	    //   console.log(data);
-	    //   res.json(data);
-    	// })
+	  	.then((data) => {
+	      console.log(data);
+	      res.json(data);
+    	})
     	.catch((err) => {
       	res.status(400).json(err);
     	});
