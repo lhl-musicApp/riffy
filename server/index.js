@@ -315,7 +315,17 @@ router.get('/main', (req, res) => {
 	// const resultsArr = [];
   knex('users')
   .join('tracks', 'users.id', '=', 'tracks.user_id').whereNotNull('track_link')
-  .select('users.id as id', 'users.first_name as first_name', 'users.last_name as last_name', 'users.user_city as user_city', 'users.user_country as user_country', 'tracks.track_name as track_name', 'tracks.track_link as track_link', 'users.image_link as image_link')
+  .select(
+    'users.id as id',
+    'users.first_name as first_name',
+    'users.last_name as last_name',
+    'users.user_city as user_city',
+    'users.user_country as user_country',
+    'tracks.track_name as track_name',
+    'tracks.track_link as track_link',
+    'users.image_link as image_link',
+    'users.user_influence as user_influence',
+    'users.instrument as instrument')
   .then( function (result) {
 		    // return res.json({ success: true, message: 'ok' });
 		console.log('results from main: ', result)
@@ -743,13 +753,13 @@ router.post('/upload/:id/image', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
     var imageBuffer = decodeBase64Image(base64Data);
     console.log(imageBuffer);
 
-    fs.writeFile(__dirname + "/upload/image-" + req.user.id +".jpeg", imageBuffer.data, 'base64', function(err) {
+    fs.writeFile(__dirname + "/upload/image-" + req.user.id +".jpg", imageBuffer.data, 'base64', function(err) {
       if (err){
         res.status(400).json(err);
       }
       else {
         knex('users').where({ id: req.user.id })
-        .update({ image_link:  '//localhost:3000/uploads/image-' + req.user.id + '.jpeg'})
+        .update({ image_link:  '//localhost:3000/uploads/image-' + req.user.id + '.jpg'})
         .then((data) => {
           res.status(200).send('created an image')
         })

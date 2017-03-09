@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="audio-container">
+  <div>
     <div <div v-if="(this.$route.params.id) === local_id">
       <div v-if="!audio">
         <h6>Audio Upload</h6>
@@ -15,7 +15,7 @@
         <button @click="saveAudio" class="btn btn-outline-primary">Save Audio</button>
       </div>
     </div>
-    <button @click="playSound" class="btn btn-outline-primary">loadsong</button>
+    <button @click="playSound" class="btn btn-outline-primary">Play</button>
     {{ this.trackname }}
   </div>
 

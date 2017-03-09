@@ -55,16 +55,18 @@
               <div class="thumbnail col-sm-6 col-md-4">
               <!-- <audio-player></audio-player> -->
 
-                <div class="caption user-container">
+                <div class="caption user-container" v-on:click="playSound(main.track_link)">
                   <div class="image-container">
                     <img :src="main.image_link">
                   </div>
 
                   <h3 class="center-text heading-space"><a :href="'users/' + main.id">{{ main.first_name }} {{ main.last_name }}</h3>
                   <ul >
+                    <br>
+                    <li><small>From:  </small>{{ main.user_city }}, {{ main.user_country }}</li>
+                    <li><small>Plays: </small>{{ main.instrument}}</li>
+                    <li><small>Likes:  </small>{{ main.user_influence }}</li>
 
-                    <li>{{ main.user_city }}</li>
-                    <li>{{ main.user_country }}</li>
                   </ul>
                   <!-- This is the audio component -->
                   <div>
@@ -72,7 +74,7 @@
                       <!-- <img :src="image" /> -->
 
 <!-- <button  v-on:click="playSound('hi')" >hi</button> -->
-                    <button id="magic-click" v-on:click="playSound(main.track_link)" class="btn btn-outline-primary">Play</button>
+                   <!--  <button id="magic-click" v-on:click="playSound(main.track_link)" class="btn btn-outline-primary">Play</button> -->
                   </div>
 
                   <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
@@ -139,6 +141,12 @@ export default {
               // console.log('obj[key]', typeof(item[key]));
             if(typeof(item[key]) === typeof('string')){
               if(item[key].toLowerCase().indexOf(stringArray[0]) !== -1){
+                console.log('item=>', item)
+                return loadArray.push(item);
+              }
+            }
+            if(typeof(item[key]) === typeof('string')){
+              if(item[key].toLowerCase().indexOf(stringArray[1]) !== -1){
                 console.log('item=>', item)
                 return loadArray.push(item);
               }

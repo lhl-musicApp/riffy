@@ -38,6 +38,9 @@
               <br>
               <textarea v-model="user.user_bio" placeholder="Add your bio"></textarea>
               <br>
+              <label for="user_country">Instrument</label>
+              <input v-model="user.instrument" placeholder="instrument">
+              <br>
               <label for="user_influence">Influence</label>
               <input v-model="user.user_influence" placeholder="influence">
               <br>
@@ -52,13 +55,14 @@
           </transition>
         </form>
       </div>
-      <div class="user user-info col-lg-6">
+      <div class="user col-lg-6">
         <transition name="slide-fade">
-          <div v-if="(this.$route.params.id) === local_id">
-            <div v-if="!show">
+          <div  v-if="(this.$route.params.id) === local_id">
+            <div class="user-info" v-if="!show">
               <p>{{ user.first_name }} {{ user.last_name }}</p>
               <p>Influence: {{ user.user_influence }}</p>
               <p>City: {{ user.user_city }}</p>
+              <p >Plays: {{ user.instrument }}</p>
               <p>Influence: {{ user.user_influence }}</p>
               <p >Bio: {{ user.user_bio }}</p>
               <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
@@ -68,13 +72,14 @@
           </div>
         </transition>
         <transition name="slide-fade">
-          <div v-if="(this.$route.params.id) !== local_id">
+          <div class="user-info" v-if="(this.$route.params.id) !== local_id">
             <p>First Name: {{ user.first_name }}</p>
             <p>Last Name: {{ user.last_name }}</p>
             <p>Influence: {{ user.user_influence }}</p>
 
             <p>City: {{ user.user_city }}</p>
             <p>Bio: {{ user.user_bio }}</p>
+            <p >Plays: {{ user.instrument }}</p>
             <p>Influence: {{ user.user_influence }}</p>
             <p>Youtube Link: {{ user.youtube_link }} </p>
             <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
@@ -157,6 +162,7 @@ export default {
         user_city: '',
         user_country: '',
         user_bio: '',
+        instrument: '',
         user_influence: '',
         youtube_link: '',
         isAvailable: false,
@@ -195,9 +201,8 @@ export default {
   },
   methods: {
     submit() {
-      this.$http.post('users/' + this.$route.params.id + '/image', {
-        user: this.user
-      })
+      console.log('post users/id:', this.user)
+      this.$http.post('users/' + this.$route.params.id, this.user)
       .then(function (response) {
         if (response.status === 200){
             this.user = response.body;

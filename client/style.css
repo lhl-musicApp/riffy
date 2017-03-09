@@ -32,6 +32,13 @@ ul {
 
 }
 
+.container {
+  margin-top: 40px;
+}
+#registration {
+  margin-left: 100px;
+}
+
 .registration {
   margin-top: 20px;
   background-color: whitesmoke;
@@ -40,7 +47,7 @@ ul {
   padding: 20px;
 }
 
-.user-info {
+.user {
   height: 500px;
   overflow: hidden;
 }
@@ -70,6 +77,7 @@ a {
 }
 
 .audio-container {
+  margin-top: -100px;
   background-color: #C6C6C6;
 }
 
@@ -102,6 +110,25 @@ li {
   box-shadow: 0px 10px 34px -9px rgba(0,0,0,0.75);
 }
 
+.message-container {
+  margin-top: 10px;
+  padding: 14px;
+  background-color: aliceblue;
+
+}
+.message-input-container {
+  padding: 14px;
+  background-color: aliceblue;
+}
+.user-name, .registration, .audio-container, .user-info {
+  background-color: aliceblue;
+  padding: 14px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0px 10px 26px -11px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 10px 26px -11px rgba(0,0,0,0.75);
+  box-shadow: 0px 10px 26px -11px rgba(0,0,0,0.75);
+}
+
 .user-container {
   transition: 0.3s;
   cursor: pointer;
@@ -117,6 +144,10 @@ box-shadow: 0px 10px 26px -11px rgba(0,0,0,0.75);
 
 }
 
+.skills-container {
+  margin-top: 40px;
+  margin-left: 100px
+}
 ul {
   padding: 0;
 }

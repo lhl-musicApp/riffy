@@ -30,7 +30,7 @@ export default {
     return {
       local_id: localStorage.user_id,
       image: '',
-      imageSrc: 'http://localhost:3000/uploads/image-' + this.$route.params.id +'.jpeg'
+      imageSrc: 'http://localhost:3000/uploads/image-' + this.$route.params.id +'.jpg'
     };
   },
   created () {
@@ -70,7 +70,7 @@ export default {
       // console.log('reader', this.image)
       this.$http.post('upload/'+ this.$route.params.id +'/image', {imageObj,
         headers: {
-          'Content-Type': 'image/jpeg'
+          'Content-Type': 'image/jpg'
         }
       })
         .then(response => {
