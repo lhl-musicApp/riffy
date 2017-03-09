@@ -1,6 +1,7 @@
 <template lang="html">
   <div>
     <div class="jumbotron jumbotron-fluid">
+      <img class="hero-image" src="~assets/hero-riffy.jpg" />
       <div class="container">
         <h1 class="display-3">Vue.js Boilerplate</h1>
         <p class="lead">Vue + Passport + Express + Postgres</p>
@@ -29,19 +30,22 @@
     <form id="main" v-cloak v-on:submit.prevent="submit">
       <div class="bar">
           <!-- Create a binding between the searchString model and the text field -->
-        <input type="text" v-model="searchString" placeholder="Enter your search terms" />
+        <input class="input-text" type="text" v-model="searchString" placeholder="Enter your search terms" />
       </div>
 
-      
+
             <!-- Render a li element for every entry in the computed filteredArticles array. -->
         <!-- <li v-for="article in filteredArticles"> -->
-          <div class="container">
-            <div class="row" v-for="main in filteredArticles">
+        <div class="container">
+          <div class="row" >
+            <div v-for="main in filteredArticles">
               <div class="thumbnail col-sm-6 col-md-4">
               <!-- <audio-player></audio-player> -->
 
                 <div class="caption user-container">
-                  <img :src="main.image_link">
+                  <div class="image-container">
+                    <img :src="main.image_link">
+                  </div>
 
                   <h3>{{ main.first_name }} {{ main.last_name }}</h3>
                   <ul>
@@ -51,7 +55,6 @@
                   </ul>
                   <!-- This is the audio component -->
                   <div>
-                    <h1>Play Audio</h1>
 
                       <!-- <img :src="image" /> -->
 
@@ -64,6 +67,7 @@
               </div>
             </div>
           </div>
+        </div>
         <!-- </li> -->
       </ul>
     </form>
@@ -89,6 +93,7 @@ export default {
         title: '',
         text: '',
       },
+      imageHero : 'assets/hero-riffy.jpg',
       audio : '',
       trackname : ''
     };
