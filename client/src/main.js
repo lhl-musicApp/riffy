@@ -4,19 +4,19 @@ import Router 					from 'vue-router';
 import Resource 				from 'vue-resource';
 import App 							from './App';
 import VeeValidate 			from 'vee-validate';
-
-import VueHowler from 'vue-howler';
+import vuefaker					from 'vue-faker';
+import VueHowler 				from 'vue-howler';
 // Import components
-import Register from './components/pages/Register.vue';
-import Hello from './components/pages/Hello.vue';
-import Login from './components/pages/Login.vue';
-import Users from './components/pages/Users.vue';
-import DragDrop from './components/pages/DragDrop.vue';
-import AudioDrop from './components/pages/AudioDrop.vue';
-import Howler from './components/pages/Howler.vue';
-import Radio from './components/pages/Radio.vue';
-import Streaming from './components/pages/Stream.vue';
-import VueYouTubeEmbed from 'vue-youtube-embed';
+import Register 				from './components/pages/Register.vue';
+import Hello 						from './components/pages/Hello.vue';
+import Login 						from './components/pages/Login.vue';
+import Users 						from './components/pages/Users.vue';
+import DragDrop 				from './components/pages/DragDrop.vue';
+import AudioDrop 				from './components/pages/AudioDrop.vue';
+import Howler 					from './components/pages/Howler.vue';
+import Radio 						from './components/pages/Radio.vue';
+import Streaming 				from './components/pages/Stream.vue';
+import VueYouTubeEmbed 	from 'vue-youtube-embed';
 import Multiselect 			from 'vue-multiselect';
 import Skills 					from './components/pages/Skills.vue';
 
@@ -44,6 +44,7 @@ Vue.use(VeeValidate);
 Vue.use(Resource);
 Vue.use(Router);
 Vue.use(VueYouTubeEmbed);
+Vue.use(vuefaker);
 Vue.component(Multiselect);
 
 // Vue.component(vSelect);
@@ -56,7 +57,7 @@ export var router = new Router({
 		{ path: '/users', component: Users, meta: { requiresAuth: true, requiresAdmin: true } },
 		{ path: '/register', component: Register, meta: { checksAuth: true } },
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
-		{ path: '/Main', component: Main },
+		{ path: '/main', component: Main },
 		{ path: '/search', component: Search },
 		{ path: '/verify', component: Verify },
     { path: '/drop', component: DragDrop },

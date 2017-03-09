@@ -8,7 +8,6 @@
 
       <div class="user-info-edit col-lg-6" v-if="(this.$route.params.id) === local_id">
         <form id="registration" v-on:submit.prevent="submit">
-
           <button type="button" class="btn btn-outline-danger" @click="show = !show">Edit</button>
           <button form="registration" name="registration" type="submit" class="btn btn-outline-danger">Save</button>
           <transition name="slide-fade">
@@ -54,6 +53,7 @@
             </div>
           </transition>
         </form>
+
       </div>
       <div class="user col-lg-6">
         <transition name="slide-fade">
@@ -76,7 +76,6 @@
             <p>First Name: {{ user.first_name }}</p>
             <p>Last Name: {{ user.last_name }}</p>
             <p>Influence: {{ user.user_influence }}</p>
-
             <p>City: {{ user.user_city }}</p>
             <p>Bio: {{ user.user_bio }}</p>
             <p >Plays: {{ user.instrument }}</p>
@@ -120,7 +119,13 @@
             </div>
             <button type="postmessage" class="btn btn-outline-primary">Send the message</button>
           </form>
+          <div class="container" v-for="message in messages">
+            <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
+            <p>{{ message.content }}</p>
+            <p>{{ moment(message.created_at) }}</p>
+          </div>
         </div>
+
         <!-- <drag-drop></drag-drop> -->
         <div class="message-container" v-for="message in messages">
           <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
@@ -142,7 +147,9 @@ import skillsComponent from './Skills.vue';
 export default {
   data () {
     return {
-      show: true,
+      show: false,
+      show_media: false,
+      show_messages: false,
       error: null,
       user: auth.user,
       error: null,
@@ -212,10 +219,6 @@ export default {
       .catch(function (error) {
         this.error = error;
       })
-      // this.$http.post('users/' + this.$route.params.id, this.user)
-      //   .then(response => {
-      //   this.user = response.body;
-      // });
     },
     // Youtube Vieo starts here
 
@@ -237,9 +240,9 @@ export default {
         }
       },
 
-      moment(date){
-        return moment(date).fromNow();
-      },
+    moment(date){
+      return moment(date).fromNow();
+    },
 
   //   edit() {
   //     this.$http.put('users/' + this.note.id, {

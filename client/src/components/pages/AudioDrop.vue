@@ -18,7 +18,6 @@
     <button @click="playSound" class="btn btn-outline-primary">Play</button>
     {{ this.trackname }}
   </div>
-
 </template>
 
 <script>
@@ -73,7 +72,7 @@ export default {
         trackname : this.trackname
       }
       // console.log('reader', this.image)
-      this.$http.post('upload/' + this.$route.params.id +'/audio', { audioObj })
+      this.$http.post('upload/' + this.$route.params.id +  '/audio', { audioObj })
         .then(response => {
           console.log('saveAudi =>', response)
         });

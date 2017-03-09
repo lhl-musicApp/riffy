@@ -449,7 +449,7 @@ router.delete('/notes/:note_id', (req, res, next) => {
 router.get('/users/:user_id', ejwt({
     secret: app.get('superSecret')
   }), (req, res) => {
-  console.log("I AM A TEST", req.params);
+  // console.log("I AM A TEST", req.params);
   // Grab data from the URL parameters
   let param_id = req.params.user_id;
 
@@ -544,7 +544,6 @@ router.delete('/users/skills/:user_id', ejwt({
 		console.log('delete req body: ', req.body);
 		let userId = parseInt(req.params.user_id);
 		let skillId = parseInt(req.body.skill_id);
-
 		delete req.body.skill_name
 		let canudelete = req.body;
 

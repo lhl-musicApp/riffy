@@ -1,9 +1,11 @@
 <template lang="html">
   <div>
-
-    <div class="jumbotron jumbotron-fluid">
-      <!-- <img class="hero-image" src="~assets/hero-riffy.jpg" /> -->
-
+<!--     <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-3">Vue.js Boilerplate</h1>
+        <p class="lead">Vue + Passport + Express + Postgres</p>
+      </div>
+    </div> -->
     <div class="container">
 
   <!--     <h1>Main List</h1>
@@ -25,8 +27,6 @@
       </form> -->
 
     <form id="main" v-cloak v-on:submit.prevent="submit">
-
-
       <div class="row">
         <div class="col-lg-3">
           <p> </p>
@@ -35,57 +35,51 @@
             <!-- Create a binding between the searchString model and the text field -->
           <div class="input-group">
             <input type="text" class="form-control" v-model="searchString" placeholder="search" />
-            <span class="input-group-btn">
-              <!-- <button class="btn btn-default" type="button">Go!</button> -->
-            </span>
           </div>
         </div>
         <div class="col-lg-3">
           <p> </p>
         </div>
       </div>
-
-
-
-            <!-- Render a li element for every entry in the computed filteredArticles array. -->
+        <!-- Render a li element for every entry in the computed filteredArticles array. -->
         <!-- <li v-for="article in filteredArticles"> -->
-        <div class="container main-container">
-          <div class="row" >
-            <div v-for="main in filteredArticles">
-              <div class="thumbnail col-sm-6 col-md-4">
-              <!-- <audio-player></audio-player> -->
 
-                <div class="caption user-container" v-on:click="playSound(main.track_link)">
-                  <div class="image-container">
-                    <img :src="main.image_link">
-                  </div>
+      <div class="container main-container">
+        <div class="row" >
+          <div v-for="main in filteredArticles">
+            <div class="thumbnail col-sm-6 col-md-4">
+            <!-- <audio-player></audio-player> -->
+              <div class="caption user-container" v-on:click="playSound(main.track_link)">
+                <div class="image-container">
+                  <img :src="main.image_link">
+                </div>
 
-                  <h3 class="center-text heading-space"><a :href="'users/' + main.id">{{ main.first_name }} {{ main.last_name }}</h3>
-                  <ul >
-                    <br>
-                    <li><small>From:  </small>{{ main.user_city }}, {{ main.user_country }}</li>
-                    <li><small>Plays: </small>{{ main.instrument}}</li>
-                    <li><small>Likes:  </small>{{ main.user_influence }}</li>
-
-                  </ul>
-                  <!-- This is the audio component -->
-                  <div>
+                <h3 class="center-text heading-space"><a :href="'users/' + main.id">{{ main.first_name }} {{ main.last_name }}</h3>
+                <ul >
+                  <br>
+                  <li><small>From:  </small>{{ main.user_city }}, {{ main.user_country }}</li>
+                  <li><small>Plays: </small>{{ main.instrument}}</li>
+                  <li><small>Likes:  </small>{{ main.user_influence }}</li>
+                </ul>
+                <!-- This is the audio component -->
+                <div>
+                  <h1>Play Audio</h1>
 
                       <!-- <img :src="image" /> -->
 
 <!-- <button  v-on:click="playSound('hi')" >hi</button> -->
+
                    <!--  <button id="magic-click" v-on:click="playSound(main.track_link)" class="btn btn-outline-primary">Play</button> -->
-                  </div>
+
+                </div>
 
                   <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
-                </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- </li> -->
-      </ul>
-    </form>
+
+      </form>
     </div>
   </div>
 </template>
@@ -108,7 +102,6 @@ export default {
         title: '',
         text: '',
       },
-      imageHero : 'assets/hero-riffy.jpg',
       audio : '',
       trackname : ''
     };
