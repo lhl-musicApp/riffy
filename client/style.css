@@ -25,7 +25,7 @@ ul {
 }
 
 .thumbnail {
-  background-color: lightgrey;
+  padding-bottom: 10px;
 }
 
 .user-info-edit {
@@ -73,6 +73,50 @@ a {
   background-color: #C6C6C6;
 }
 
+.center-text {
+  text-align: center;
+}
 .image-container {
+  margin: 0 auto;
+}
 
+.image-container img {
+  padding-top: 20px;
+}
+.main-container {
+  margin-top: 40px;
+}
+.heading-space {
+  margin-top: 20px;
+}
+
+li {
+  text-align: center;
+}
+
+.user-container:hover {
+  transition: 0.3s;
+  transform: scale(1.05);
+  -webkit-box-shadow: 0px 10px 34px -9px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 10px 34px -9px rgba(0,0,0,0.75);
+  box-shadow: 0px 10px 34px -9px rgba(0,0,0,0.75);
+}
+
+.user-container {
+  transition: 0.3s;
+  cursor: pointer;
+  height: 260px;
+  overflow: hidden;
+  background-color: white;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 6px;
+  -webkit-box-shadow: 0px 10px 26px -11px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 10px 26px -11px rgba(0,0,0,0.75);
+box-shadow: 0px 10px 26px -11px rgba(0,0,0,0.75);
+
+}
+
+ul {
+  padding: 0;
 }
