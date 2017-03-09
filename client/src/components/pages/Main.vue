@@ -49,7 +49,7 @@
 
             <!-- Render a li element for every entry in the computed filteredArticles array. -->
         <!-- <li v-for="article in filteredArticles"> -->
-        <div class="container">
+        <div class="container main-container">
           <div class="row" >
             <div v-for="main in filteredArticles">
               <div class="thumbnail col-sm-6 col-md-4">
@@ -60,9 +60,9 @@
                     <img :src="main.image_link">
                   </div>
 
-                  <h3>{{ main.first_name }} {{ main.last_name }}</h3>
-                  <ul>
-                    <li><a :href="'users/' + main.id">{{ main.first_name }} {{ main.last_name }}</a></li>
+                  <h3 class="center-text heading-space"><a :href="'users/' + main.id">{{ main.first_name }} {{ main.last_name }}</h3>
+                  <ul >
+
                     <li>{{ main.user_city }}</li>
                     <li>{{ main.user_country }}</li>
                   </ul>
