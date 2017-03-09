@@ -1,3 +1,43 @@
 nav.navbar {
   background-color: #2bb9ef;
 }
+
+.image-container {
+  width: 300px;
+  height: 100px;
+  overflow: hidden;
+}
+
+ul {
+  list-style: none;
+}
+
+.input-text {
+  height: 50px;
+  border: none;
+  border-bottom: 2px solid black;
+}
+
+.hero-image {
+  width: 100vw;
+  height: 500px;
+}
+
+.thumbnail {
+  background-color: grey;
+}
+
+.user-info-edit {
+
+}
+
+.registration {
+  background-color: whitesmoke;
+  position: absolute;
+  z-index: 100;
+}
+
+.user-info {
+  height: 500px;
+  overflow: hidden;
+}
