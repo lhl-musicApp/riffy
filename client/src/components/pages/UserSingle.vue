@@ -15,7 +15,7 @@
         <p>email: {{ user.email }}</p>
         <span>Gender: {{ user.gender }}</span>
         <p>City: {{ user.user_city }}</p>
-        <p style="white-space: pre">Bio: {{ user.user_bio }}</p>
+        <p>Bio: {{ user.user_bio }}</p>
         <p>Influence: {{ user.user_influence }}</p>
         <p>Youtube Link: {{ user.youtube_link }} </p>
         <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
@@ -23,8 +23,8 @@
         <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
         <p>SKILLZ</p>
       </div>
-<!-- v-if="(this.$route.params.id) === ls" -->
-      <div class="col-lg-4" >
+
+      <div class="col-lg-4" v-if="(this.$route.params.id) === ls">
         <div v-show="error" class="alert alert-danger" role="alert">
           <strong>Oh snap!</strong> {{ error }}
         </div>

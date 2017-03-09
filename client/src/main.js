@@ -57,7 +57,7 @@ export var router = new Router({
 		{ path: '/users', component: Users, meta: { requiresAuth: true, requiresAdmin: true } },
 		{ path: '/register', component: Register, meta: { checksAuth: true } },
 		{ path: '/login', component: Login, meta: { checksAuth: true } },
-		{ path: '/Main', component: Main },
+		{ path: '/main', component: Main },
 		{ path: '/search', component: Search },
 		{ path: '/verify', component: Verify },
     { path: '/drop', component: DragDrop },

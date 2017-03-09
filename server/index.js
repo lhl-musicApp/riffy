@@ -742,13 +742,13 @@ router.post('/upload/:id/image', ejwt({ secret: 'lkmaspokjsafpaoskdpa8asda0s9a' 
     var imageBuffer = decodeBase64Image(base64Data);
     console.log(imageBuffer);
 
-    fs.writeFile(__dirname + "/upload/image-" + req.user.id +".jpeg", imageBuffer.data, 'base64', function(err) {
+    fs.writeFile(__dirname + "/upload/image-" + req.user.id +".jpg", imageBuffer.data, 'base64', function(err) {
       if (err){
         res.status(400).json(err);
       }
       else {
         knex('users').where({ id: req.user.id })
-        .update({ image_link:  '//localhost:3000/uploads/image-' + req.user.id + '.jpeg'})
+        .update({ image_link:  '//localhost:3000/uploads/image-' + req.user.id + '.jpg'})
         .then((data) => {
           res.status(200).send('created an image')
         })

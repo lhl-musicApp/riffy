@@ -1,18 +1,18 @@
 <template lang="html">
   <div class="container">
-      <div class="row" v-if="!imageSrc">
-        <div class="col-sm-4">
+      <div class="row" >
+        <div class="col-sm-4" v-if="!imageSrc">
           <p>You don't have an image</p>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" v-else>
           <img :src="imageSrc" />
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-8" >
           <h6>Select an image</h6>
           <input type="file" @change="onFileChange">
         </div>
       </div>
-      <div class="row" v-else>
+      <div class="row"  >
         <img :src="image" />
         <button @click="removeImage">Remove image</button>
         <button @click="saveImage">Save image</button>
@@ -27,7 +27,7 @@ export default {
   data () {
     return {
       image: '',
-      imageSrc: 'http://localhost:3000/uploads/image-' + this.$route.params.id +'.jpeg'
+      imageSrc: 'http://localhost:3000/uploads/image-' + this.$route.params.id +'.jpg'
     };
   },
   created () {
@@ -66,7 +66,7 @@ export default {
       // console.log('reader', this.image)
       this.$http.post('upload/'+ this.$route.params.id +'/image', {imageObj,
         headers: {
-          'Content-Type': 'image/jpeg'
+          'Content-Type': 'image/jpg'
         }
       })
         .then(response => {
