@@ -1,12 +1,9 @@
 <template lang="html">
   <div>
+
     <div class="jumbotron jumbotron-fluid">
       <img class="hero-image" src="~assets/hero-riffy.jpg" />
-      <div class="container">
-        <h1 class="display-3">Vue.js Boilerplate</h1>
-        <p class="lead">Vue + Passport + Express + Postgres</p>
-      </div>
-    </div>
+
     <div class="container">
 
   <!--     <h1>Main List</h1>

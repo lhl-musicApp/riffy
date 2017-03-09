@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid hero">
       <div class="container">
         <h1 class="display-3">Vue.js Boilerplate</h1>
         <p class="lead">Vue + Passport + Express + Postgres</p>
@@ -47,4 +47,7 @@
 </script>
 
 <style lang="css">
+.hero {
+  background-image: url("/src/assets/hero_1.jpg");
+}
 </style>
