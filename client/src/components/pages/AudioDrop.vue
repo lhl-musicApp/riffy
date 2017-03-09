@@ -1,22 +1,23 @@
 <template lang="html">
-  <div class="container">
-    <h1>Audio Upload</h1>
-    <div v-if="!audio">
-      <h2>Select audio file to up load</h2>
-      <input type="file" @change="onFileAudio">
+  <div class="audio-container">
+    <div <div v-if="(this.$route.params.id) === local_id">
+      <div v-if="!audio">
+        <h6>Audio Upload</h6>
+        <input type="file" @change="onFileAudio">
+      </div>
+      <div v-else>
+        <!-- <img :src="image" /> -->
+        <button class="btn btn-outline-primary" @click="removeAudio">Remove Audio</button>
+        <label for="trackame">First Name</label>
+        <input v-model="trackname" placeholder="first name">
+        <br>
+        <p>trackame: {{ trackname }}</p>
+        <button @click="saveAudio" class="btn btn-outline-primary">Save Audio</button>
+      </div>
     </div>
-    <div v-else>
-      <!-- <img :src="image" /> -->
-      <button @click="removeAudio">Remove Audio</button>
-      <label for="trackame">First Name</label>
-      <input v-model="trackname" placeholder="first name">
-      <br>
-      <p>trackame is: {{ trackname }}</p>
-      <button @click="saveAudio">Save Audio</button>
-    </div>
-    <button @click="playSound">loadsong</button>
+    <button @click="playSound" class="btn btn-outline-primary">loadsong</button>
+    {{ this.trackname }}
   </div>
-
 </template>
 
 <script>
@@ -26,6 +27,7 @@ import auth from '../../auth.js'
 export default {
   data () {
     return {
+      local_id: localStorage.user_id,
       audio : '',
       trackname : ''
     };

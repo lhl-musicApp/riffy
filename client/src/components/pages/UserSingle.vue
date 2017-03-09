@@ -1,38 +1,17 @@
 <template lang="html">
   <div class="container">
     <div class="row">
-      <div class="col-lg-4">
-        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+      <div class="user-name col-lg-6">
+        <h1 class="header-name">{{ user.first_name }} {{ user.last_name }}</h1>
         <image-component></image-component>
       </div>
-      <div class="col-lg-2">
-        <audio-component></audio-component>
-      </div>
-      <div class="user col-lg-4">
-        <p>First Name: {{ user.first_name }}</p>
-        <p>Last Name: {{ user.last_name }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>email: {{ user.email }}</p>
-        <span>Gender: {{ user.gender }}</span>
-        <p>City: {{ user.user_city }}</p>
-        <p>Bio: {{ user.user_bio }}</p>
-        <p>Influence: {{ user.user_influence }}</p>
-        <p>Youtube Link: {{ user.youtube_link }} </p>
-        <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
-        <br>
-        <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
-        <p>SKILLZ</p>
-      </div>
 
-      <div class="col-lg-4" v-if="(this.$route.params.id) === ls">
-        <div v-show="error" class="alert alert-danger" role="alert">
-          <strong>Oh snap!</strong> {{ error }}
-        </div>
-        <button @click="show_edit = !show_edit">Edit Your Profile</button>
+      <div class="user-info-edit col-lg-6" v-if="(this.$route.params.id) === local_id">
         <form id="registration" v-on:submit.prevent="submit">
-          <!-- <transition name="slide-fade"> -->
-            <div v-show="show_edit" class="registration form-group">
-              <button form="registration" name="registration" type="submit">Save</button>
+          <button type="button" class="btn btn-outline-danger" @click="show = !show">Edit</button>
+          <button form="registration" name="registration" type="submit" class="btn btn-outline-danger">Save</button>
+          <transition name="slide-fade">
+            <div v-if="show" class="registration form-group">
               <label for="first_name">First Name</label>
               <input v-model="user.first_name" placeholder="first name">
               <br>
@@ -70,37 +49,64 @@
               <br>
             </div>
           </transition>
-          <button form="registration" name="registration" type="submit">Save</button>
         </form>
         <div class="col-lg-2">
           <skills-component></skills-component>
         </div>
       </div>
-
-
-
-      <button @click="show_media = !show_media">Media</button>
-        <div v-show="show_media" class="container">
-            <div class="col-lg-4">
-              <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-              <image-component></image-component>
+      <div class="user user-info col-lg-6">
+        <transition name="slide-fade">
+          <div v-if="(this.$route.params.id) === local_id">
+            <div v-if="!show">
+              <p>{{ user.first_name }} {{ user.last_name }}</p>
+              <p>Influence: {{ user.user_influence }}</p>
+              <p>City: {{ user.user_city }}</p>
+              <p>Influence: {{ user.user_influence }}</p>
+              <p >Bio: {{ user.user_bio }}</p>
+              <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
+              <br>
+              <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
             </div>
-            <div class="col-lg-2">
-              <audio-component></audio-component>
-            </div>
-            <section>
-              <youtube
-                :video-id="videoId"
-                player-width="50%"
-                player-height="350"
-                @ready="ready">
-              </youtube>
-            </section>
-        </div>
+          </div>
+        </transition>
+        <transition name="slide-fade">
+          <div v-if="(this.$route.params.id) !== local_id">
+            <p>First Name: {{ user.first_name }}</p>
+            <p>Last Name: {{ user.last_name }}</p>
+            <p>Influence: {{ user.user_influence }}</p>
+            <p>City: {{ user.user_city }}</p>
+            <p>Bio: {{ user.user_bio }}</p>
+            <p>Influence: {{ user.user_influence }}</p>
+            <p>Youtube Link: {{ user.youtube_link }} </p>
+            <label for="checkbox">Available to join? {{ user.isAvailable }}</label>
+            <br>
+            <label for="checkbox">Looking for band to join? {{ user.looking_for }}</label>
+          </div>
+        </transition>
+      </div>
+      <div class="audio-container col-lg-6">
+        <audio-component></audio-component>
+      </div>
 
-        <button @click="show_messages = !show_messages">Message...</button>
-        <div class="container" v-show="show_messages">
-          <form v-on:postmessage="postmessage">
+
+      <div class="skills-container col-lg-4">
+        <skills-component></skills-component>
+      </div>
+
+
+      <div class="video-container col-lg-12">
+        <section>
+          <youtube
+            :video-id="videoId"
+            player-width="50%"
+            player-height="350"
+            @ready="ready">
+          </youtube>
+        </section>
+      </div>
+      <div class="message-form-container col-lg-6">
+        <div class="message-input-container ">
+          <form v-on:submit.prevent="postmessage">
             <div v-show="error" class="alert alert-danger" role="alert">
               <strong>Oh snap!</strong> {{ error }}
             </div>
@@ -108,7 +114,7 @@
             <div class="form-group">
               <input type="text" class="form-control" v-model="messages.content" id="text">
             </div>
-            <button type="postmessage" class="btn btn-primary">Send the message</button>
+            <button type="postmessage" class="btn btn-outline-primary">Send the message</button>
           </form>
           <div class="container" v-for="message in messages">
             <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
@@ -118,10 +124,14 @@
         </div>
 
         <!-- <drag-drop></drag-drop> -->
-
+        <div class="message-container" v-for="message in messages">
+          <p><a :href="'/users/' + message.author_id ">{{ message.first_name }} {{ message.last_name }}</a></p>
+          <p>{{ message.content }}</p>
+          <p>{{ moment(message.created_at) }}</p>
+        </div>
       </div>
-    </div>
-  </div>
+    </div><!-- row -->
+  </div><!--  -->
 </template>
 
 <script>
@@ -281,7 +291,7 @@ export default {
     transition: all .3s ease;
   }
   .slide-fade-leave-active {
-    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
   .slide-fade-enter, .slide-fade-leave-to
   /* .slide-fade-leave-active for <2.1.8 */ {
